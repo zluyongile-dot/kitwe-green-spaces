@@ -7,17 +7,19 @@ const CONFIG = {
     
     // Production deployment
     production: {
-        API_BASE_URL: 'https://your-backend-url.railway.app' // Replace with your actual Railway URL
+        API_BASE_URL: 'https://your-railway-app.railway.app' // You'll replace this with your actual Railway URL
     }
 };
 
 // Auto-detect environment
 const isLocal = window.location.hostname === 'localhost' || 
                 window.location.hostname === '127.0.0.1' ||
-                window.location.hostname === '';
+                window.location.hostname === '' ||
+                window.location.port === '8000'; // Local HTTP server
 
 // Export the appropriate config
 window.APP_CONFIG = isLocal ? CONFIG.local : CONFIG.production;
 
-console.log('🔧 Environment:', isLocal ? 'Local' : 'Production');
+console.log('🔧 Environment:', isLocal ? 'Local Development' : 'Production (GitHub Pages)');
 console.log('🌐 API Base URL:', window.APP_CONFIG.API_BASE_URL);
+console.log('📍 Current hostname:', window.location.hostname);

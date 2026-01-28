@@ -445,7 +445,15 @@
         // Load real-time statistics
         async function loadStats() {
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/green-spaces');
+                // Use the same config system as other pages
+                const apiUrl = window.location.hostname === 'localhost' || 
+                              window.location.hostname === '127.0.0.1' ||
+                              window.location.hostname === '' ||
+                              window.location.port === '8000'
+                    ? 'http://127.0.0.1:5000'
+                    : 'https://your-railway-app.railway.app'; // You'll replace this with your Railway URL
+                
+                const response = await fetch(`${apiUrl}/api/green-spaces`);
                 const data = await response.json();
                 const spaces = data.features || [];
                 
