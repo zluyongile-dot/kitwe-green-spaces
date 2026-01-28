@@ -3,74 +3,536 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kitwe Green Space Mapping System</title>
+    <title>Kitwe Green Space Mapping System | Interactive GIS Application</title>
+    
+    <!-- Meta tags for better SEO and sharing -->
+    <meta name="description" content="Interactive GIS-based mapping and analysis system for urban green spaces in Kitwe, Zambia. Academic project by Mulungushi University.">
+    <meta name="keywords" content="Kitwe, Green Spaces, GIS, Mapping, Urban Planning, Zambia, Environmental, Sustainability">
+    <meta name="author" content="Mukendwa Luyongile - Mulungushi University">
+    
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content="Kitwe Green Space Mapping System">
+    <meta property="og:description" content="Interactive GIS-based mapping and analysis of urban green spaces in Kitwe, Zambia">
+    <meta property="og:type" content="website">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             margin: 0;
+            overflow-x: hidden;
+        }
+        
+        .hero-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            position: relative;
         }
-        .container {
+        
+        .hero-content {
             background: rgba(255,255,255,0.1);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            padding: 60px 40px;
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            max-width: 800px;
+            margin: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        h1 { font-size: 2.5rem; margin-bottom: 20px; }
-        p { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9; }
-        .btn {
-            display: inline-block;
+        
+        .logo-icon {
+            width: 120px;
+            height: 120px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .logo-icon i {
+            font-size: 60px;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            padding: 25px 15px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 40px 0 30px;
+        }
+        
+        .btn-custom {
             background: white;
-            color: #2E7D32;
+            color: var(--primary-color);
             padding: 15px 30px;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 1.1rem;
-            transition: all 0.3s;
-            margin: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        
+        .btn-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            color: var(--primary-color);
+            text-decoration: none;
         }
+        
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.8);
+        }
+        
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+        
         .academic-info {
+            margin-top: 40px;
+            padding: 25px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .academic-info h5 {
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            text-align: left;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .features-preview {
             margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+        
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .feature-title {
             font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .feature-desc {
+            font-size: 0.8rem;
             opacity: 0.8;
+            line-height: 1.4;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 40px 25px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-custom {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Loading animation */
+        .loading-dots {
+            display: inline-block;
+        }
+        
+        .loading-dots::after {
+            content: '';
+            animation: dots 2s infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+        
+        /* Background animation */
+        .hero-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🌳 Kitwe Green Space Mapping System</h1>
-        <p>Interactive GIS-based mapping and analysis of urban green spaces in Kitwe, Zambia</p>
-        
-        <a href="frontend/index.html" class="btn">🚀 Launch Application</a>
-        <a href="frontend/documentation.html" class="btn">📚 View Documentation</a>
-        
-        <div class="academic-info">
-            <strong>Academic Project - ICT431 Capstone</strong><br>
-            Student: Mukendwa Luyongile (ID: 202201912)<br>
-            Institution: Mulungushi University<br>
-            Supervisor: Mr. Nyirenda
+    <div class="hero-container">
+        <div class="hero-content">
+            <div class="logo-icon">
+                <i class="fas fa-tree"></i>
+            </div>
+            
+            <h1>Kitwe Green Space Mapping System</h1>
+            <p class="subtitle">
+                Interactive GIS-based mapping and analysis of urban green spaces in Kitwe, Zambia.<br>
+                <strong>Comprehensive environmental monitoring and urban planning tool.</strong>
+            </p>
+            
+            <!-- Real-time Stats -->
+            <div class="stats-row" id="statsContainer">
+                <div class="stat-card">
+                    <div class="stat-number" id="statSpaces">
+                        <span class="loading-dots">Loading</span>
+                    </div>
+                    <div class="stat-label">Green Spaces</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statArea">
+                        <span class="loading-dots">Loading</span>
+                    </div>
+                    <div class="stat-label">Hectares</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statWards">
+                        <span class="loading-dots">Loading</span>
+                    </div>
+                    <div class="stat-label">Wards</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statCoverage">
+                        <span class="loading-dots">Loading</span>
+                    </div>
+                    <div class="stat-label">m² per Capita</div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="frontend/index.html" class="btn-custom">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Launch Interactive Map
+                </a>
+                <a href="frontend/home.html" class="btn-custom btn-outline">
+                    <i class="fas fa-home"></i>
+                    Explore Homepage
+                </a>
+                <a href="frontend/environmental-monitoring.html" class="btn-custom btn-outline">
+                    <i class="fas fa-leaf"></i>
+                    Environmental Monitor
+                </a>
+                <a href="frontend/documentation.html" class="btn-custom btn-outline">
+                    <i class="fas fa-book"></i>
+                    Documentation
+                </a>
+            </div>
+            
+            <!-- Features Preview -->
+            <div class="features-preview">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <div class="feature-title">Interactive Mapping</div>
+                    <div class="feature-desc">Real-time GIS visualization with advanced filtering</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="feature-title">Data Analytics</div>
+                    <div class="feature-desc">Comprehensive statistics and environmental impact analysis</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="feature-title">Environmental Monitoring</div>
+                    <div class="feature-desc">Real-time air quality and sustainability metrics</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="feature-title">Community Engagement</div>
+                    <div class="feature-desc">Citizen reporting and feedback system</div>
+                </div>
+            </div>
+            
+            <!-- Academic Information -->
+            <div class="academic-info">
+                <h5><i class="fas fa-graduation-cap me-2"></i>Academic Capstone Project</h5>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div>
+                            <strong>Student:</strong><br>
+                            Mukendwa Luyongile<br>
+                            <small>ID: 202201912</small>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div>
+                            <strong>Institution:</strong><br>
+                            Mulungushi University<br>
+                            <small>Computer Science & IT</small>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div>
+                            <strong>Supervisor:</strong><br>
+                            Mr. Nyirenda<br>
+                            <small>ICT431 Capstone</small>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>
+                            <strong>Academic Year:</strong><br>
+                            2024/2025<br>
+                            <small>Final Year Project</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        // Auto-redirect to main application after 3 seconds
-        setTimeout(() => {
-            if (confirm('Would you like to go directly to the main application?')) {
+        console.log('🌳 Kitwe Green Space Mapping System - Loading...');
+        
+        // Load real-time statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/green-spaces');
+                const data = await response.json();
+                const spaces = data.features || [];
+                
+                // Calculate statistics
+                const totalSpaces = spaces.length;
+                const totalArea = spaces.reduce((sum, space) => sum + (space.properties.area_sq_m || 0), 0);
+                const totalAreaHa = (totalArea / 10000).toFixed(0);
+                const uniqueWards = new Set(spaces.map(space => space.properties.ward).filter(Boolean)).size;
+                
+                // Kitwe population estimate
+                const population = 517543;
+                const perCapita = (totalArea / population).toFixed(1);
+                
+                // Update UI
+                document.getElementById('statSpaces').textContent = totalSpaces;
+                document.getElementById('statArea').textContent = totalAreaHa;
+                document.getElementById('statWards').textContent = uniqueWards;
+                document.getElementById('statCoverage').textContent = perCapita;
+                
+                console.log(`✅ Loaded stats: ${totalSpaces} spaces, ${totalAreaHa} ha, ${uniqueWards} wards`);
+                
+            } catch (error) {
+                console.log('📊 Using fallback statistics (backend not available)');
+                // Fallback to known values
+                document.getElementById('statSpaces').textContent = '51';
+                document.getElementById('statArea').textContent = '314';
+                document.getElementById('statWards').textContent = '16';
+                document.getElementById('statCoverage').textContent = '6.1';
+            }
+        }
+        
+        // Auto-redirect functionality (optional)
+        let redirectTimer;
+        
+        function startAutoRedirect() {
+            redirectTimer = setTimeout(() => {
+                if (confirm('🚀 Ready to explore the interactive map?\n\nClick OK to launch the main application, or Cancel to stay on this page.')) {
+                    window.location.href = 'frontend/index.html';
+                }
+            }, 8000); // 8 seconds delay
+        }
+        
+        // Cancel auto-redirect if user interacts with page
+        function cancelAutoRedirect() {
+            if (redirectTimer) {
+                clearTimeout(redirectTimer);
+                redirectTimer = null;
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats();
+            startAutoRedirect();
+            
+            // Cancel auto-redirect on user interaction
+            document.addEventListener('click', cancelAutoRedirect);
+            document.addEventListener('keydown', cancelAutoRedirect);
+            document.addEventListener('scroll', cancelAutoRedirect);
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
                 window.location.href = 'frontend/index.html';
             }
-        }, 3000);
+            if (e.key === 'h' || e.key === 'H') {
+                window.location.href = 'frontend/home.html';
+            }
+            if (e.key === 'd' || e.key === 'D') {
+                window.location.href = 'frontend/documentation.html';
+            }
+        });
+        
+        // Add some visual feedback
+        document.querySelectorAll('.btn-custom').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        
+        console.log('✅ Landing page initialized successfully');
+        console.log('💡 Keyboard shortcuts: Enter/Space = Map, H = Home, D = Docs');
     </script>
 </body>
 </html>

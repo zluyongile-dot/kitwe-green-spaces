@@ -1091,9 +1091,6 @@
     <!-- Configuration -->
     <script src="config.js"></script>
     
-    <!-- Static Data for GitHub Pages -->
-    <script src="static-data.js"></script>
-    
     <!-- Main Application Script -->
     <script>
         console.log('🚀 Kitwe Green Space Map - Professional Version');
@@ -1370,38 +1367,13 @@
             try {
                 const timestamp = new Date().getTime();
                 const apiUrl = window.APP_CONFIG?.API_BASE_URL || 'http://127.0.0.1:5000';
-                
-                // Try API first, fallback to static data
-                let response;
-                try {
-                    response = await fetch(`${apiUrl}/api/green-spaces?t=${timestamp}`, {
-                        cache: 'no-cache',
-                        headers: {
-                            'Cache-Control': 'no-cache',
-                            'Pragma': 'no-cache'
-                        }
-                    });
-                } catch (apiError) {
-                    console.log('🔄 API not available, using static data for GitHub Pages');
-                    // Use static data for GitHub Pages deployment
-                    if (typeof STATIC_GREEN_SPACES_DATA !== 'undefined') {
-                        const data = STATIC_GREEN_SPACES_DATA;
-                        allGreenSpaces = data.features || [];
-                        console.log(`✅ Loaded ${allGreenSpaces.length} green spaces from static data`);
-                        
-                        displayGreenSpaces(allGreenSpaces);
-                        updateStatistics(allGreenSpaces);
-                        populateWardFilter(allGreenSpaces);
-                        
-                        const loadingOverlay = document.getElementById('loadingOverlay');
-                        if (loadingOverlay) {
-                            loadingOverlay.style.display = 'none';
-                        }
-                        
-                        showNotification(`Successfully loaded ${allGreenSpaces.length} green spaces!`, 'success');
-                        return;
+                const response = await fetch(`${apiUrl}/api/green-spaces?t=${timestamp}`, {
+                    cache: 'no-cache',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
                     }
-                }
+                });
                 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
