@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitwe Green Space Mapping System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 20px; }
+        p { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9; }
+        .btn {
+            display: inline-block;
+            background: white;
+            color: #2E7D32;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            margin: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .academic-info {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌳 Kitwe Green Space Mapping System</h1>
+        <p>Interactive GIS-based mapping and analysis of urban green spaces in Kitwe, Zambia</p>
+        
+        <a href="frontend/index.html" class="btn">🚀 Launch Application</a>
+        <a href="frontend/documentation.html" class="btn">📚 View Documentation</a>
+        
+        <div class="academic-info">
+            <strong>Academic Project - ICT431 Capstone</strong><br>
+            Student: Mukendwa Luyongile (ID: 202201912)<br>
+            Institution: Mulungushi University<br>
+            Supervisor: Mr. Nyirenda
+        </div>
+    </div>
+    
+    <script>
+        // Auto-redirect to main application after 3 seconds
+        setTimeout(() => {
+            if (confirm('Would you like to go directly to the main application?')) {
+                window.location.href = 'frontend/index.html';
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

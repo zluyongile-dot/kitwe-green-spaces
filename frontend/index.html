@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Kitwe Green Space Map | Interactive GIS System</title>
+    
+    <!-- External CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/2.0.0/Control.FullScreen.css" />
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+            --sidebar-width: 380px;
+            --navbar-height: 70px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            height: auto !important;
+            min-height: 100vh !important;
+        }
+        
+        /* Override any conflicting styles from style.css */
+        body {
+            position: static !important;
+            max-height: none !important;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 2000;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            height: var(--navbar-height);
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+        }
+        
+        .navbar-nav .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - var(--navbar-height));
+            margin-top: var(--navbar-height);
+            overflow: visible !important;
+            height: auto !important;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+            border-right: 1px solid #e0e0e0;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1100;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        .sidebar-header {
+            padding: 25px;
+            border-bottom: 1px solid #e0e0e0;
+            background: white;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        .logo-text h3 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .logo-text p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        /* Search */
+        .search-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        .search-clear {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .search-clear:hover {
+            background: #f0f0f0;
+            color: var(--primary-color);
+        }
+        
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .search-result-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .search-result-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Sidebar Content */
+        .sidebar-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: calc(100vh - var(--navbar-height) - 200px);
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .filter-select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+        
+        /* Range Slider */
+        .range-container {
+            margin-top: 10px;
+        }
+        
+        .range-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .range-value {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        #areaRange {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        #areaRange::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .btn-primary {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
+        }
+        
+        .btn-secondary {
+            flex: 1;
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: #666;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* Legend */
+        .legend-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .legend-label {
+            font-size: 0.9rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* Map Container */
+        .map-container {
+            flex: 1;
+            position: relative;
+            background: #f0f0f0;
+            min-height: calc(100vh - var(--navbar-height));
+        }
+        
+        #map {
+            width: 100%;
+            height: calc(100vh - var(--navbar-height));
+        }
+        
+        /* Sidebar Toggle */
+        .sidebar-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1200;
+            background: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+        
+        .sidebar-toggle:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(46, 125, 50, 0.3);
+        }
+        
+        .sidebar-toggle.sidebar-open {
+            left: calc(var(--sidebar-width) + 20px);
+        }
+        
+        .sidebar-toggle.sidebar-closed {
+            left: 20px;
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .sidebar-toggle.sidebar-closed:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+        
+        /* Animate sidebar toggle position */
+        .sidebar-toggle {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Add tooltip for better UX */
+        .sidebar-toggle::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .sidebar-toggle:hover::after {
+            opacity: 1;
+        }
+        
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+        
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+        
+        .control-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        /* Loading Overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1900;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+            }
+            
+            .main-container {
+                flex-direction: column;
+                min-height: auto;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: fixed;
+                height: calc(100vh - var(--navbar-height));
+                z-index: 1500;
+                top: var(--navbar-height);
+            }
+            
+            .sidebar.collapsed {
+                transform: translateX(-100%);
+            }
+            
+            .map-container {
+                width: 100%;
+                height: calc(100vh - var(--navbar-height));
+            }
+            
+            #map {
+                height: 100%;
+            }
+            
+            .sidebar-content {
+                max-height: calc(100vh - var(--navbar-height) - 150px);
+            }
+            
+            .sidebar-toggle {
+                left: 15px;
+                top: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+            
+            .sidebar-toggle.sidebar-open {
+                left: 15px;
+                background: var(--primary-color);
+                color: white;
+            }
+            
+            .sidebar-toggle.sidebar-closed {
+                left: 15px;
+                background: var(--primary-color);
+                color: white;
+            }
+            
+            .sidebar-toggle::after {
+                display: none; /* Hide tooltip on mobile */
+            }
+            
+            .map-controls {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .control-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 15px 10px;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Hide elements initially */
+        .d-none {
+            display: none !important;
+        }
+        
+        /* Modal improvements */
+        .modal-dialog {
+            max-width: 900px;
+        }
+        
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+        
+        /* Ensure proper scrolling */
+        html {
+            scroll-behavior: smooth;
+            overflow-y: auto !important;
+            height: auto !important;
+        }
+        
+        /* Fix any potential scrolling issues */
+        .modal-open {
+            overflow: auto !important;
+        }
+        
+        /* Override any height restrictions */
+        .modal-open body {
+            overflow: auto !important;
+            height: auto !important;
+            position: static !important;
+        }
+        
+        /* Custom scrollbar for modal */
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+        
+        /* Ensure popups are scrollable */
+        .leaflet-popup-content {
+            overflow-y: auto !important;
+            max-height: 400px;
+        }
+        
+        .leaflet-popup-content-wrapper {
+            overflow: visible !important;
+        }
+        
+        .custom-popup .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .custom-popup .leaflet-popup-content {
+            margin: 0;
+            overflow-y: auto;
+            max-height: 450px;
+        }
+        
+        .custom-popup .leaflet-popup-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-popup .leaflet-popup-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .custom-popup .leaflet-popup-content::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="home.html">
+                <div class="logo-icon me-3" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-tree text-white" style="font-size: 20px;"></i>
+                </div>
+                <div>
+                    <span class="fw-bold">Kitwe Green Spaces</span>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: rgba(255,255,255,0.3);">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="home.html">
+                            <i class="fas fa-home me-2"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active px-3" href="index.html">
+                            <i class="fas fa-map-marked-alt me-2"></i>Map
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="simpledashboard.html">
+                            <i class="fas fa-chart-bar me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="feedback.html">
+                            <i class="fas fa-comment-dots me-2"></i>Feedback
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="documentation.html">
+                            <i class="fas fa-book me-2"></i>Documentation
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="about-green-spaces.html">
+                            <i class="fas fa-info-circle me-2"></i>About Green Spaces
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle px-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-tools me-2"></i>Tools
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="environmental-monitoring.html"><i class="fas fa-leaf me-2"></i>Environmental Monitor</a></li>
+                            <li><a class="dropdown-item" href="advanced-stats.html"><i class="fas fa-chart-line me-2"></i>Advanced Statistics</a></li>
+                            <li><a class="dropdown-item" href="report-generator.html"><i class="fas fa-file-pdf me-2"></i>Generate Report</a></li>
+                            <li><a class="dropdown-item" href="bibliography.html"><i class="fas fa-book me-2"></i>Bibliography</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="logo-container">
+                        <div class="logo-icon">
+                            <i class="fas fa-tree text-white" style="font-size: 24px;"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h3>Green Spaces</h3>
+                            <p>Interactive GIS Map</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary d-md-none" id="sidebarCloseBtn" title="Close Sidebar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" 
+                           placeholder="Search green spaces...">
+                    <button class="search-clear" id="searchClear">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Search Results -->
+                <div class="search-results d-none" id="searchResults"></div>
+            </div>
+            
+            <!-- Sidebar Content -->
+            <div class="sidebar-content">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statSpaces">...</div>
+                        <div class="stat-label">Spaces</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statArea">...</div>
+                        <div class="stat-label">Area (ha)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statWards">...</div>
+                        <div class="stat-label">Wards</div>
+                    </div>
+                </div>
+                
+                <!-- Filters Section -->
+                <div class="filter-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-filter"></i> Filter Green Spaces
+                    </h3>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Type</label>
+                        <select class="filter-select" id="filterType">
+                            <option value="all">All Types</option>
+                            <option value="park">🌳 Park</option>
+                            <option value="garden">🌺 Garden</option>
+                            <option value="forest">🌲 Forest</option>
+                            <option value="recreational">⚽ Recreational</option>
+                            <option value="golf course">🏌️ Golf Course</option>
+                            <option value="other">📌 Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Ward</label>
+                        <select class="filter-select" id="filterWard">
+                            <option value="all">All Wards</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Minimum Area</label>
+                        <div class="range-container">
+                            <div class="range-header">
+                                <span>Area:</span>
+                                <span class="range-value" id="areaValue">5,000 m²</span>
+                            </div>
+                            <input type="range" id="areaRange" min="0" max="50000" step="1000" value="5000">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-primary" id="applyFilters">
+                        <i class="fas fa-search me-2"></i> Apply Filters
+                    </button>
+                    <button class="btn-secondary" id="resetFilters">
+                        <i class="fas fa-redo me-2"></i> Reset
+                    </button>
+                </div>
+                
+                <!-- Legend -->
+                <div class="legend-container">
+                    <h3 class="section-title">
+                        <i class="fas fa-key"></i> Map Legend
+                    </h3>
+                    <div class="legend-grid">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #4CAF50;"></div>
+                            <span class="legend-label">Parks</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #2196F3;"></div>
+                            <span class="legend-label">Gardens</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #9C27B0;"></div>
+                            <span class="legend-label">Forests</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #FF9800;"></div>
+                            <span class="legend-label">Recreational</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #795548;"></div>
+                            <span class="legend-label">Golf Courses</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #607D8B;"></div>
+                            <span class="legend-label">Other</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Map Container -->
+        <div class="map-container">
+            <!-- Toggle Sidebar Button -->
+            <button class="sidebar-toggle sidebar-open" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- Map -->
+            <div id="map"></div>
+            
+            <!-- Map Controls -->
+            <div class="map-controls">
+                <button class="control-btn" id="toggleSidebarBtn" title="Toggle Sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button class="control-btn" id="exportDataBtn" title="Export Data">
+                    <i class="fas fa-download"></i>
+                </button>
+                <button class="control-btn" id="analyticsBtn" title="Advanced Analytics">
+                    <i class="fas fa-chart-line"></i>
+                </button>
+                <button class="control-btn" id="homeBtn" title="Go to Homepage">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button class="control-btn" id="locateBtn" title="Find my location">
+                    <i class="fas fa-location-arrow"></i>
+                </button>
+                <button class="control-btn" id="fullscreenBtn" title="Toggle Fullscreen">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="control-btn" id="feedbackBtn" title="Report Issue">
+                    <i class="fas fa-flag"></i>
+                </button>
+                <button class="control-btn" id="dashboardBtn" title="View Dashboard">
+                    <i class="fas fa-chart-bar"></i>
+                </button>
+                <button class="control-btn" id="refreshBtn" title="Refresh Data">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="spinner"></div>
+                <p class="loading-text">Loading green spaces data...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Advanced Analytics Modal -->
+    <div class="modal fade" id="analyticsModal" tabindex="-1" aria-labelledby="analyticsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #1565C0, #1976D2); color: white;">
+                    <h5 class="modal-title" id="analyticsModalLabel">
+                        <i class="fas fa-chart-line me-2"></i>Advanced Spatial Analytics
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="analyticsModalBody">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Green Space Distribution</h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="distributionChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Area Coverage by Ward</h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="wardChart" width="400" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card mb-3">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0"><i class="fas fa-leaf me-2"></i>Environmental Impact Analysis</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row" id="environmentalMetrics">
+                                        <!-- Will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6 class="mb-0"><i class="fas fa-calculator me-2"></i>Urban Planning Recommendations</h6>
+                                </div>
+                                <div class="card-body" id="recommendations">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="exportAnalytics()">
+                        <i class="fas fa-download me-2"></i>Export Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detailed Information Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white;">
+                    <h5 class="modal-title" id="detailModalLabel">
+                        <i class="fas fa-tree me-2"></i>Green Space Details
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detailModalBody">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='feedback.html'" style="background: var(--primary-color); border-color: var(--primary-color);">
+                        <i class="fas fa-flag me-2"></i>Report Issue
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- External JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/2.0.0/Control.FullScreen.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Configuration -->
+    <script src="config.js"></script>
+    
+    <!-- Static Data for GitHub Pages -->
+    <script src="static-data.js"></script>
+    
+    <!-- Main Application Script -->
+    <script>
+        console.log('🚀 Kitwe Green Space Map - Professional Version');
+        
+        // Global variables
+        let map;
+        let allMarkers = [];
+        let allGreenSpaces = [];
+        let layerGroups = {};
+        
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📱 DOM loaded, initializing professional map...');
+            
+            // Initialize everything in the correct order
+            initializeMap();
+            setupSidebar();
+            setupControls();
+            loadGreenSpaces();
+        });
+        
+        // Initialize the map
+        function initializeMap() {
+            console.log('🗺️ Initializing map...');
+            
+            try {
+                // Create map
+                map = L.map('map', {
+                    center: [-12.8130, 28.2200],
+                    zoom: 13,
+                    zoomControl: false
+                });
+                
+                // Add zoom control to top-left
+                L.control.zoom({
+                    position: 'topleft'
+                }).addTo(map);
+                
+                // Multiple tile layers
+                const osmStandard = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors'
+                });
+                
+                const cartoDB = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors © CARTO'
+                });
+                
+                // Add default layer
+                osmStandard.addTo(map);
+                
+                // Create layer groups
+                layerGroups = {
+                    park: L.layerGroup(),
+                    garden: L.layerGroup(),
+                    forest: L.layerGroup(),
+                    recreational: L.layerGroup(),
+                    'golf course': L.layerGroup(),
+                    other: L.layerGroup()
+                };
+                
+                // Add layer groups to map
+                Object.values(layerGroups).forEach(layer => layer.addTo(map));
+                
+                // Layer control
+                const baseMaps = {
+                    "Standard": osmStandard,
+                    "Light Theme": cartoDB
+                };
+                
+                const overlayMaps = {
+                    "Parks": layerGroups.park,
+                    "Gardens": layerGroups.garden,
+                    "Forests": layerGroups.forest,
+                    "Recreational": layerGroups.recreational,
+                    "Golf Courses": layerGroups['golf course'],
+                    "Other": layerGroups.other
+                };
+                
+                L.control.layers(baseMaps, overlayMaps, {
+                    position: 'topright',
+                    collapsed: true
+                }).addTo(map);
+                
+                console.log('✅ Map initialized successfully');
+                
+            } catch (error) {
+                console.error('❌ Map initialization failed:', error);
+                showError('Failed to initialize map: ' + error.message);
+            }
+        }
+        
+        // Setup sidebar functionality
+        function setupSidebar() {
+            console.log('🎛️ Setting up sidebar...');
+            
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+            
+            if (sidebarToggle && sidebar) {
+                // Set initial state
+                sidebarToggle.setAttribute('data-tooltip', 'Hide Sidebar');
+                
+                const toggleSidebar = function() {
+                    const isCollapsed = sidebar.classList.contains('collapsed');
+                    
+                    if (isCollapsed) {
+                        // Show sidebar
+                        sidebar.classList.remove('collapsed');
+                        sidebarToggle.classList.add('sidebar-open');
+                        sidebarToggle.classList.remove('sidebar-closed');
+                        sidebarToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                        sidebarToggle.setAttribute('data-tooltip', 'Hide Sidebar');
+                        
+                        // Animate button position
+                        setTimeout(() => {
+                            sidebarToggle.style.left = `calc(var(--sidebar-width) + 20px)`;
+                        }, 50);
+                        
+                        showNotification('Sidebar shown', 'info');
+                    } else {
+                        // Hide sidebar
+                        sidebar.classList.add('collapsed');
+                        sidebarToggle.classList.remove('sidebar-open');
+                        sidebarToggle.classList.add('sidebar-closed');
+                        sidebarToggle.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                        sidebarToggle.setAttribute('data-tooltip', 'Show Sidebar');
+                        sidebarToggle.style.left = '20px';
+                        
+                        showNotification('Sidebar hidden - more map space!', 'info');
+                    }
+                };
+                
+                sidebarToggle.addEventListener('click', toggleSidebar);
+                
+                // Add close button functionality (for mobile)
+                if (sidebarCloseBtn) {
+                    sidebarCloseBtn.addEventListener('click', function() {
+                        if (!sidebar.classList.contains('collapsed')) {
+                            toggleSidebar();
+                        }
+                    });
+                }
+                
+                // Add keyboard shortcut (Ctrl + B)
+                document.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey && e.key === 'b') {
+                        e.preventDefault();
+                        toggleSidebar();
+                    }
+                });
+            }
+            
+            // Setup search
+            setupSearch();
+            
+            // Setup filters
+            setupFilters();
+            
+            console.log('✅ Sidebar setup complete');
+        }
+        
+        // Setup search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchClear = document.getElementById('searchClear');
+            const searchResults = document.getElementById('searchResults');
+            
+            if (!searchInput || !searchClear || !searchResults) {
+                console.error('❌ Search elements not found');
+                return;
+            }
+            
+            searchInput.addEventListener('input', performSearch);
+            searchClear.addEventListener('click', clearSearch);
+            
+            function performSearch() {
+                const query = searchInput.value.toLowerCase().trim();
+                searchResults.innerHTML = '';
+                
+                if (!query) {
+                    searchResults.classList.add('d-none');
+                    return;
+                }
+                
+                if (!allGreenSpaces || allGreenSpaces.length === 0) {
+                    searchResults.innerHTML = '<div class="search-result-item">Loading data...</div>';
+                    searchResults.classList.remove('d-none');
+                    return;
+                }
+                
+                const results = allGreenSpaces.filter(space =>
+                    space.properties.name.toLowerCase().includes(query) ||
+                    space.properties.ward?.toLowerCase().includes(query) ||
+                    space.properties.type.toLowerCase().includes(query)
+                );
+                
+                if (results.length > 0) {
+                    searchResults.classList.remove('d-none');
+                    results.slice(0, 8).forEach(space => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'search-result-item';
+                        resultItem.innerHTML = `
+                            <strong>${space.properties.name}</strong><br>
+                            <small style="color: #666;">${space.properties.type} • ${space.properties.ward || 'N/A'}</small>
+                        `;
+                        resultItem.addEventListener('click', () => {
+                            const coords = space.geometry.coordinates;
+                            map.setView([coords[1], coords[0]], 16);
+                            clearSearch();
+                            searchInput.value = space.properties.name;
+                        });
+                        searchResults.appendChild(resultItem);
+                    });
+                } else {
+                    searchResults.innerHTML = '<div class="search-result-item" style="color: #999;">No results found</div>';
+                    searchResults.classList.remove('d-none');
+                }
+            }
+            
+            function clearSearch() {
+                searchInput.value = '';
+                searchResults.innerHTML = '';
+                searchResults.classList.add('d-none');
+            }
+        }
+        
+        // Setup filters
+        function setupFilters() {
+            const applyBtn = document.getElementById('applyFilters');
+            const resetBtn = document.getElementById('resetFilters');
+            const areaRange = document.getElementById('areaRange');
+            const areaValue = document.getElementById('areaValue');
+            
+            if (applyBtn) applyBtn.addEventListener('click', applyFilters);
+            if (resetBtn) resetBtn.addEventListener('click', resetFilters);
+            
+            if (areaRange && areaValue) {
+                areaRange.addEventListener('input', function() {
+                    const value = parseInt(this.value);
+                    areaValue.textContent = value.toLocaleString() + ' m²';
+                });
+            }
+        }
+        
+        // Setup control buttons
+        function setupControls() {
+            console.log('🎮 Setting up controls...');
+            
+            const controls = {
+                toggleSidebarBtn: () => document.getElementById('sidebarToggle').click(),
+                exportDataBtn: exportData,
+                analyticsBtn: showAdvancedAnalytics,
+                homeBtn: () => window.location.href = 'home.html',
+                locateBtn: findUserLocation,
+                fullscreenBtn: toggleFullscreen,
+                feedbackBtn: () => window.location.href = 'feedback.html',
+                dashboardBtn: () => window.location.href = 'simpledashboard.html',
+                refreshBtn: refreshData
+            };
+            
+            Object.entries(controls).forEach(([id, handler]) => {
+                const btn = document.getElementById(id);
+                if (btn) btn.addEventListener('click', handler);
+            });
+        }
+        
+        // Load green spaces data
+        async function loadGreenSpaces() {
+            console.log('📊 Loading green spaces data...');
+            
+            try {
+                const timestamp = new Date().getTime();
+                const apiUrl = window.APP_CONFIG?.API_BASE_URL || 'http://127.0.0.1:5000';
+                
+                // Try API first, fallback to static data
+                let response;
+                try {
+                    response = await fetch(`${apiUrl}/api/green-spaces?t=${timestamp}`, {
+                        cache: 'no-cache',
+                        headers: {
+                            'Cache-Control': 'no-cache',
+                            'Pragma': 'no-cache'
+                        }
+                    });
+                } catch (apiError) {
+                    console.log('🔄 API not available, using static data for GitHub Pages');
+                    // Use static data for GitHub Pages deployment
+                    if (typeof STATIC_GREEN_SPACES_DATA !== 'undefined') {
+                        const data = STATIC_GREEN_SPACES_DATA;
+                        allGreenSpaces = data.features || [];
+                        console.log(`✅ Loaded ${allGreenSpaces.length} green spaces from static data`);
+                        
+                        displayGreenSpaces(allGreenSpaces);
+                        updateStatistics(allGreenSpaces);
+                        populateWardFilter(allGreenSpaces);
+                        
+                        const loadingOverlay = document.getElementById('loadingOverlay');
+                        if (loadingOverlay) {
+                            loadingOverlay.style.display = 'none';
+                        }
+                        
+                        showNotification(`Successfully loaded ${allGreenSpaces.length} green spaces!`, 'success');
+                        return;
+                    }
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                allGreenSpaces = data.features || [];
+                
+                console.log(`✅ Loaded ${allGreenSpaces.length} green spaces`);
+                
+                // Update UI
+                displayGreenSpaces(allGreenSpaces);
+                updateStatistics(allGreenSpaces);
+                populateWardFilter(allGreenSpaces);
+                
+                // Hide loading overlay
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+                
+                showNotification(`Successfully loaded ${allGreenSpaces.length} green spaces!`, 'success');
+                
+            } catch (error) {
+                console.error('❌ Failed to load green spaces:', error);
+                showError('Failed to load green spaces: ' + error.message);
+            }
+        }
+        
+        // Display green spaces on map
+        function displayGreenSpaces(greenSpaces) {
+            console.log(`🗺️ Displaying ${greenSpaces.length} green spaces on map`);
+            
+            // Clear existing markers
+            allMarkers.forEach(marker => marker.remove());
+            allMarkers = [];
+            Object.values(layerGroups).forEach(layer => layer.clearLayers());
+            
+            const typeColors = {
+                'park': '#4CAF50',
+                'garden': '#2196F3',
+                'forest': '#9C27B0',
+                'recreational': '#FF9800',
+                'golf course': '#795548',
+                'other': '#607D8B'
+            };
+            
+            greenSpaces.forEach(feature => {
+                const props = feature.properties;
+                const coords = feature.geometry.coordinates;
+                const color = typeColors[props.type] || typeColors.other;
+                
+                // Create custom icon
+                const icon = L.divIcon({
+                    html: `<div style="
+                        width: 28px;
+                        height: 28px;
+                        background-color: ${color};
+                        border: 3px solid white;
+                        border-radius: 50%;
+                        box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 12px;
+                    ">${props.type.charAt(0).toUpperCase()}</div>`,
+                    iconSize: [28, 28],
+                    className: 'custom-marker'
+                });
+                
+                // Create marker
+                const marker = L.marker([coords[1], coords[0]], { icon: icon })
+                    .addTo(layerGroups[props.type] || layerGroups.other);
+                
+                // Create popup with enhanced information
+                const area_ha = ((props.area_sq_m || 0) / 10000).toFixed(2);
+                const area_acres = ((props.area_sq_m || 0) * 0.000247105).toFixed(2);
+                
+                const popupContent = `
+                    <div style="min-width: 320px; font-family: 'Segoe UI', sans-serif; line-height: 1.4; max-height: 500px; overflow-y: auto;">
+                        <div style="background: linear-gradient(135deg, ${color}, ${color}dd); color: white; margin: -10px -10px 15px -10px; padding: 15px; border-radius: 8px 8px 0 0;">
+                            <h5 style="margin: 0; font-size: 18px; font-weight: 600;">
+                                <i class="fas fa-tree" style="margin-right: 8px;"></i>${props.name}
+                            </h5>
+                            <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">
+                                <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>${props.ward || 'Location not specified'}
+                            </p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+                            <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 20px; font-weight: 700; color: ${color};">${area_ha}</div>
+                                <div style="font-size: 12px; color: #666; font-weight: 500;">Hectares</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 20px; font-weight: 700; color: ${color};">${area_acres}</div>
+                                <div style="font-size: 12px; color: #666; font-weight: 500;">Acres</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                            <h6 style="margin: 0 0 8px 0; color: #333; font-size: 14px; font-weight: 600;">
+                                <i class="fas fa-info-circle" style="margin-right: 6px; color: ${color};"></i>Details
+                            </h6>
+                            <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 13px;">
+                                <strong>Type:</strong> <span style="text-transform: capitalize; color: ${color}; font-weight: 500;">${props.type}</span>
+                                <strong>Area:</strong> <span>${(props.area_sq_m || 0).toLocaleString()} m²</span>
+                                <strong>ID:</strong> <span>#${props.id}</span>
+                                <strong>Status:</strong> <span style="color: #28a745; font-weight: 500;">Active</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                            <h6 style="margin: 0 0 8px 0; color: #333; font-size: 14px; font-weight: 600;">
+                                <i class="fas fa-leaf" style="margin-right: 6px; color: #28a745;"></i>Environmental Impact
+                            </h6>
+                            <div style="font-size: 13px; color: #666;">
+                                <div style="margin-bottom: 4px;">
+                                    <i class="fas fa-wind" style="margin-right: 6px; color: #17a2b8;"></i>
+                                    Est. CO₂ absorbed: <strong>${Math.round((props.area_sq_m || 0) * 0.0002)} kg/year</strong>
+                                </div>
+                                <div style="margin-bottom: 4px;">
+                                    <i class="fas fa-tint" style="margin-right: 6px; color: #007bff;"></i>
+                                    Rainwater capacity: <strong>${Math.round((props.area_sq_m || 0) * 0.001)} L</strong>
+                                </div>
+                                <div>
+                                    <i class="fas fa-thermometer-half" style="margin-right: 6px; color: #fd7e14;"></i>
+                                    Cooling effect: <strong>${Math.round((props.area_sq_m || 0) * 0.00001)} °C</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                            <h6 style="margin: 0 0 8px 0; color: #333; font-size: 14px; font-weight: 600;">
+                                <i class="fas fa-users" style="margin-right: 6px; color: #6f42c1;"></i>Community Benefits
+                            </h6>
+                            <div style="font-size: 13px; color: #666;">
+                                <div style="margin-bottom: 4px;">
+                                    <i class="fas fa-walking" style="margin-right: 6px; color: #28a745;"></i>
+                                    Recreation space for <strong>${Math.round((props.area_sq_m || 0) / 100)}</strong> people
+                                </div>
+                                <div style="margin-bottom: 4px;">
+                                    <i class="fas fa-home" style="margin-right: 6px; color: #dc3545;"></i>
+                                    Property value boost: <strong>+${Math.round((props.area_sq_m || 0) * 0.00001)}%</strong>
+                                </div>
+                                <div>
+                                    <i class="fas fa-heart" style="margin-right: 6px; color: #e83e8c;"></i>
+                                    Health benefit radius: <strong>${Math.round(Math.sqrt((props.area_sq_m || 0) / Math.PI))}m</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 8px; margin-top: 15px;">
+                            <button onclick="showDetailedInfo(${props.id})" 
+                                    style="flex: 1; background: ${color}; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                                <i class="fas fa-info-circle" style="margin-right: 6px;"></i>More Details
+                            </button>
+                            <button onclick="window.location.href='feedback.html?space=${props.id}'" 
+                                    style="flex: 1; background: white; color: ${color}; border: 2px solid ${color}; padding: 10px 15px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                                <i class="fas fa-flag" style="margin-right: 6px;"></i>Report Issue
+                            </button>
+                        </div>
+                        
+                        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #eee; font-size: 11px; color: #999; text-align: center;">
+                            <i class="fas fa-map-marked-alt" style="margin-right: 4px;"></i>
+                            Coordinates: ${coords[1].toFixed(4)}, ${coords[0].toFixed(4)}
+                        </div>
+                    </div>
+                `;
+                
+                marker.bindPopup(popupContent, {
+                    maxWidth: 400,
+                    maxHeight: 500,
+                    autoPan: true,
+                    keepInView: true,
+                    className: 'custom-popup'
+                });
+                allMarkers.push(marker);
+            });
+        }
+        
+        // Update statistics
+        function updateStatistics(greenSpaces) {
+            const totalSpaces = greenSpaces.length;
+            const totalAreaSqM = greenSpaces.reduce((sum, space) => sum + (space.properties.area_sq_m || 0), 0);
+            const totalAreaHa = Math.round(totalAreaSqM / 10000);
+            const wards = [...new Set(greenSpaces.map(space => space.properties.ward).filter(Boolean))];
+            
+            const statSpaces = document.getElementById('statSpaces');
+            const statArea = document.getElementById('statArea');
+            const statWards = document.getElementById('statWards');
+            
+            if (statSpaces) statSpaces.textContent = totalSpaces;
+            if (statArea) statArea.textContent = totalAreaHa;
+            if (statWards) statWards.textContent = wards.length;
+            
+            console.log(`📊 Stats updated: ${totalSpaces} spaces, ${totalAreaHa} ha, ${wards.length} wards`);
+        }
+        
+        // Populate ward filter
+        function populateWardFilter(greenSpaces) {
+            const wardSelect = document.getElementById('filterWard');
+            if (!wardSelect) return;
+            
+            const wards = [...new Set(greenSpaces.map(space => space.properties.ward).filter(Boolean))].sort();
+            
+            // Clear existing options (keep "All Wards")
+            while (wardSelect.options.length > 1) {
+                wardSelect.remove(1);
+            }
+            
+            // Add ward options
+            wards.forEach(ward => {
+                const option = document.createElement('option');
+                option.value = ward;
+                option.textContent = ward;
+                wardSelect.appendChild(option);
+            });
+        }
+        
+        // Apply filters
+        function applyFilters() {
+            const typeFilter = document.getElementById('filterType').value;
+            const wardFilter = document.getElementById('filterWard').value;
+            const areaFilter = parseInt(document.getElementById('areaRange').value);
+            
+            const filtered = allGreenSpaces.filter(space => {
+                const props = space.properties;
+                
+                if (typeFilter !== 'all' && props.type !== typeFilter) return false;
+                if (wardFilter !== 'all' && props.ward !== wardFilter) return false;
+                if ((props.area_sq_m || 0) < areaFilter) return false;
+                
+                return true;
+            });
+            
+            displayGreenSpaces(filtered);
+            updateStatistics(filtered);
+            
+            showNotification(`Showing ${filtered.length} filtered green spaces`, 'info');
+        }
+        
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('filterType').value = 'all';
+            document.getElementById('filterWard').value = 'all';
+            document.getElementById('areaRange').value = 0;
+            document.getElementById('areaValue').textContent = '0 m²';
+            
+            displayGreenSpaces(allGreenSpaces);
+            updateStatistics(allGreenSpaces);
+            
+            showNotification('Filters reset', 'info');
+        }
+        
+        // Control functions
+        function findUserLocation() {
+            const btn = document.getElementById('locateBtn');
+            if (!navigator.geolocation) {
+                showNotification('Geolocation is not supported by this browser', 'error');
+                return;
+            }
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    map.setView([lat, lng], 16);
+                    L.marker([lat, lng])
+                        .addTo(map)
+                        .bindPopup('📍 Your Location')
+                        .openPopup();
+                    
+                    btn.innerHTML = '<i class="fas fa-location-arrow"></i>';
+                    showNotification('Location found!', 'success');
+                },
+                function(error) {
+                    btn.innerHTML = '<i class="fas fa-location-arrow"></i>';
+                    showNotification('Could not get your location', 'error');
+                }
+            );
+        }
+        
+        function toggleFullscreen() {
+            const btn = document.getElementById('fullscreenBtn');
+            
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().then(() => {
+                    btn.innerHTML = '<i class="fas fa-compress"></i>';
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    btn.innerHTML = '<i class="fas fa-expand"></i>';
+                });
+            }
+        }
+        
+        function refreshData() {
+            const btn = document.getElementById('refreshBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            loadGreenSpaces().finally(() => {
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+            });
+        }
+        
+        // Show detailed information modal
+        function showDetailedInfo(spaceId) {
+            const space = allGreenSpaces.find(s => s.properties.id === spaceId);
+            if (!space) {
+                showNotification('Green space not found', 'error');
+                return;
+            }
+            
+            const props = space.properties;
+            const coords = space.geometry.coordinates;
+            const typeColors = {
+                'park': '#4CAF50',
+                'garden': '#2196F3',
+                'forest': '#9C27B0',
+                'recreational': '#FF9800',
+                'golf course': '#795548',
+                'other': '#607D8B'
+            };
+            const color = typeColors[props.type] || typeColors.other;
+            
+            // Calculate additional metrics
+            const area_ha = ((props.area_sq_m || 0) / 10000).toFixed(2);
+            const area_acres = ((props.area_sq_m || 0) * 0.000247105).toFixed(2);
+            const co2_absorption = Math.round((props.area_sq_m || 0) * 0.0002);
+            const rainwater_capacity = Math.round((props.area_sq_m || 0) * 0.001);
+            const cooling_effect = ((props.area_sq_m || 0) * 0.00001).toFixed(2);
+            const recreation_capacity = Math.round((props.area_sq_m || 0) / 100);
+            const property_boost = ((props.area_sq_m || 0) * 0.00001).toFixed(1);
+            const health_radius = Math.round(Math.sqrt((props.area_sq_m || 0) / Math.PI));
+            
+            // Estimate facilities based on type and size
+            const facilities = getFacilitiesForSpace(props.type, props.area_sq_m || 0);
+            const accessibility = getAccessibilityInfo(props.type);
+            const maintenance = getMaintenanceInfo(props.type, props.area_sq_m || 0);
+            
+            const modalContent = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header" style="background: ${color}; color: white;">
+                                <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Basic Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm">
+                                    <tr><td><strong>Name:</strong></td><td>${props.name}</td></tr>
+                                    <tr><td><strong>Type:</strong></td><td style="text-transform: capitalize; color: ${color}; font-weight: 600;">${props.type}</td></tr>
+                                    <tr><td><strong>Ward:</strong></td><td>${props.ward || 'Not specified'}</td></tr>
+                                    <tr><td><strong>ID:</strong></td><td>#${props.id}</td></tr>
+                                    <tr><td><strong>Status:</strong></td><td><span class="badge bg-success">Active</span></td></tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header" style="background: ${color}; color: white;">
+                                <h6 class="mb-0"><i class="fas fa-ruler-combined me-2"></i>Area Measurements</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="h4 text-primary">${(props.area_sq_m || 0).toLocaleString()}</div>
+                                        <small class="text-muted">Square Meters</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="h4 text-success">${area_ha}</div>
+                                        <small class="text-muted">Hectares</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="h4 text-warning">${area_acres}</div>
+                                        <small class="text-muted">Acres</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header" style="background: #28a745; color: white;">
+                                <h6 class="mb-0"><i class="fas fa-leaf me-2"></i>Environmental Impact</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <i class="fas fa-wind text-info me-2"></i>
+                                    <strong>CO₂ Absorption:</strong> ${co2_absorption} kg/year
+                                </div>
+                                <div class="mb-2">
+                                    <i class="fas fa-tint text-primary me-2"></i>
+                                    <strong>Rainwater Capacity:</strong> ${rainwater_capacity.toLocaleString()} L
+                                </div>
+                                <div class="mb-2">
+                                    <i class="fas fa-thermometer-half text-warning me-2"></i>
+                                    <strong>Cooling Effect:</strong> ${cooling_effect}°C reduction
+                                </div>
+                                <div class="mb-2">
+                                    <i class="fas fa-seedling text-success me-2"></i>
+                                    <strong>Biodiversity:</strong> Supports local ecosystem
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header" style="background: #6f42c1; color: white;">
+                                <h6 class="mb-0"><i class="fas fa-users me-2"></i>Community Benefits</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <i class="fas fa-walking text-success me-2"></i>
+                                    <strong>Recreation Capacity:</strong> ${recreation_capacity} people
+                                </div>
+                                <div class="mb-2">
+                                    <i class="fas fa-home text-danger me-2"></i>
+                                    <strong>Property Value Boost:</strong> +${property_boost}%
+                                </div>
+                                <div class="mb-2">
+                                    <i class="fas fa-heart text-pink me-2"></i>
+                                    <strong>Health Benefit Radius:</strong> ${health_radius}m
+                                </div>
+                                <div class="mb-2">
+                                    <i class="fas fa-child text-info me-2"></i>
+                                    <strong>Family Friendly:</strong> ${props.area_sq_m > 5000 ? 'Yes' : 'Limited space'}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header" style="background: #17a2b8; color: white;">
+                                <h6 class="mb-0"><i class="fas fa-cogs me-2"></i>Facilities & Amenities</h6>
+                            </div>
+                            <div class="card-body">
+                                ${facilities.map(facility => `
+                                    <div class="mb-1">
+                                        <i class="fas fa-check-circle text-success me-2"></i>${facility}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header" style="background: #fd7e14; color: white;">
+                                <h6 class="mb-0"><i class="fas fa-universal-access me-2"></i>Accessibility</h6>
+                            </div>
+                            <div class="card-body">
+                                ${accessibility.map(item => `
+                                    <div class="mb-1">
+                                        <i class="fas fa-info-circle text-info me-2"></i>${item}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header" style="background: #6c757d; color: white;">
+                                <h6 class="mb-0"><i class="fas fa-tools me-2"></i>Maintenance Info</h6>
+                            </div>
+                            <div class="card-body">
+                                ${maintenance.map(item => `
+                                    <div class="mb-1">
+                                        <i class="fas fa-wrench text-secondary me-2"></i>${item}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header" style="background: #343a40; color: white;">
+                                <h6 class="mb-0"><i class="fas fa-map-marked-alt me-2"></i>Location Details</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Coordinates:</strong><br>
+                                        Latitude: ${coords[1].toFixed(6)}<br>
+                                        Longitude: ${coords[0].toFixed(6)}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Administrative:</strong><br>
+                                        Ward: ${props.ward || 'Not specified'}<br>
+                                        City: Kitwe, Zambia
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <button class="btn btn-outline-primary btn-sm" onclick="map.setView([${coords[1]}, ${coords[0]}], 16); bootstrap.Modal.getInstance(document.getElementById('detailModal')).hide();">
+                                        <i class="fas fa-crosshairs me-1"></i>Center Map Here
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm ms-2" onclick="navigator.clipboard.writeText('${coords[1].toFixed(6)}, ${coords[0].toFixed(6)}'); showNotification('Coordinates copied!', 'success');">
+                                        <i class="fas fa-copy me-1"></i>Copy Coordinates
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('detailModalLabel').innerHTML = `<i class="fas fa-tree me-2"></i>${props.name}`;
+            document.getElementById('detailModalBody').innerHTML = modalContent;
+            
+            const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+            modal.show();
+        }
+        
+        // Helper functions for detailed information
+        function getFacilitiesForSpace(type, area) {
+            const facilities = [];
+            
+            switch(type) {
+                case 'park':
+                    facilities.push('Walking paths');
+                    if (area > 10000) facilities.push('Playground equipment');
+                    if (area > 20000) facilities.push('Picnic areas');
+                    if (area > 30000) facilities.push('Sports facilities');
+                    facilities.push('Benches and seating');
+                    facilities.push('Landscaped gardens');
+                    break;
+                    
+                case 'garden':
+                    facilities.push('Botanical displays');
+                    facilities.push('Walking paths');
+                    facilities.push('Educational signage');
+                    if (area > 5000) facilities.push('Greenhouse');
+                    facilities.push('Seating areas');
+                    break;
+                    
+                case 'forest':
+                    facilities.push('Nature trails');
+                    facilities.push('Wildlife habitat');
+                    facilities.push('Canopy cover');
+                    if (area > 50000) facilities.push('Visitor center');
+                    facilities.push('Conservation area');
+                    break;
+                    
+                case 'recreational':
+                    facilities.push('Sports equipment');
+                    facilities.push('Playing fields');
+                    facilities.push('Changing rooms');
+                    facilities.push('Spectator seating');
+                    if (area > 15000) facilities.push('Multiple courts/fields');
+                    break;
+                    
+                case 'golf course':
+                    facilities.push('Golf course (18 holes)');
+                    facilities.push('Clubhouse');
+                    facilities.push('Pro shop');
+                    facilities.push('Driving range');
+                    facilities.push('Putting green');
+                    break;
+                    
+                default:
+                    facilities.push('Open space');
+                    facilities.push('Basic landscaping');
+                    if (area > 5000) facilities.push('Seating areas');
+            }
+            
+            // Common facilities for larger spaces
+            if (area > 25000) {
+                facilities.push('Parking area');
+                facilities.push('Public restrooms');
+            }
+            
+            return facilities;
+        }
+        
+        function getAccessibilityInfo(type) {
+            const accessibility = [
+                'Public access during daylight hours',
+                'Pedestrian accessible',
+                'Connected to local transport'
+            ];
+            
+            if (type === 'park' || type === 'recreational') {
+                accessibility.push('Wheelchair accessible paths');
+                accessibility.push('Family-friendly facilities');
+            }
+            
+            if (type === 'garden') {
+                accessibility.push('Educational tours available');
+                accessibility.push('Guided walks');
+            }
+            
+            return accessibility;
+        }
+        
+        function getMaintenanceInfo(type, area) {
+            const maintenance = [];
+            
+            if (area < 5000) {
+                maintenance.push('Weekly maintenance schedule');
+            } else if (area < 20000) {
+                maintenance.push('Bi-weekly maintenance schedule');
+            } else {
+                maintenance.push('Daily maintenance schedule');
+            }
+            
+            maintenance.push('Seasonal landscaping updates');
+            maintenance.push('Regular safety inspections');
+            
+            if (type === 'park' || type === 'recreational') {
+                maintenance.push('Equipment safety checks');
+            }
+            
+            if (type === 'forest') {
+                maintenance.push('Conservation management');
+                maintenance.push('Wildlife monitoring');
+            }
+            
+            maintenance.push('Community volunteer programs');
+            
+            return maintenance;
+        }
+        
+        // Make functions globally accessible
+        window.showDetailedInfo = showDetailedInfo;
+        window.exportAnalytics = exportAnalytics;
+        
+        // Advanced Data Export Function
+        function exportData() {
+            const btn = document.getElementById('exportDataBtn');
+            const originalIcon = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            try {
+                // Create comprehensive dataset
+                const exportData = {
+                    metadata: {
+                        title: "Kitwe Green Spaces Dataset",
+                        generated: new Date().toISOString(),
+                        total_spaces: allGreenSpaces.length,
+                        data_source: "Kitwe Municipal GIS Database",
+                        coordinate_system: "WGS84 (EPSG:4326)"
+                    },
+                    summary_statistics: calculateSummaryStats(),
+                    green_spaces: allGreenSpaces.map(space => ({
+                        id: space.properties.id,
+                        name: space.properties.name,
+                        type: space.properties.type,
+                        ward: space.properties.ward,
+                        area_sqm: space.properties.area_sq_m,
+                        area_hectares: (space.properties.area_sq_m / 10000).toFixed(2),
+                        coordinates: {
+                            latitude: space.geometry.coordinates[1],
+                            longitude: space.geometry.coordinates[0]
+                        },
+                        environmental_impact: {
+                            co2_absorption_kg_year: Math.round(space.properties.area_sq_m * 0.0002),
+                            rainwater_capacity_liters: Math.round(space.properties.area_sq_m * 0.001),
+                            cooling_effect_celsius: (space.properties.area_sq_m * 0.00001).toFixed(2)
+                        }
+                    }))
+                };
+                
+                // Export as JSON
+                const jsonData = JSON.stringify(exportData, null, 2);
+                downloadFile(jsonData, 'kitwe_green_spaces_data.json', 'application/json');
+                
+                // Also create CSV for Excel compatibility
+                const csvData = convertToCSV(exportData.green_spaces);
+                downloadFile(csvData, 'kitwe_green_spaces_data.csv', 'text/csv');
+                
+                showNotification('Data exported successfully! (JSON & CSV formats)', 'success');
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                showNotification('Export failed: ' + error.message, 'error');
+            } finally {
+                btn.innerHTML = originalIcon;
+            }
+        }
+        
+        // Advanced Analytics Function
+        function showAdvancedAnalytics() {
+            if (allGreenSpaces.length === 0) {
+                showNotification('Please wait for data to load', 'error');
+                return;
+            }
+            
+            // Calculate advanced metrics
+            const analytics = calculateAdvancedAnalytics();
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('analyticsModal'));
+            modal.show();
+            
+            // Wait for modal to be shown, then create charts
+            document.getElementById('analyticsModal').addEventListener('shown.bs.modal', function() {
+                createDistributionChart(analytics.typeDistribution);
+                createWardChart(analytics.wardAnalysis);
+                displayEnvironmentalMetrics(analytics.environmental);
+                displayRecommendations(analytics.recommendations);
+            }, { once: true });
+        }
+        
+        // Calculate Summary Statistics
+        function calculateSummaryStats() {
+            const totalArea = allGreenSpaces.reduce((sum, space) => sum + (space.properties.area_sq_m || 0), 0);
+            const types = [...new Set(allGreenSpaces.map(space => space.properties.type))];
+            const wards = [...new Set(allGreenSpaces.map(space => space.properties.ward))];
+            
+            return {
+                total_spaces: allGreenSpaces.length,
+                total_area_sqm: totalArea,
+                total_area_hectares: (totalArea / 10000).toFixed(2),
+                average_space_size_sqm: Math.round(totalArea / allGreenSpaces.length),
+                unique_types: types.length,
+                unique_wards: wards.length,
+                largest_space: allGreenSpaces.reduce((max, space) => 
+                    (space.properties.area_sq_m || 0) > (max.properties.area_sq_m || 0) ? space : max
+                ).properties.name,
+                smallest_space: allGreenSpaces.reduce((min, space) => 
+                    (space.properties.area_sq_m || 0) < (min.properties.area_sq_m || 0) ? space : min
+                ).properties.name
+            };
+        }
+        
+        // Calculate Advanced Analytics
+        function calculateAdvancedAnalytics() {
+            // Type distribution
+            const typeDistribution = {};
+            allGreenSpaces.forEach(space => {
+                const type = space.properties.type;
+                typeDistribution[type] = (typeDistribution[type] || 0) + 1;
+            });
+            
+            // Ward analysis
+            const wardAnalysis = {};
+            allGreenSpaces.forEach(space => {
+                const ward = space.properties.ward || 'Unknown';
+                if (!wardAnalysis[ward]) {
+                    wardAnalysis[ward] = { count: 0, totalArea: 0 };
+                }
+                wardAnalysis[ward].count++;
+                wardAnalysis[ward].totalArea += space.properties.area_sq_m || 0;
+            });
+            
+            // Environmental impact
+            const totalArea = allGreenSpaces.reduce((sum, space) => sum + (space.properties.area_sq_m || 0), 0);
+            const environmental = {
+                totalCO2Absorption: Math.round(totalArea * 0.0002),
+                totalRainwaterCapacity: Math.round(totalArea * 0.001),
+                averageCoolingEffect: (totalArea * 0.00001).toFixed(2),
+                biodiversityIndex: calculateBiodiversityIndex(),
+                greenSpacePerCapita: (totalArea / 517543).toFixed(2) // Kitwe population estimate
+            };
+            
+            // Urban planning recommendations
+            const recommendations = generateRecommendations(wardAnalysis, environmental);
+            
+            return {
+                typeDistribution,
+                wardAnalysis,
+                environmental,
+                recommendations
+            };
+        }
+        
+        // Create Distribution Chart
+        function createDistributionChart(data) {
+            const ctx = document.getElementById('distributionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        data: Object.values(data),
+                        backgroundColor: [
+                            '#4CAF50', '#2196F3', '#9C27B0', '#FF9800', '#795548', '#607D8B'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribution by Type'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Create Ward Chart
+        function createWardChart(data) {
+            const ctx = document.getElementById('wardChart').getContext('2d');
+            const wards = Object.keys(data).slice(0, 10); // Top 10 wards
+            const areas = wards.map(ward => (data[ward].totalArea / 10000).toFixed(1)); // Convert to hectares
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: wards,
+                    datasets: [{
+                        label: 'Area (Hectares)',
+                        data: areas,
+                        backgroundColor: 'rgba(76, 175, 80, 0.8)',
+                        borderColor: 'rgba(76, 175, 80, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Area (Hectares)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Wards'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Green Space Coverage by Ward'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Display Environmental Metrics
+        function displayEnvironmentalMetrics(environmental) {
+            const container = document.getElementById('environmentalMetrics');
+            container.innerHTML = `
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded">
+                        <h4 class="text-success">${environmental.totalCO2Absorption.toLocaleString()}</h4>
+                        <small>kg CO₂ absorbed/year</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded">
+                        <h4 class="text-primary">${environmental.totalRainwaterCapacity.toLocaleString()}</h4>
+                        <small>Liters rainwater capacity</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded">
+                        <h4 class="text-warning">${environmental.averageCoolingEffect}°C</h4>
+                        <small>Average cooling effect</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3 bg-light rounded">
+                        <h4 class="text-info">${environmental.greenSpacePerCapita}</h4>
+                        <small>m² per capita</small>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Generate Urban Planning Recommendations
+        function generateRecommendations(wardAnalysis, environmental) {
+            const recommendations = [];
+            
+            // Analyze ward coverage
+            const wardsByArea = Object.entries(wardAnalysis)
+                .sort((a, b) => b[1].totalArea - a[1].totalArea);
+            
+            const lowCoverageWards = wardsByArea.slice(-3);
+            
+            recommendations.push({
+                category: "Spatial Equity",
+                priority: "High",
+                recommendation: `Increase green space development in ${lowCoverageWards.map(w => w[0]).join(', ')} - these wards have the lowest green space coverage.`
+            });
+            
+            // WHO standard is 9m² per capita
+            const currentPerCapita = parseFloat(environmental.greenSpacePerCapita);
+            if (currentPerCapita < 9) {
+                recommendations.push({
+                    category: "WHO Standards",
+                    priority: "Medium",
+                    recommendation: `Current green space per capita (${currentPerCapita}m²) is below WHO recommendation (9m²). Consider developing ${Math.round((9 - currentPerCapita) * 517543 / 10000)} additional hectares.`
+                });
+            }
+            
+            recommendations.push({
+                category: "Environmental Impact",
+                priority: "Medium",
+                recommendation: `Current green spaces absorb ${environmental.totalCO2Absorption.toLocaleString()}kg CO₂ annually. Expanding by 20% could increase absorption to ${Math.round(environmental.totalCO2Absorption * 1.2).toLocaleString()}kg/year.`
+            });
+            
+            recommendations.push({
+                category: "Connectivity",
+                priority: "Low",
+                recommendation: "Develop green corridors connecting isolated spaces to create ecological networks and improve biodiversity."
+            });
+            
+            return recommendations;
+        }
+        
+        // Calculate Biodiversity Index (simplified)
+        function calculateBiodiversityIndex() {
+            const types = [...new Set(allGreenSpaces.map(space => space.properties.type))];
+            const totalSpaces = allGreenSpaces.length;
+            
+            // Shannon Diversity Index approximation
+            let diversity = 0;
+            types.forEach(type => {
+                const count = allGreenSpaces.filter(space => space.properties.type === type).length;
+                const proportion = count / totalSpaces;
+                diversity -= proportion * Math.log(proportion);
+            });
+            
+            return diversity.toFixed(2);
+        }
+        
+        // Display Recommendations
+        function displayRecommendations(recommendations) {
+            const container = document.getElementById('recommendations');
+            container.innerHTML = recommendations.map(rec => `
+                <div class="alert alert-${rec.priority === 'High' ? 'danger' : rec.priority === 'Medium' ? 'warning' : 'info'} mb-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>${rec.category}</strong>
+                            <p class="mb-0 mt-1">${rec.recommendation}</p>
+                        </div>
+                        <span class="badge bg-${rec.priority === 'High' ? 'danger' : rec.priority === 'Medium' ? 'warning' : 'info'}">${rec.priority}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Export Analytics Report
+        function exportAnalytics() {
+            const analytics = calculateAdvancedAnalytics();
+            const report = {
+                title: "Kitwe Green Spaces - Advanced Analytics Report",
+                generated: new Date().toISOString(),
+                summary: calculateSummaryStats(),
+                analytics: analytics,
+                methodology: {
+                    co2_calculation: "Area (m²) × 0.0002 kg/m²/year",
+                    rainwater_calculation: "Area (m²) × 0.001 L/m²",
+                    cooling_calculation: "Area (m²) × 0.00001 °C/m²",
+                    biodiversity_index: "Shannon Diversity Index",
+                    data_source: "Municipal GIS Database"
+                }
+            };
+            
+            const reportData = JSON.stringify(report, null, 2);
+            downloadFile(reportData, 'kitwe_green_spaces_analytics_report.json', 'application/json');
+            showNotification('Analytics report exported successfully!', 'success');
+        }
+        
+        // Utility Functions
+        function convertToCSV(data) {
+            const headers = Object.keys(data[0]);
+            const csvContent = [
+                headers.join(','),
+                ...data.map(row => headers.map(header => {
+                    const value = row[header];
+                    return typeof value === 'object' ? JSON.stringify(value) : value;
+                }).join(','))
+            ].join('\n');
+            return csvContent;
+        }
+        
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }
+        
+        function showNotification(message, type = 'info') {
+            const colors = {
+                success: '#4CAF50',
+                error: '#f44336',
+                info: '#2196F3'
+            };
+            
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 90px;
+                right: 20px;
+                background: ${colors[type]};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                z-index: 9999;
+                font-weight: 500;
+                max-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    ${message}
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        function showError(message) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.innerHTML = `
+                    <div style="text-align: center; color: #f44336;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                        <h4>Error Loading Map</h4>
+                        <p>${message}</p>
+                        <button onclick="location.reload()" style="background: var(--primary-color); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 15px;">
+                            <i class="fas fa-redo me-2"></i>Retry
+                        </button>
+                    </div>
+                `;
+            }
+            showNotification(message, 'error');
+        }
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliography & References | Kitwe Green Space Research</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        body { background: #f8f9fa; padding: 20px 0; }
+        .bib-container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .bib-header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 40px; text-align: center; }
+        .citation { background: #f8f9fa; padding: 20px; margin: 15px 0; border-left: 4px solid var(--primary-color); border-radius: 8px; }
+        .back-button { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; }
+    </style>
+</head>
+<body>
+    <div class="bib-container">
+        <div class="bib-header" style="position: relative;">
+            <button class="back-button" onclick="window.location.href='index.html'">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1><i class="fas fa-book me-3"></i>Bibliography & References</h1>
+            <p class="lead mb-0">Academic Sources and Research Foundation</p>
+        </div>
+        
+        <div class="p-5">
+            <h3 class="text-primary mb-4">Academic Sources</h3>
+            
+            <div class="citation">
+                <strong>World Health Organization (2016).</strong> <em>Urban green spaces and health: A review of evidence.</em> WHO Press. 
+                <br><small class="text-muted">Used for: WHO green space recommendations (9m²/capita standard)</small>
+            </div>
+            
+            <div class="citation">
+                <strong>Gascon, M., et al. (2016).</strong> <em>Mental health benefits of long-term exposure to residential green and blue spaces.</em> Environmental Research, 142, 9-19.
+                <br><small class="text-muted">Used for: Mental health benefits analysis</small>
+            </div>
+            
+            <div class="citation">
+                <strong>Nowak, D. J., & Crane, D. E. (2002).</strong> <em>Carbon storage and sequestration by urban trees in the USA.</em> Environmental Pollution, 116(3), 381-389.
+                <br><small class="text-muted">Used for: CO₂ absorption calculations</small>
+            </div>
+            
+            <h3 class="text-primary mb-4 mt-5">Technical References</h3>
+            
+            <div class="citation">
+                <strong>OpenStreetMap Foundation (2023).</strong> <em>OpenStreetMap Data.</em> Retrieved from https://www.openstreetmap.org/
+                <br><small class="text-muted">Used for: Base mapping and geographic data</small>
+            </div>
+            
+            <div class="citation">
+                <strong>Leaflet.js Documentation (2023).</strong> <em>Interactive Maps Library.</em> Retrieved from https://leafletjs.com/
+                <br><small class="text-muted">Used for: Interactive mapping functionality</small>
+            </div>
+            
+            <h3 class="text-primary mb-4 mt-5">Local Context</h3>
+            
+            <div class="citation">
+                <strong>Zambia Statistics Agency (2022).</strong> <em>2022 Census of Population and Housing.</em> Lusaka: Government Printer.
+                <br><small class="text-muted">Used for: Kitwe population data (517,543)</small>
+            </div>
+            
+            <div class="citation">
+                <strong>Kitwe City Council (2023).</strong> <em>Urban Development Plan 2023-2030.</em> Kitwe Municipal Office.
+                <br><small class="text-muted">Used for: Local planning context and ward boundaries</small>
+            </div>
+            
+            <div class="alert alert-info mt-5">
+                <h5><i class="fas fa-info-circle me-2"></i>Research Methodology</h5>
+                <p class="mb-0">This study employed a mixed-methods approach combining GIS analysis, environmental calculations based on peer-reviewed literature, and municipal data integration to create a comprehensive urban green space mapping system for Kitwe, Zambia.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

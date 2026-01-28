@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Green Space Issue | Kitwe</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Feedback Page Specific Styles -->
+    <style>
+        /* Feedback Page Overrides */
+        body {
+            background: #f8f9fa;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .feedback-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .feedback-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .feedback-body {
+            padding: 30px;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            padding: 12px 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #d32f2f;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+        }
+        
+        .message-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .message-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .feedback-header {
+                padding: 20px;
+            }
+            
+            .feedback-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left me-2"></i>Back to Map
+        </a>
+        
+        <div class="feedback-container">
+            <!-- Header -->
+            <div class="feedback-header">
+                <button class="back-button" onclick="window.location.href='index.html'" title="Back to Map">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2><i class="fas fa-flag me-2"></i>Report Green Space Issue</h2>
+                <p class="mb-0">Help us maintain Kitwe's green spaces</p>
+            </div>
+            
+            <!-- Body -->
+            <div class="feedback-body">
+                <div class="info-box">
+                    <h5><i class="fas fa-info-circle me-2"></i>Citizen Reporting Portal</h5>
+                    <p class="mb-0">
+                        Help us maintain Kitwe's green spaces by reporting issues like damaged facilities, 
+                        illegal dumping, or suggesting improvements. Your feedback will be reviewed by the 
+                        Kitwe City Council.
+                    </p>
+                </div>
+                
+                <form id="feedbackForm">
+                    <!-- Green Space Selection -->
+                    <div class="mb-4">
+                        <label for="green_space" class="form-label required">Select Green Space</label>
+                        <select class="form-select" id="green_space" required>
+                            <option value="">-- Choose a green space --</option>
+                            <option value="other">Other location (specify below)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Issue Type -->
+                    <div class="mb-4">
+                        <label for="issue_type" class="form-label required">Issue Type</label>
+                        <select class="form-select" id="issue_type" required>
+                            <option value="">-- Select issue type --</option>
+                            <option value="damage">Damaged Facilities</option>
+                            <option value="maintenance">Poor Maintenance</option>
+                            <option value="dumping">Illegal Dumping</option>
+                            <option value="safety">Safety Concern</option>
+                            <option value="suggestion">Improvement Suggestion</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <label for="description" class="form-label required">Description</label>
+                        <textarea class="form-control" id="description" required 
+                                  placeholder="Please describe the issue in detail..."></textarea>
+                    </div>
+                    
+                    <!-- Location Details -->
+                    <div class="mb-4">
+                        <label for="location_details" class="form-label">Location Details (if not in dropdown)</label>
+                        <input type="text" class="form-control" id="location_details" 
+                               placeholder="e.g., Near Kitwe Central Market, along Chingola Road">
+                    </div>
+                    
+                    <!-- Contact Information -->
+                    <div class="mb-4">
+                        <label class="form-label">Your Contact (Optional)</label>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="user_name" placeholder="Your name">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="email" class="form-control" id="user_email" placeholder="Email address">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Report
+                    </button>
+                </form>
+                
+                <!-- Message Box -->
+                <div id="message" class="message-box"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Load green spaces into dropdown
+        async function loadGreenSpaces() {
+            try {
+                // Simulate API call
+                const sampleSpaces = [
+                    { id: 1, name: "Kitwe Central Park", type: "park" },
+                    { id: 2, name: "Botanical Gardens", type: "garden" },
+                    { id: 3, name: "Chimwemwe Forest", type: "forest" },
+                    { id: 4, name: "Riverside Park", type: "recreational" },
+                    { id: 5, name: "Nkana Golf Club", type: "golf" }
+                ];
+                
+                const select = document.getElementById('green_space');
+                
+                // Clear existing options except first two
+                while (select.options.length > 2) {
+                    select.remove(2);
+                }
+                
+                // Add green spaces
+                sampleSpaces.forEach(space => {
+                    const option = document.createElement('option');
+                    option.value = space.id;
+                    option.textContent = `${space.name} (${space.type})`;
+                    select.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error loading green spaces:', error);
+            }
+        }
+        
+        // Handle form submission
+        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+            submitBtn.disabled = true;
+            
+            // Get form data
+            const formData = {
+                green_space_id: document.getElementById('green_space').value,
+                user_name: document.getElementById('user_name').value || 'Anonymous',
+                user_email: document.getElementById('user_email').value,
+                issue_type: document.getElementById('issue_type').value,
+                description: document.getElementById('description').value
+            };
+            
+            // If "other" location selected, add location details
+            if (document.getElementById('green_space').value === 'other') {
+                const locationDetails = document.getElementById('location_details').value;
+                if (locationDetails) {
+                    formData.description += `\n\nLocation: ${locationDetails}`;
+                }
+            }
+            
+            // Clear previous message
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'none';
+            messageDiv.className = 'message-box';
+            
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Mock successful response
+                const mockResponse = {
+                    status: 'success',
+                    feedback_id: 'GSR-' + Date.now().toString().slice(-6),
+                    message: 'Report submitted successfully'
+                };
+                
+                if (mockResponse.status === 'success') {
+                    // Show success message
+                    messageDiv.innerHTML = `
+                        <h4 class="mb-3"><i class="fas fa-check-circle me-2"></i>Report Submitted Successfully!</h4>
+                        <p>Thank you for helping improve Kitwe's green spaces.</p>
+                        <p><strong>Report ID:</strong> ${mockResponse.feedback_id}</p>
+                        <p>The Kitwe City Council will review your report within 5-7 working days.</p>
+                        <div class="mt-3">
+                            <a href="index.html" class="btn btn-sm btn-primary me-2">
+                                <i class="fas fa-map me-1"></i>Return to Map
+                            </a>
+                            <button class="btn btn-sm btn-outline-primary" onclick="location.reload()">
+                                <i class="fas fa-plus me-1"></i>Submit Another Report
+                            </button>
+                        </div>
+                    `;
+                    messageDiv.className = 'message-box message-success';
+                    messageDiv.style.display = 'block';
+                    
+                    // Clear form
+                    document.getElementById('feedbackForm').reset();
+                    
+                } else {
+                    // Show error message
+                    messageDiv.textContent = `Error: ${mockResponse.message}`;
+                    messageDiv.className = 'message-box message-error';
+                    messageDiv.style.display = 'block';
+                }
+                
+            } catch (error) {
+                messageDiv.textContent = `Network error: ${error.message}`;
+                messageDiv.className = 'message-box message-error';
+                messageDiv.style.display = 'block';
+            } finally {
+                // Restore button state
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Load green spaces when page loads
+        document.addEventListener('DOMContentLoaded', loadGreenSpaces);
+    </script>
+</body>
+</html>

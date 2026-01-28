@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Monitoring | Kitwe Green Spaces</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <script src="config.js"></script>
+    
+    <style>
+        body { background: #f8f9fa; padding: 20px 0; overflow-y: auto; }
+        .monitor-container { max-width: 1400px; margin: 0 auto; }
+        .monitor-card { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .metric-card { background: linear-gradient(135deg, #e8f5e8, #f1f8e9); border-radius: 12px; padding: 20px; text-align: center; border-left: 4px solid var(--primary-color); }
+        .alert-card { background: linear-gradient(135deg, #fff3cd, #ffeaa7); border-radius: 12px; padding: 20px; border-left: 4px solid #ffc107; }
+        .status-indicator { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .status-good { background: #28a745; }
+        .status-moderate { background: #ffc107; }
+        .status-poor { background: #dc3545; }
+        .sensor-reading { font-size: 2rem; font-weight: 700; margin: 10px 0; }
+        .trend-up { color: #28a745; }
+        .trend-down { color: #dc3545; }
+        .trend-stable { color: #6c757d; }
+        .back-button { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; }
+    </style>
+</head>
+<body>
+    <div class="monitor-container">
+        <!-- Header -->
+        <div class="monitor-card" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; position: relative;">
+            <button class="back-button" onclick="window.location.href='index.html'">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="text-center">
+                <h1><i class="fas fa-leaf me-3"></i>Environmental Monitoring System</h1>
+                <p class="lead mb-0">Real-time environmental data and green space impact analysis for Kitwe</p>
+                <small>Last updated: <span id="lastUpdate"></span></small>
+            </div>
+        </div>
+
+        <!-- Real-time Metrics Dashboard -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6><i class="fas fa-wind text-primary me-2"></i>Air Quality Index</h6>
+                        <span class="status-indicator status-good" title="Good"></span>
+                    </div>
+                    <div class="sensor-reading text-success" id="aqiReading">42</div>
+                    <small class="text-muted">Good (0-50)</small>
+                    <div class="mt-2">
+                        <i class="fas fa-arrow-down trend-down me-1"></i>
+                        <small>-5% from yesterday</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6><i class="fas fa-thermometer-half text-warning me-2"></i>Temperature</h6>
+                        <span class="status-indicator status-moderate" title="Moderate"></span>
+                    </div>
+                    <div class="sensor-reading text-warning" id="tempReading">28.5°C</div>
+                    <small class="text-muted">Feels like 31°C</small>
+                    <div class="mt-2">
+                        <i class="fas fa-arrow-up trend-up me-1"></i>
+                        <small>+2°C from morning</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6><i class="fas fa-tint text-info me-2"></i>Humidity</h6>
+                        <span class="status-indicator status-good" title="Good"></span>
+                    </div>
+                    <div class="sensor-reading text-info" id="humidityReading">65%</div>
+                    <small class="text-muted">Comfortable range</small>
+                    <div class="mt-2">
+                        <i class="fas fa-minus trend-stable me-1"></i>
+                        <small>Stable</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6><i class="fas fa-seedling text-success me-2"></i>Green Impact</h6>
+                        <span class="status-indicator status-good" title="Positive Impact"></span>
+                    </div>
+                    <div class="sensor-reading text-success" id="greenImpact">+12%</div>
+                    <small class="text-muted">Air quality improvement</small>
+                    <div class="mt-2">
+                        <i class="fas fa-arrow-up trend-up me-1"></i>
+                        <small>Increasing</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Environmental Trends -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="monitor-card">
+                    <h5><i class="fas fa-chart-line me-2"></i>Environmental Trends (Last 7 Days)</h5>
+                    <canvas id="trendsChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="monitor-card">
+                    <h5><i class="fas fa-exclamation-triangle me-2"></i>Environmental Alerts</h5>
+                    
+                    <div class="alert-card mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-info-circle text-info me-2"></i>
+                            <div>
+                                <strong>Air Quality Improving</strong>
+                                <br><small>Green spaces contributing to 12% improvement in city center</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-thermometer-three-quarters me-2"></i>
+                            <div>
+                                <strong>Heat Island Effect</strong>
+                                <br><small>Industrial areas 3°C warmer than green spaces</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-leaf me-2"></i>
+                            <div>
+                                <strong>CO₂ Reduction</strong>
+                                <br><small>628kg CO₂ absorbed this month by green spaces</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Environmental Analysis -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="monitor-card">
+                    <h5><i class="fas fa-microscope me-2"></i>Air Quality Analysis</h5>
+                    
+                    <div class="row text-center mb-3">
+                        <div class="col-4">
+                            <div class="metric-card">
+                                <h6>PM2.5</h6>
+                                <div class="sensor-reading text-success" style="font-size: 1.5rem;">18 μg/m³</div>
+                                <small class="text-success">Good</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="metric-card">
+                                <h6>PM10</h6>
+                                <div class="sensor-reading text-success" style="font-size: 1.5rem;">35 μg/m³</div>
+                                <small class="text-success">Good</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="metric-card">
+                                <h6>NO₂</h6>
+                                <div class="sensor-reading text-warning" style="font-size: 1.5rem;">45 μg/m³</div>
+                                <small class="text-warning">Moderate</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <canvas id="airQualityChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="monitor-card">
+                    <h5><i class="fas fa-thermometer-half me-2"></i>Temperature & Climate</h5>
+                    
+                    <div class="row text-center mb-3">
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <h6>Urban Heat Island</h6>
+                                <div class="sensor-reading text-warning" style="font-size: 1.5rem;">+3.2°C</div>
+                                <small class="text-muted">vs Green Areas</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <h6>Cooling Effect</h6>
+                                <div class="sensor-reading text-success" style="font-size: 1.5rem;">-2.1°C</div>
+                                <small class="text-muted">Green Spaces</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <canvas id="temperatureChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Green Space Environmental Impact -->
+        <div class="monitor-card">
+            <h5><i class="fas fa-leaf me-2"></i>Green Space Environmental Impact Assessment</h5>
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="metric-card">
+                            <i class="fas fa-wind text-primary" style="font-size: 2rem;"></i>
+                            <h4 class="mt-2">628 kg</h4>
+                            <p>CO₂ Absorbed/Year</p>
+                            <small class="text-success">+15% from last year</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="metric-card">
+                            <i class="fas fa-tint text-info" style="font-size: 2rem;"></i>
+                            <h4 class="mt-2">3.14M L</h4>
+                            <p>Rainwater Managed</p>
+                            <small class="text-info">Flood prevention</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="metric-card">
+                            <i class="fas fa-thermometer-half text-warning" style="font-size: 2rem;"></i>
+                            <h4 class="mt-2">2.1°C</h4>
+                            <p>Temperature Reduction</p>
+                            <small class="text-success">Urban cooling</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="metric-card">
+                            <i class="fas fa-bug text-success" style="font-size: 2rem;"></i>
+                            <h4 class="mt-2">85%</h4>
+                            <p>Biodiversity Index</p>
+                            <small class="text-success">Species diversity</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Environmental Recommendations -->
+        <div class="monitor-card">
+            <h5><i class="fas fa-lightbulb me-2"></i>Environmental Recommendations</h5>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-plus-circle me-2"></i>Immediate Actions</h6>
+                        <ul class="mb-0">
+                            <li>Plant 200 additional trees in industrial areas to improve air quality</li>
+                            <li>Create green corridors to enhance cooling effects</li>
+                            <li>Install air quality sensors near major green spaces</li>
+                            <li>Implement rainwater harvesting in parks</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-chart-line me-2"></i>Long-term Goals</h6>
+                        <ul class="mb-0">
+                            <li>Achieve 15% reduction in urban heat island effect</li>
+                            <li>Increase CO₂ absorption by 25% through new green spaces</li>
+                            <li>Establish continuous environmental monitoring network</li>
+                            <li>Integrate with regional climate monitoring systems</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Sources -->
+        <div class="monitor-card">
+            <h6><i class="fas fa-database me-2"></i>Data Sources & Methodology</h6>
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Air Quality:</strong> Simulated based on WHO standards and industrial proximity
+                </div>
+                <div class="col-md-4">
+                    <strong>Temperature:</strong> Urban heat island calculations using green space coverage
+                </div>
+                <div class="col-md-4">
+                    <strong>Green Impact:</strong> Scientific formulas for CO₂ absorption and cooling effects
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update timestamp
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+
+        // Simulate real-time data updates
+        function updateRealTimeData() {
+            // Simulate slight variations in readings
+            const aqi = 40 + Math.random() * 10;
+            const temp = 27 + Math.random() * 4;
+            const humidity = 60 + Math.random() * 10;
+            const impact = 10 + Math.random() * 5;
+
+            document.getElementById('aqiReading').textContent = Math.round(aqi);
+            document.getElementById('tempReading').textContent = temp.toFixed(1) + '°C';
+            document.getElementById('humidityReading').textContent = Math.round(humidity) + '%';
+            document.getElementById('greenImpact').textContent = '+' + Math.round(impact) + '%';
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+        }
+
+        // Environmental Trends Chart
+        const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+        new Chart(trendsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [
+                    {
+                        label: 'Air Quality Index',
+                        data: [45, 42, 38, 41, 39, 37, 42],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Temperature (°C)',
+                        data: [29, 31, 28, 30, 27, 26, 28],
+                        borderColor: '#ffc107',
+                        backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Humidity (%)',
+                        data: [68, 65, 70, 62, 67, 69, 65],
+                        borderColor: '#17a2b8',
+                        backgroundColor: 'rgba(23, 162, 184, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Air Quality Breakdown Chart
+        const airCtx = document.getElementById('airQualityChart').getContext('2d');
+        new Chart(airCtx, {
+            type: 'radar',
+            data: {
+                labels: ['PM2.5', 'PM10', 'NO₂', 'SO₂', 'CO', 'O₃'],
+                datasets: [{
+                    label: 'Current Levels',
+                    data: [18, 35, 45, 12, 8, 55],
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.2)'
+                }, {
+                    label: 'WHO Limits',
+                    data: [25, 50, 40, 20, 10, 60],
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: { beginAtZero: true, max: 70 }
+                }
+            }
+        });
+
+        // Temperature Comparison Chart
+        const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+        new Chart(tempCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Industrial Areas', 'City Center', 'Residential', 'Green Spaces', 'Parks'],
+                datasets: [{
+                    label: 'Average Temperature (°C)',
+                    data: [31.2, 29.8, 28.5, 26.4, 25.1],
+                    backgroundColor: [
+                        'rgba(220, 53, 69, 0.8)',
+                        'rgba(255, 193, 7, 0.8)',
+                        'rgba(23, 162, 184, 0.8)',
+                        'rgba(40, 167, 69, 0.8)',
+                        'rgba(40, 167, 69, 0.9)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: false, min: 20, max: 35 }
+                }
+            }
+        });
+
+        // Load real environmental data from API
+        async function loadEnvironmentalData() {
+            try {
+                const apiUrl = window.APP_CONFIG?.API_BASE_URL || 'http://127.0.0.1:5000';
+                const response = await fetch(`${apiUrl}/api/environmental-data`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updateDashboardWithRealData(data);
+                } else {
+                    console.warn('Using simulated data - API not available');
+                }
+            } catch (error) {
+                console.warn('Using simulated data - API error:', error);
+            }
+        }
+
+        function updateDashboardWithRealData(data) {
+            // Update current readings
+            const readings = data.current_readings;
+            document.getElementById('aqiReading').textContent = readings.aqi;
+            document.getElementById('tempReading').textContent = readings.temperature + '°C';
+            document.getElementById('humidityReading').textContent = readings.humidity + '%';
+            document.getElementById('greenImpact').textContent = '+' + readings.green_impact + '%';
+            
+            // Update green space impact
+            const impact = data.green_space_impact;
+            document.querySelector('.monitor-card:last-of-type .row .col-md-3:nth-child(1) h4').textContent = impact.co2_absorbed + ' kg';
+            document.querySelector('.monitor-card:last-of-type .row .col-md-3:nth-child(2) h4').textContent = (impact.rainwater_capacity / 1000000).toFixed(2) + 'M L';
+            document.querySelector('.monitor-card:last-of-type .row .col-md-3:nth-child(3) h4').textContent = impact.cooling_effect + '°C';
+            document.querySelector('.monitor-card:last-of-type .row .col-md-3:nth-child(4) h4').textContent = impact.biodiversity_index + '%';
+            
+            // Update charts with real data
+            updateChartsWithRealData(data);
+        }
+
+        function updateChartsWithRealData(data) {
+            // Update trends chart
+            const trendsChart = Chart.getChart('trendsChart');
+            if (trendsChart && data.historical_data) {
+                const labels = data.historical_data.map(d => new Date(d.date).toLocaleDateString('en-US', {weekday: 'short'}));
+                const aqiData = data.historical_data.map(d => Math.round(d.aqi));
+                const tempData = data.historical_data.map(d => Math.round(d.temperature));
+                const humidityData = data.historical_data.map(d => Math.round(d.humidity));
+                
+                trendsChart.data.labels = labels;
+                trendsChart.data.datasets[0].data = aqiData;
+                trendsChart.data.datasets[1].data = tempData;
+                trendsChart.data.datasets[2].data = humidityData;
+                trendsChart.update();
+            }
+            
+            // Update air quality radar chart
+            const airChart = Chart.getChart('airQualityChart');
+            if (airChart && data.air_quality_breakdown) {
+                const breakdown = data.air_quality_breakdown;
+                airChart.data.datasets[0].data = [
+                    Math.round(breakdown.pm25),
+                    Math.round(breakdown.pm10),
+                    Math.round(breakdown.no2),
+                    Math.round(breakdown.so2),
+                    Math.round(breakdown.co),
+                    Math.round(breakdown.o3)
+                ];
+                airChart.update();
+            }
+            
+            // Update temperature chart
+            const tempChart = Chart.getChart('temperatureChart');
+            if (tempChart && data.temperature_by_area) {
+                const temps = data.temperature_by_area;
+                tempChart.data.datasets[0].data = [
+                    Math.round(temps.industrial * 10) / 10,
+                    Math.round(temps.city_center * 10) / 10,
+                    Math.round(temps.residential * 10) / 10,
+                    Math.round(temps.green_spaces * 10) / 10,
+                    Math.round(temps.parks * 10) / 10
+                ];
+                tempChart.update();
+            }
+        }
+
+        // Update data every 30 seconds
+        setInterval(() => {
+            updateRealTimeData();
+            loadEnvironmentalData();
+        }, 30000);
+        
+        // Initial updates
+        updateRealTimeData();
+        
+        // Load real data after charts are created
+        setTimeout(loadEnvironmentalData, 1000);
+    </script>
+</body>
+</html>

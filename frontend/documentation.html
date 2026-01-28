@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Documentation | Kitwe Green Space Mapping System</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        body {
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        
+        .doc-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .doc-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .doc-body {
+            padding: 40px;
+        }
+        
+        .tech-badge {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin: 2px;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="doc-container">
+        <!-- Header -->
+        <div class="doc-header">
+            <button class="back-button" onclick="window.location.href='index.html'" title="Back to Map">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1><i class="fas fa-book me-3"></i>Technical Documentation</h1>
+            <p class="lead mb-0">Kitwe Green Space Mapping System - ICT431 Capstone Project</p>
+        </div>
+        
+        <!-- Body -->
+        <div class="doc-body">
+            <!-- Project Overview -->
+            <section class="mb-5">
+                <h2 class="text-primary mb-4"><i class="fas fa-info-circle me-2"></i>Project Overview</h2>
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="lead">A comprehensive GIS-based web application for mapping, analyzing, and managing urban green spaces in Kitwe, Zambia. This system demonstrates advanced web development, spatial analysis, and data visualization techniques.</p>
+                        
+                        <h5>Academic Context</h5>
+                        <ul>
+                            <li><strong>Course:</strong> ICT431 - Capstone Project</li>
+                            <li><strong>Institution:</strong> Mulungushi University</li>
+                            <li><strong>Program:</strong> Bachelor of Science in Computer Science</li>
+                            <li><strong>Student:</strong> Mukendwa Luyongile (ID: 202201912)</li>
+                            <li><strong>Supervisor:</strong> Mr. Nyirenda</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric-card">
+                            <h3 class="text-success">51</h3>
+                            <p>Green Spaces Mapped</p>
+                        </div>
+                        <div class="metric-card">
+                            <h3 class="text-info">16</h3>
+                            <p>Wards Covered</p>
+                        </div>
+                        <div class="metric-card">
+                            <h3 class="text-warning">314</h3>
+                            <p>Hectares Total Area</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Technical Architecture -->
+            <section class="mb-5">
+                <h2 class="text-primary mb-4"><i class="fas fa-cogs me-2"></i>Technical Architecture</h2>
+                
+                <h5>Technology Stack</h5>
+                <div class="mb-3">
+                    <span class="tech-badge">Python Flask</span>
+                    <span class="tech-badge">PostgreSQL</span>
+                    <span class="tech-badge">PostGIS</span>
+                    <span class="tech-badge">JavaScript ES6+</span>
+                    <span class="tech-badge">Leaflet.js</span>
+                    <span class="tech-badge">Bootstrap 5</span>
+                    <span class="tech-badge">Chart.js</span>
+                    <span class="tech-badge">HTML5/CSS3</span>
+                    <span class="tech-badge">RESTful API</span>
+                    <span class="tech-badge">GeoJSON</span>
+                </div>
+                
+                <h5>System Architecture</h5>
+                <div class="code-block mb-3">
+Frontend (Client-Side)
+├── HTML5 Semantic Structure
+├── CSS3 with Flexbox/Grid
+├── JavaScript (ES6+)
+├── Leaflet.js (Mapping)
+├── Chart.js (Analytics)
+└── Bootstrap 5 (UI Framework)
+
+Backend (Server-Side)
+├── Python Flask Framework
+├── PostgreSQL Database
+├── PostGIS Spatial Extension
+├── RESTful API Endpoints
+└── CORS Configuration
+
+Data Layer
+├── Spatial Database (PostGIS)
+├── GeoJSON Data Format
+├── Real-time API Integration
+└── Advanced Analytics Engine
+                </div>
+                
+                <h5>Database Schema</h5>
+                <div class="code-block">
+CREATE TABLE green_spaces (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(100),
+    area_sq_m FLOAT,
+    ward VARCHAR(100),
+    geom GEOMETRY(Point, 4326)
+);
+
+CREATE TABLE public_feedback (
+    id SERIAL PRIMARY KEY,
+    green_space_id INTEGER REFERENCES green_spaces(id),
+    user_name VARCHAR(100),
+    user_email VARCHAR(100),
+    issue_type VARCHAR(50),
+    description TEXT,
+    status VARCHAR(20) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+                </div>
+            </section>
+            
+            <!-- Advanced Features -->
+            <section class="mb-5">
+                <h2 class="text-primary mb-4"><i class="fas fa-star me-2"></i>Advanced Features</h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Spatial Analysis</h5>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Real-time coordinate mapping</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Spatial data visualization</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Geographic filtering</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Distance calculations</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Area measurements</li>
+                        </ul>
+                        
+                        <h5>Data Analytics</h5>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-chart-pie text-info me-2"></i>Distribution analysis</li>
+                            <li><i class="fas fa-chart-bar text-info me-2"></i>Ward-based statistics</li>
+                            <li><i class="fas fa-leaf text-success me-2"></i>Environmental impact calculations</li>
+                            <li><i class="fas fa-calculator text-warning me-2"></i>Urban planning recommendations</li>
+                            <li><i class="fas fa-download text-primary me-2"></i>Data export (JSON/CSV)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5>User Experience</h5>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-mobile-alt text-primary me-2"></i>Responsive design</li>
+                            <li><i class="fas fa-search text-secondary me-2"></i>Real-time search</li>
+                            <li><i class="fas fa-filter text-info me-2"></i>Advanced filtering</li>
+                            <li><i class="fas fa-expand text-warning me-2"></i>Fullscreen mode</li>
+                            <li><i class="fas fa-location-arrow text-danger me-2"></i>Geolocation services</li>
+                        </ul>
+                        
+                        <h5>Technical Excellence</h5>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-code text-primary me-2"></i>Clean, modular code</li>
+                            <li><i class="fas fa-database text-success me-2"></i>Optimized database queries</li>
+                            <li><i class="fas fa-shield-alt text-warning me-2"></i>Input validation & sanitization</li>
+                            <li><i class="fas fa-sync-alt text-info me-2"></i>Real-time data synchronization</li>
+                            <li><i class="fas fa-tachometer-alt text-danger me-2"></i>Performance optimization</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Environmental Calculations -->
+            <section class="mb-5">
+                <h2 class="text-primary mb-4"><i class="fas fa-leaf me-2"></i>Environmental Impact Methodology</h2>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0">CO₂ Absorption</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="code-block">
+CO₂ = Area × 0.0002 kg/m²/year
+
+Based on:
+- Urban tree coverage
+- Grass carbon sequestration
+- Soil organic carbon
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0">Rainwater Management</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="code-block">
+Capacity = Area × 0.001 L/m²
+
+Factors:
+- Soil infiltration rate
+- Vegetation water retention
+- Surface permeability
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0">Urban Cooling</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="code-block">
+Cooling = Area × 0.00001 °C/m²
+
+Based on:
+- Evapotranspiration
+- Shade provision
+- Albedo effects
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- API Documentation -->
+            <section class="mb-5">
+                <h2 class="text-primary mb-4"><i class="fas fa-plug me-2"></i>API Documentation</h2>
+                
+                <h5>Core Endpoints</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Method</th>
+                                <th>Description</th>
+                                <th>Response Format</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>/api/green-spaces</code></td>
+                                <td><span class="badge bg-success">GET</span></td>
+                                <td>Retrieve all green spaces</td>
+                                <td>GeoJSON FeatureCollection</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/add-green-space</code></td>
+                                <td><span class="badge bg-primary">POST</span></td>
+                                <td>Add new green space</td>
+                                <td>JSON Status Response</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/submit-feedback</code></td>
+                                <td><span class="badge bg-primary">POST</span></td>
+                                <td>Submit user feedback</td>
+                                <td>JSON Status Response</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/feedback</code></td>
+                                <td><span class="badge bg-success">GET</span></td>
+                                <td>Retrieve all feedback</td>
+                                <td>JSON Array</td>
+                            </tr>
+                            <tr>
+                                <td><code>/test-db</code></td>
+                                <td><span class="badge bg-success">GET</span></td>
+                                <td>Database connection test</td>
+                                <td>JSON Status Response</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- Academic Contributions -->
+            <section class="mb-5">
+                <h2 class="text-primary mb-4"><i class="fas fa-graduation-cap me-2"></i>Academic Contributions</h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Research Applications</h5>
+                        <ul>
+                            <li>Urban planning and development studies</li>
+                            <li>Environmental impact assessment</li>
+                            <li>Public health and green space accessibility</li>
+                            <li>Climate change mitigation analysis</li>
+                            <li>Biodiversity conservation planning</li>
+                        </ul>
+                        
+                        <h5>Technical Innovations</h5>
+                        <ul>
+                            <li>Real-time spatial data visualization</li>
+                            <li>Advanced environmental impact calculations</li>
+                            <li>Interactive urban planning recommendations</li>
+                            <li>Multi-format data export capabilities</li>
+                            <li>Responsive GIS web application design</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5>Learning Outcomes Demonstrated</h5>
+                        <ul>
+                            <li><strong>Database Design:</strong> Spatial database with PostGIS</li>
+                            <li><strong>Web Development:</strong> Full-stack application</li>
+                            <li><strong>API Development:</strong> RESTful services</li>
+                            <li><strong>Data Visualization:</strong> Interactive charts and maps</li>
+                            <li><strong>User Experience:</strong> Responsive, accessible design</li>
+                            <li><strong>Software Engineering:</strong> Modular, maintainable code</li>
+                        </ul>
+                        
+                        <h5>Industry Standards</h5>
+                        <ul>
+                            <li>WHO green space recommendations (9m²/capita)</li>
+                            <li>GIS data standards (WGS84, GeoJSON)</li>
+                            <li>Web accessibility guidelines</li>
+                            <li>Environmental calculation methodologies</li>
+                            <li>Urban planning best practices</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Future Enhancements -->
+            <section class="mb-5">
+                <h2 class="text-primary mb-4"><i class="fas fa-rocket me-2"></i>Future Enhancements</h2>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0">Technical Improvements</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-satellite text-info me-2"></i>Satellite imagery integration</li>
+                                    <li><i class="fas fa-mobile-alt text-success me-2"></i>Progressive Web App (PWA)</li>
+                                    <li><i class="fas fa-cloud text-primary me-2"></i>Cloud deployment (AWS/Azure)</li>
+                                    <li><i class="fas fa-robot text-warning me-2"></i>Machine learning predictions</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0">Feature Additions</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-route text-primary me-2"></i>Route planning to green spaces</li>
+                                    <li><i class="fas fa-calendar text-info me-2"></i>Event management system</li>
+                                    <li><i class="fas fa-users text-success me-2"></i>Community engagement tools</li>
+                                    <li><i class="fas fa-bell text-warning me-2"></i>Maintenance notifications</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0">Integration Opportunities</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-building text-primary me-2"></i>Municipal systems integration</li>
+                                    <li><i class="fas fa-thermometer text-danger me-2"></i>Weather data integration</li>
+                                    <li><i class="fas fa-chart-line text-success me-2"></i>Air quality monitoring</li>
+                                    <li><i class="fas fa-share-alt text-info me-2"></i>Social media integration</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Conclusion -->
+            <section>
+                <div class="alert alert-success">
+                    <h5><i class="fas fa-trophy me-2"></i>Project Achievement</h5>
+                    <p class="mb-0">This Kitwe Green Space Mapping System successfully demonstrates advanced web development skills, spatial data management, and environmental analysis capabilities. The application provides a solid foundation for urban planning decisions and environmental monitoring in Kitwe, while showcasing technical excellence suitable for academic evaluation and real-world deployment.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
