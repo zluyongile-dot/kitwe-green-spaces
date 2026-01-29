@@ -12,9 +12,24 @@
     <script src="config.js"></script>
     
     <style>
-        body { background: #f8f9fa; padding: 20px 0; overflow-y: auto; }
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #f8f9fa; 
+            padding: 20px 0; 
+            overflow-y: auto; 
+        }
         .monitor-container { max-width: 1400px; margin: 0 auto; }
         .monitor-card { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .header-card { 
+            background: linear-gradient(135deg, #2E7D32, #4CAF50) !important; 
+            color: white !important; 
+            position: relative; 
+        }
         .metric-card { background: linear-gradient(135deg, #e8f5e8, #f1f8e9); border-radius: 12px; padding: 20px; text-align: center; border-left: 4px solid var(--primary-color); }
         .alert-card { background: linear-gradient(135deg, #fff3cd, #ffeaa7); border-radius: 12px; padding: 20px; border-left: 4px solid #ffc107; }
         .status-indicator { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 8px; }
@@ -25,13 +40,33 @@
         .trend-up { color: #28a745; }
         .trend-down { color: #dc3545; }
         .trend-stable { color: #6c757d; }
-        .back-button { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; }
+        .back-button { 
+            position: absolute; 
+            left: 20px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            background: rgba(255,255,255,0.2); 
+            color: white; 
+            border: none; 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
     </style>
 </head>
 <body>
     <div class="monitor-container">
         <!-- Header -->
-        <div class="monitor-card" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; position: relative;">
+        <div class="monitor-card header-card">
             <button class="back-button" onclick="window.location.href='index.html'">
                 <i class="fas fa-arrow-left"></i>
             </button>

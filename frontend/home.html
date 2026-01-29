@@ -168,56 +168,51 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="home.html">
-                <div class="logo-icon" style="width: 50px; height: 50px; margin-right: 10px;">
+                <div class="logo-icon d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; margin-right: 15px; background: rgba(46, 125, 50, 0.1); border-radius: 12px;">
                     <i class="fas fa-tree" style="color: #2E7D32; font-size: 28px;"></i>
                 </div>
-                <div>
-                    <span class="fw-bold" style="color: var(--primary-color);">Kitwe Green Space</span><br>
-                    <small class="text-muted" style="font-size: 0.8rem;">Mapping System</small>
+                <div class="d-flex flex-column justify-content-center">
+                    <span class="fw-bold mb-0" style="color: var(--primary-color); line-height: 1.2;">Kitwe Green Space</span>
+                    <small class="text-muted" style="font-size: 0.8rem; line-height: 1;">Mapping System</small>
                 </div>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link active fw-semibold" href="home.html">
-                            <i class="fas fa-home me-1"></i>Home
+                        <a class="nav-link active fw-semibold px-3 py-2" href="home.html">
+                            <i class="fas fa-home me-2"></i>Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold" href="index.html">
-                            <i class="fas fa-map-marked-alt me-1"></i>Interactive Map
+                        <a class="nav-link fw-semibold px-3 py-2" href="index.html">
+                            <i class="fas fa-map-marked-alt me-2"></i>Interactive Map
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold" href="simpledashboard.html">
-                            <i class="fas fa-chart-bar me-1"></i>Dashboard
+                        <a class="nav-link fw-semibold px-3 py-2" href="simpledashboard.html">
+                            <i class="fas fa-chart-bar me-2"></i>Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold" href="feedback.html">
-                            <i class="fas fa-comment-dots me-1"></i>Report Issue
+                        <a class="nav-link fw-semibold px-3 py-2" href="documentation.html">
+                            <i class="fas fa-book me-2"></i>Documentation
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold" href="documentation.html">
-                            <i class="fas fa-book me-1"></i>Documentation
+                        <a class="nav-link fw-semibold px-3 py-2" href="environmental-monitoring.html">
+                            <i class="fas fa-leaf me-2"></i>Environmental Monitor
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-semibold" href="environmental-monitoring.html">
-                            <i class="fas fa-leaf me-1"></i>Environmental Monitor
+                        <a class="nav-link fw-semibold px-3 py-2" href="about-green-spaces.html">
+                            <i class="fas fa-info-circle me-2"></i>About Green Spaces
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-semibold" href="about-green-spaces.html">
-                            <i class="fas fa-info-circle me-1"></i>About Green Spaces
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-primary ms-2" href="index.html" style="background: var(--primary-color); border-color: var(--primary-color);">
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-primary px-4 py-2" href="index.html" style="background: var(--primary-color); border-color: var(--primary-color); border-radius: 8px;">
                             <i class="fas fa-play-circle me-2"></i>Launch App
                         </a>
                     </li>
@@ -324,7 +319,6 @@
                         <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Filter by type, ward, and area</li>
                         <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Search for specific locations</li>
                         <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>View detailed information for each space</li>
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Report issues directly from the map</li>
                     </ul>
                     <a href="index.html" class="btn btn-primary mt-3" style="background: var(--primary-color); border-color: var(--primary-color);">
                         <i class="fas fa-external-link-alt me-2"></i>Open Full Map
@@ -650,16 +644,12 @@
                             <div class="col-md-6">
                                 <div class="h-100 p-4" style="background: white; border-radius: 12px; border-left: 4px solid #1976D2;">
                                     <h5 class="mb-4" style="color: #1976D2;">
-                                        <i class="fas fa-comment-dots me-2"></i>Report & Improve
+                                        <i class="fas fa-lightbulb me-2"></i>Contribute & Improve
                                     </h5>
                                     <div class="d-flex flex-column gap-3">
                                         <div class="d-flex align-items-start">
-                                            <i class="fas fa-flag me-3 mt-1" style="color: #2196F3; font-size: 16px;"></i>
-                                            <span style="line-height: 1.6;">Use our feedback system to report problems</span>
-                                        </div>
-                                        <div class="d-flex align-items-start">
                                             <i class="fas fa-lightbulb me-3 mt-1" style="color: #2196F3; font-size: 16px;"></i>
-                                            <span style="line-height: 1.6;">Suggest improvements to existing spaces</span>
+                                            <span style="line-height: 1.6;">Share improvement ideas for existing spaces</span>
                                         </div>
                                         <div class="d-flex align-items-start">
                                             <i class="fas fa-map-pin me-3 mt-1" style="color: #2196F3; font-size: 16px;"></i>
@@ -669,17 +659,18 @@
                                             <i class="fas fa-star me-3 mt-1" style="color: #2196F3; font-size: 16px;"></i>
                                             <span style="line-height: 1.6;">Share success stories and positive impacts</span>
                                         </div>
+                                        <div class="d-flex align-items-start">
+                                            <i class="fas fa-users me-3 mt-1" style="color: #2196F3; font-size: 16px;"></i>
+                                            <span style="line-height: 1.6;">Connect with other environmental advocates</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="text-center mt-5 pt-4" style="border-top: 1px solid #e9ecef;">
-                            <a href="index.html" class="btn btn-primary btn-lg me-3 px-4 py-3" style="background: #2E7D32; border-color: #2E7D32; border-radius: 10px;">
+                            <a href="index.html" class="btn btn-primary btn-lg px-4 py-3" style="background: #2E7D32; border-color: #2E7D32; border-radius: 10px;">
                                 <i class="fas fa-map me-2"></i>Launch Interactive Map
-                            </a>
-                            <a href="feedback.html" class="btn btn-outline-primary btn-lg px-4 py-3" style="color: #1976D2; border-color: #1976D2; border-radius: 10px;">
-                                <i class="fas fa-comment-dots me-2"></i>Report an Issue
                             </a>
                         </div>
                     </div>
@@ -750,7 +741,7 @@
                     <ul class="list-unstyled">
                         <li><a href="index.html" class="text-light text-decoration-none">Interactive Map</a></li>
                         <li><a href="simpledashboard.html" class="text-light text-decoration-none">Analytics Dashboard</a></li>
-                        <li><a href="feedback.html" class="text-light text-decoration-none">Report Issues</a></li>
+                        <li><a href="documentation.html" class="text-light text-decoration-none">Documentation</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">

@@ -10,11 +10,71 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        body { background: #f8f9fa; padding: 20px 0; }
-        .bib-container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        /* Fix scrolling issues */
+        html, body {
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            height: auto !important;
+            min-height: 100vh !important;
+            max-height: none !important;
+        }
+        
+        /* Override any conflicting styles */
+        * {
+            max-height: none !important;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #f8f9fa; 
+            padding: 20px 0; 
+            position: static !important;
+            height: auto !important;
+            overflow: visible !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+        
+        /* Ensure all containers allow scrolling */
+        .container, .container-fluid {
+            overflow: visible !important;
+        }
+        
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+        }
+        .bib-container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            overflow: visible !important;
+        }
         .bib-header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 40px; text-align: center; }
         .citation { background: #f8f9fa; padding: 20px; margin: 15px 0; border-left: 4px solid var(--primary-color); border-radius: 8px; }
-        .back-button { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; }
+        .back-button { 
+            position: absolute; 
+            left: 20px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            background: rgba(255,255,255,0.2); 
+            color: white; 
+            border: none; 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
     </style>
 </head>
 <body>

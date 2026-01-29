@@ -442,30 +442,16 @@
     <script>
         console.log('🌳 Kitwe Green Space Mapping System - Loading...');
         
-        // Load real-time statistics
+        // Load real-time statistics - STATIC VERSION FOR GITHUB PAGES
         async function loadStats() {
             try {
-                // Use the same config system as other pages
-                const apiUrl = window.location.hostname === 'localhost' || 
-                              window.location.hostname === '127.0.0.1' ||
-                              window.location.hostname === '' ||
-                              window.location.port === '8000'
-                    ? 'http://127.0.0.1:5000'
-                    : 'https://YOUR_ACTUAL_RAILWAY_URL_HERE'; // Replace with your Railway URL
+                console.log('📊 Loading statistics (Static Demo Version)...');
                 
-                const response = await fetch(`${apiUrl}/api/green-spaces`);
-                const data = await response.json();
-                const spaces = data.features || [];
-                
-                // Calculate statistics
-                const totalSpaces = spaces.length;
-                const totalArea = spaces.reduce((sum, space) => sum + (space.properties.area_sq_m || 0), 0);
-                const totalAreaHa = (totalArea / 10000).toFixed(0);
-                const uniqueWards = new Set(spaces.map(space => space.properties.ward).filter(Boolean)).size;
-                
-                // Kitwe population estimate
-                const population = 517543;
-                const perCapita = (totalArea / population).toFixed(1);
+                // Use static values for GitHub Pages demo
+                const totalSpaces = 51;
+                const totalAreaHa = 314;
+                const uniqueWards = 16;
+                const perCapita = 6.1;
                 
                 // Update UI
                 document.getElementById('statSpaces').textContent = totalSpaces;
@@ -473,11 +459,11 @@
                 document.getElementById('statWards').textContent = uniqueWards;
                 document.getElementById('statCoverage').textContent = perCapita;
                 
-                console.log(`✅ Loaded stats: ${totalSpaces} spaces, ${totalAreaHa} ha, ${uniqueWards} wards`);
+                console.log(`✅ Demo stats loaded: ${totalSpaces} spaces, ${totalAreaHa} ha, ${uniqueWards} wards`);
                 
             } catch (error) {
-                console.log('📊 Using fallback statistics (backend not available)');
-                // Fallback to known values
+                console.log('📊 Using fallback statistics');
+                // Fallback to same values
                 document.getElementById('statSpaces').textContent = '51';
                 document.getElementById('statArea').textContent = '314';
                 document.getElementById('statWards').textContent = '16';
