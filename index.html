@@ -26,7 +26,7 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             min-height: 100vh;
@@ -451,7 +451,7 @@
                               window.location.hostname === '' ||
                               window.location.port === '8000'
                     ? 'http://127.0.0.1:5000'
-                    : 'https://your-railway-app.railway.app'; // You'll replace this with your Railway URL
+                    : 'https://YOUR_ACTUAL_RAILWAY_URL_HERE'; // Replace with your Railway URL
                 
                 const response = await fetch(`${apiUrl}/api/green-spaces`);
                 const data = await response.json();

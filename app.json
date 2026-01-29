@@ -1,0 +1,20 @@
+{
+  "name": "Kitwe Green Spaces Backend",
+  "description": "Flask backend for Kitwe Green Space Mapping System",
+  "repository": "https://github.com/zluyongile-dot/kitwe-green-spaces",
+  "keywords": ["flask", "postgresql", "gis", "green-spaces"],
+  "addons": [
+    "heroku-postgresql:mini"
+  ],
+  "env": {
+    "FLASK_ENV": {
+      "value": "production"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  }
+}

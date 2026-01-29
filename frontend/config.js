@@ -7,7 +7,7 @@ const CONFIG = {
     
     // Production deployment
     production: {
-        API_BASE_URL: 'https://your-railway-app.railway.app' // You'll replace this with your actual Railway URL
+        API_BASE_URL: 'https://YOUR_ACTUAL_RAILWAY_URL_HERE' // Replace with your Railway URL
     }
 };
 
