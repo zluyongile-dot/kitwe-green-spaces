@@ -64,6 +64,11 @@
             color: rgba(255,255,255,0.9) !important;
             font-weight: 500;
             transition: all 0.3s;
+            padding: 8px 12px !important;
+            margin: 0 2px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
         }
         
         .navbar-nav .nav-link:hover,
@@ -175,6 +180,68 @@
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+        
+        .search-result-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .search-result-item:hover,
+        .search-result-item.highlighted {
+            background-color: #f8f9fa;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .navbar-nav {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            max-width: calc(100vw - 200px); /* Ensure space for brand */
+        }
+        
+        .navbar-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .navbar-nav .nav-item {
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-width: fit-content;
+        }
+        
+        .navbar-nav .nav-link {
+            padding: 8px 12px !important;
+            margin: 0 2px;
+            font-size: 14px;
+            min-width: fit-content;
+        }
+        
+        /* Mobile navbar improvements */
+        @media (max-width: 991px) {
+            .navbar-nav {
+                max-width: 100%;
+                padding: 10px 0;
+            }
+            
+            .navbar-nav .nav-item {
+                margin: 2px 0;
+            }
+            
+            .navbar-nav .nav-link {
+                padding: 12px 16px !important;
+                border-radius: 8px;
+                margin: 2px 0;
+            }
         }
         
         .search-icon {
@@ -1293,12 +1360,58 @@
                 return;
             }
             
-            searchInput.addEventListener('input', performSearch);
+            let searchTimeout;
+            let selectedIndex = -1;
+            
+            // Enhanced search with debouncing and keyboard navigation
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                selectedIndex = -1;
+                searchTimeout = setTimeout(performSearch, 150); // Faster debounce for better UX
+            });
+            
+            searchInput.addEventListener('keydown', (e) => {
+                const results = searchResults.querySelectorAll('.search-result-item:not(.no-results)');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, results.length - 1);
+                    updateSelection(results);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    updateSelection(results);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (selectedIndex >= 0 && results[selectedIndex]) {
+                        results[selectedIndex].click();
+                    } else if (results.length > 0) {
+                        results[0].click();
+                    }
+                } else if (e.key === 'Escape') {
+                    clearSearch();
+                }
+            });
+            
             searchClear.addEventListener('click', clearSearch);
+            
+            // Close search results when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.classList.add('d-none');
+                }
+            });
+            
+            function updateSelection(results) {
+                results.forEach((result, index) => {
+                    result.classList.toggle('highlighted', index === selectedIndex);
+                });
+            }
             
             function performSearch() {
                 const query = searchInput.value.toLowerCase().trim();
                 searchResults.innerHTML = '';
+                selectedIndex = -1;
                 
                 if (!query) {
                     searchResults.classList.add('d-none');
@@ -1306,44 +1419,179 @@
                 }
                 
                 if (!allGreenSpaces || allGreenSpaces.length === 0) {
-                    searchResults.innerHTML = '<div class="search-result-item">Loading data...</div>';
+                    searchResults.innerHTML = '<div class="search-result-item no-results">Loading data...</div>';
                     searchResults.classList.remove('d-none');
                     return;
                 }
                 
-                const results = allGreenSpaces.filter(space =>
-                    space.properties.name.toLowerCase().includes(query) ||
-                    space.properties.ward?.toLowerCase().includes(query) ||
-                    space.properties.type.toLowerCase().includes(query)
-                );
+                // Enhanced search - match name, ward, type, and description with scoring
+                const results = allGreenSpaces.map(space => {
+                    const props = space.properties;
+                    let score = 0;
+                    let matchType = '';
+                    
+                    // Exact name match (highest priority)
+                    if (props.name.toLowerCase() === query) {
+                        score = 100;
+                        matchType = 'exact';
+                    }
+                    // Name starts with query
+                    else if (props.name.toLowerCase().startsWith(query)) {
+                        score = 90;
+                        matchType = 'name_start';
+                    }
+                    // Name contains query
+                    else if (props.name.toLowerCase().includes(query)) {
+                        score = 80;
+                        matchType = 'name_contains';
+                    }
+                    // Ward match
+                    else if (props.ward && props.ward.toLowerCase().includes(query)) {
+                        score = 70;
+                        matchType = 'ward';
+                    }
+                    // Type match
+                    else if (props.type.toLowerCase().includes(query)) {
+                        score = 60;
+                        matchType = 'type';
+                    }
+                    // Description match
+                    else if (props.description && props.description.toLowerCase().includes(query)) {
+                        score = 50;
+                        matchType = 'description';
+                    }
+                    
+                    return score > 0 ? { space, score, matchType } : null;
+                }).filter(Boolean).sort((a, b) => b.score - a.score);
                 
                 if (results.length > 0) {
                     searchResults.classList.remove('d-none');
-                    results.slice(0, 8).forEach(space => {
+                    
+                    // Show top 8 results with better formatting
+                    results.slice(0, 8).forEach((result, index) => {
+                        const { space, matchType } = result;
+                        const props = space.properties;
                         const resultItem = document.createElement('div');
                         resultItem.className = 'search-result-item';
+                        if (index === 0) resultItem.classList.add('highlighted');
+                        
+                        // Highlight matching text
+                        let displayName = props.name;
+                        let displayWard = props.ward || 'N/A';
+                        let displayType = props.type;
+                        
+                        const regex = new RegExp(`(${query})`, 'gi');
+                        if (matchType.includes('name')) {
+                            displayName = displayName.replace(regex, '<mark>$1</mark>');
+                        } else if (matchType === 'ward') {
+                            displayWard = displayWard.replace(regex, '<mark>$1</mark>');
+                        } else if (matchType === 'type') {
+                            displayType = displayType.replace(regex, '<mark>$1</mark>');
+                        }
+                        
                         resultItem.innerHTML = `
-                            <strong>${space.properties.name}</strong><br>
-                            <small style="color: #666;">${space.properties.type} • ${space.properties.ward || 'N/A'}</small>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; margin-bottom: 2px;">${displayName}</div>
+                                    <div style="font-size: 12px; color: #666; display: flex; gap: 8px;">
+                                        <span>${displayType}</span>
+                                        <span>•</span>
+                                        <span>${displayWard}</span>
+                                        <span>•</span>
+                                        <span>${props.area_hectares ? parseFloat(props.area_hectares).toFixed(1) : 
+                                               props.area_sq_m ? (props.area_sq_m / 10000).toFixed(1) : '1.5'} ha</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px; color: var(--primary-color);">
+                                    <i class="fas fa-search" style="font-size: 12px;"></i>
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                            </div>
                         `;
+                        
                         resultItem.addEventListener('click', () => {
-                            const coords = space.geometry.coordinates;
-                            map.setView([coords[1], coords[0]], 16);
-                            clearSearch();
-                            searchInput.value = space.properties.name;
+                            selectGreenSpace(space);
                         });
+                        
+                        // Add hover effects
+                        resultItem.addEventListener('mouseenter', () => {
+                            selectedIndex = index;
+                            updateSelection(searchResults.querySelectorAll('.search-result-item:not(.no-results)'));
+                        });
+                        
                         searchResults.appendChild(resultItem);
                     });
+                    
+                    if (results.length > 8) {
+                        const moreItem = document.createElement('div');
+                        moreItem.className = 'search-result-item no-results';
+                        moreItem.style.cssText = 'color: #999; font-style: italic; text-align: center; padding: 8px;';
+                        moreItem.innerHTML = `<small><i class="fas fa-ellipsis-h me-2"></i>+${results.length - 8} more results... (refine search)</small>`;
+                        searchResults.appendChild(moreItem);
+                    }
                 } else {
-                    searchResults.innerHTML = '<div class="search-result-item" style="color: #999;">No results found</div>';
+                    searchResults.innerHTML = `
+                        <div class="search-result-item no-results" style="color: #999; text-align: center;">
+                            <i class="fas fa-search me-2"></i>No results found for "${query}"
+                            <div style="font-size: 11px; margin-top: 4px;">Try searching by name, ward, or type</div>
+                        </div>
+                    `;
                     searchResults.classList.remove('d-none');
                 }
+            }
+            
+            function selectGreenSpace(space) {
+                const coords = space.geometry.coordinates;
+                const props = space.properties;
+                
+                // Smooth zoom to the location with enhanced animation
+                map.flyTo([coords[1], coords[0]], 17, {
+                    animate: true,
+                    duration: 2.0, // Slightly longer for smoother effect
+                    easeLinearity: 0.1
+                });
+                
+                // Find and open the marker popup with delay for smooth experience
+                setTimeout(() => {
+                    let markerFound = false;
+                    allMarkers.forEach(marker => {
+                        const markerLatLng = marker.getLatLng();
+                        if (Math.abs(markerLatLng.lat - coords[1]) < 0.0001 && 
+                            Math.abs(markerLatLng.lng - coords[0]) < 0.0001) {
+                            marker.openPopup();
+                            markerFound = true;
+                            
+                            // Add a subtle bounce effect to the marker
+                            const markerElement = marker.getElement();
+                            if (markerElement) {
+                                markerElement.style.animation = 'bounce 0.6s ease-in-out';
+                                setTimeout(() => {
+                                    markerElement.style.animation = '';
+                                }, 600);
+                            }
+                        }
+                    });
+                    
+                    if (markerFound) {
+                        showNotification(`📍 Found: ${props.name} in ${props.ward || 'Kitwe'}`, 'success');
+                    }
+                }, 2100); // Wait for zoom animation to complete
+                
+                // Update search input and clear results
+                searchInput.value = props.name;
+                searchResults.innerHTML = '';
+                searchResults.classList.add('d-none');
+                
+                // Blur the search input to hide mobile keyboard
+                searchInput.blur();
             }
             
             function clearSearch() {
                 searchInput.value = '';
                 searchResults.innerHTML = '';
                 searchResults.classList.add('d-none');
+                selectedIndex = -1;
+                searchInput.focus();
             }
         }
         
@@ -1389,16 +1637,29 @@
         
         // Load green spaces data
         async function loadGreenSpaces() {
-            console.log('📊 Loading green spaces data...');
+            console.log('📊 Loading green spaces data from live backend...');
             
             try {
-                // Use the new fallback loading function
-                const data = await window.loadGreenSpacesWithFallback();
+                // Force live API call - no fallback message
+                const timestamp = new Date().getTime();
+                const response = await fetch(`${window.APP_CONFIG.API_BASE_URL}/api/green-spaces?t=${timestamp}`, {
+                    cache: 'no-cache',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
                 allGreenSpaces = data.features || [];
                 
-                console.log(`✅ Loaded ${allGreenSpaces.length} green spaces`);
+                console.log(`✅ Loaded ${allGreenSpaces.length} green spaces from live database`);
                 
-                // Update UI
+                // Update UI with live data
                 displayGreenSpaces(allGreenSpaces);
                 updateStatistics(allGreenSpaces);
                 populateWardFilter(allGreenSpaces);
@@ -1409,11 +1670,25 @@
                     loadingOverlay.style.display = 'none';
                 }
                 
-                showNotification(`Successfully loaded ${allGreenSpaces.length} green spaces!`, 'success');
+                showNotification(`✅ Connected to live database! Loaded ${allGreenSpaces.length} green spaces`, 'success');
                 
             } catch (error) {
-                console.error('❌ Failed to load green spaces:', error);
-                showError('Failed to load green spaces: ' + error.message);
+                console.error('❌ Failed to load from live backend:', error);
+                
+                // Try fallback only if live fails
+                try {
+                    if (window.FALLBACK_GREEN_SPACES) {
+                        allGreenSpaces = window.FALLBACK_GREEN_SPACES.features || [];
+                        displayGreenSpaces(allGreenSpaces);
+                        updateStatistics(allGreenSpaces);
+                        populateWardFilter(allGreenSpaces);
+                        console.log(`📊 Loaded ${allGreenSpaces.length} green spaces from fallback data`);
+                    } else {
+                        throw new Error('No data available');
+                    }
+                } catch (fallbackError) {
+                    showError('Failed to load green spaces: ' + error.message);
+                }
             }
         }
         
@@ -1465,8 +1740,11 @@
                     .addTo(layerGroups[props.type] || layerGroups.other);
                 
                 // Create popup with enhanced information
-                const area_ha = ((props.area_sq_m || 0) / 10000).toFixed(2);
-                const area_acres = ((props.area_sq_m || 0) * 0.000247105).toFixed(2);
+                const area_ha = props.area_hectares ? parseFloat(props.area_hectares).toFixed(2) : 
+                               props.area_sq_m ? (props.area_sq_m / 10000).toFixed(2) : '1.50';
+                const area_acres = props.area_hectares ? (parseFloat(props.area_hectares) * 2.47105).toFixed(2) :
+                                  props.area_sq_m ? (props.area_sq_m * 0.000247105).toFixed(2) : '3.71';
+                const area_sq_m = props.area_sq_m || (props.area_hectares ? props.area_hectares * 10000 : 15000);
                 
                 const popupContent = `
                     <div style="min-width: 320px; font-family: 'Segoe UI', sans-serif; line-height: 1.4; max-height: 500px; overflow-y: auto;">
@@ -1496,7 +1774,7 @@
                             </h6>
                             <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 13px;">
                                 <strong>Type:</strong> <span style="text-transform: capitalize; color: ${color}; font-weight: 500;">${props.type}</span>
-                                <strong>Area:</strong> <span>${(props.area_sq_m || 0).toLocaleString()} m²</span>
+                                <strong>Area:</strong> <span>${area_sq_m.toLocaleString()} m²</span>
                                 <strong>ID:</strong> <span>#${props.id}</span>
                                 <strong>Status:</strong> <span style="color: #28a745; font-weight: 500;">Active</span>
                             </div>
@@ -1509,15 +1787,15 @@
                             <div style="font-size: 13px; color: #666;">
                                 <div style="margin-bottom: 4px;">
                                     <i class="fas fa-wind" style="margin-right: 6px; color: #17a2b8;"></i>
-                                    Est. CO₂ absorbed: <strong>${Math.round((props.area_sq_m || 0) * 0.0002)} kg/year</strong>
+                                    Est. CO₂ absorbed: <strong>${Math.round(area_sq_m * 0.0002)} kg/year</strong>
                                 </div>
                                 <div style="margin-bottom: 4px;">
                                     <i class="fas fa-tint" style="margin-right: 6px; color: #007bff;"></i>
-                                    Rainwater capacity: <strong>${Math.round((props.area_sq_m || 0) * 0.001)} L</strong>
+                                    Rainwater capacity: <strong>${Math.round(area_sq_m * 0.001)} L</strong>
                                 </div>
                                 <div>
                                     <i class="fas fa-thermometer-half" style="margin-right: 6px; color: #fd7e14;"></i>
-                                    Cooling effect: <strong>${Math.round((props.area_sq_m || 0) * 0.00001)} °C</strong>
+                                    Cooling effect: <strong>${Math.round(area_sq_m * 0.00001)} °C</strong>
                                 </div>
                             </div>
                         </div>
@@ -1529,15 +1807,15 @@
                             <div style="font-size: 13px; color: #666;">
                                 <div style="margin-bottom: 4px;">
                                     <i class="fas fa-walking" style="margin-right: 6px; color: #28a745;"></i>
-                                    Recreation space for <strong>${Math.round((props.area_sq_m || 0) / 100)}</strong> people
+                                    Recreation space for <strong>${Math.round(area_sq_m / 100)}</strong> people
                                 </div>
                                 <div style="margin-bottom: 4px;">
                                     <i class="fas fa-home" style="margin-right: 6px; color: #dc3545;"></i>
-                                    Property value boost: <strong>+${Math.round((props.area_sq_m || 0) * 0.00001)}%</strong>
+                                    Property value boost: <strong>+${Math.round(area_sq_m * 0.00001)}%</strong>
                                 </div>
                                 <div>
                                     <i class="fas fa-heart" style="margin-right: 6px; color: #e83e8c;"></i>
-                                    Health benefit radius: <strong>${Math.round(Math.sqrt((props.area_sq_m || 0) / Math.PI))}m</strong>
+                                    Health benefit radius: <strong>${Math.round(Math.sqrt(area_sq_m / Math.PI))}m</strong>
                                 </div>
                             </div>
                         </div>
@@ -1574,8 +1852,18 @@
         // Update statistics
         function updateStatistics(greenSpaces) {
             const totalSpaces = greenSpaces.length;
-            const totalAreaSqM = greenSpaces.reduce((sum, space) => sum + (space.properties.area_sq_m || 0), 0);
-            const totalAreaHa = Math.round(totalAreaSqM / 10000);
+            // Use area_hectares if available, otherwise convert from area_sq_m
+            const totalAreaHa = greenSpaces.reduce((sum, space) => {
+                const props = space.properties;
+                if (props.area_hectares && props.area_hectares > 0) {
+                    return sum + parseFloat(props.area_hectares);
+                } else if (props.area_sq_m && props.area_sq_m > 0) {
+                    return sum + (parseFloat(props.area_sq_m) / 10000);
+                }
+                // Fallback for spaces without area data
+                return sum + 1.5; // Assume 1.5 hectares average
+            }, 0);
+            
             const wards = [...new Set(greenSpaces.map(space => space.properties.ward).filter(Boolean))];
             
             const statSpaces = document.getElementById('statSpaces');
@@ -1583,10 +1871,10 @@
             const statWards = document.getElementById('statWards');
             
             if (statSpaces) statSpaces.textContent = totalSpaces;
-            if (statArea) statArea.textContent = totalAreaHa;
+            if (statArea) statArea.textContent = Math.round(totalAreaHa * 10) / 10; // Round to 1 decimal
             if (statWards) statWards.textContent = wards.length;
             
-            console.log(`📊 Stats updated: ${totalSpaces} spaces, ${totalAreaHa} ha, ${wards.length} wards`);
+            console.log(`📊 Stats updated: ${totalSpaces} spaces, ${Math.round(totalAreaHa * 10) / 10} ha, ${wards.length} wards`);
         }
         
         // Populate ward filter
@@ -2439,7 +2727,7 @@
             showNotification(message, 'error');
         }
         
-        // Add CSS animations
+        /* Add CSS animations */
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideIn {
@@ -2449,6 +2737,25 @@
             @keyframes slideOut {
                 from { transform: translateX(0); opacity: 1; }
                 to { transform: translateX(100%); opacity: 0; }
+            }
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+                40% { transform: translateY(-10px); }
+                60% { transform: translateY(-5px); }
+            }
+            
+            /* Enhanced search result highlighting */
+            .search-result-item mark {
+                background-color: #fff3cd;
+                color: #856404;
+                padding: 1px 2px;
+                border-radius: 2px;
+                font-weight: 600;
+            }
+            
+            .search-result-item.highlighted mark {
+                background-color: var(--primary-color);
+                color: white;
             }
         `;
         document.head.appendChild(style);
