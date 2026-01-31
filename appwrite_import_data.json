@@ -1,0 +1,20 @@
+{
+  "database_id": "kitwe_green_spaces",
+  "collection_id": "green_spaces",
+  "documents": [
+    {
+      "name": "Kitwe Central Park",
+      "ward": "Central Ward",
+      "area_hectares": 15.5,
+      "latitude": -12.8044,
+      "longitude": 28.2136,
+      "type": "Urban Park",
+      "description": "Large central park with recreational facilities",
+      "facilities": "Playground, Walking paths, Benches",
+      "accessibility": "Wheelchair accessible",
+      "environmental_impact": "High - provides urban cooling and air purification"
+    }
+  ],
+  "total_documents": 1,
+  "note": "This is sample data. You'll need to export your actual 51 green spaces from your Flask backend database."
+}
