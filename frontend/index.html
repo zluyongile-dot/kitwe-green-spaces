@@ -1640,15 +1640,21 @@
             console.log('📊 Loading green spaces data from live backend...');
             
             try {
-                // Force live API call - no fallback message
+                // Try live API first, but with a short timeout
                 const timestamp = new Date().getTime();
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+                
                 const response = await fetch(`${window.APP_CONFIG.API_BASE_URL}/api/green-spaces?t=${timestamp}`, {
                     cache: 'no-cache',
                     headers: {
                         'Cache-Control': 'no-cache',
                         'Pragma': 'no-cache'
-                    }
+                    },
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -1664,30 +1670,36 @@
                 updateStatistics(allGreenSpaces);
                 populateWardFilter(allGreenSpaces);
                 
+                showNotification(`✅ Connected to live database! Loaded ${allGreenSpaces.length} green spaces`, 'success');
+                
+            } catch (error) {
+                console.log('⚠️ Live API not available, using fallback data:', error.message);
+                
+                // Use fallback data immediately
+                if (window.FALLBACK_GREEN_SPACES && window.FALLBACK_GREEN_SPACES.features) {
+                    allGreenSpaces = window.FALLBACK_GREEN_SPACES.features || [];
+                    
+                    // Convert area_sq_m to area_hectares for consistency
+                    allGreenSpaces.forEach(space => {
+                        if (space.properties.area_sq_m && !space.properties.area_hectares) {
+                            space.properties.area_hectares = space.properties.area_sq_m / 10000;
+                        }
+                    });
+                    
+                    displayGreenSpaces(allGreenSpaces);
+                    updateStatistics(allGreenSpaces);
+                    populateWardFilter(allGreenSpaces);
+                    
+                    console.log(`✅ Loaded ${allGreenSpaces.length} green spaces from fallback data`);
+                    showNotification(`📍 Map loaded with ${allGreenSpaces.length} green spaces! (Offline mode)`, 'info');
+                } else {
+                    throw new Error('No fallback data available');
+                }
+            } finally {
                 // Hide loading overlay
                 const loadingOverlay = document.getElementById('loadingOverlay');
                 if (loadingOverlay) {
                     loadingOverlay.style.display = 'none';
-                }
-                
-                showNotification(`✅ Connected to live database! Loaded ${allGreenSpaces.length} green spaces`, 'success');
-                
-            } catch (error) {
-                console.error('❌ Failed to load from live backend:', error);
-                
-                // Try fallback only if live fails
-                try {
-                    if (window.FALLBACK_GREEN_SPACES) {
-                        allGreenSpaces = window.FALLBACK_GREEN_SPACES.features || [];
-                        displayGreenSpaces(allGreenSpaces);
-                        updateStatistics(allGreenSpaces);
-                        populateWardFilter(allGreenSpaces);
-                        console.log(`📊 Loaded ${allGreenSpaces.length} green spaces from fallback data`);
-                    } else {
-                        throw new Error('No data available');
-                    }
-                } catch (fallbackError) {
-                    showError('Failed to load green spaces: ' + error.message);
                 }
             }
         }
@@ -1740,11 +1752,10 @@
                     .addTo(layerGroups[props.type] || layerGroups.other);
                 
                 // Create popup with enhanced information
-                const area_ha = props.area_hectares ? parseFloat(props.area_hectares).toFixed(2) : 
-                               props.area_sq_m ? (props.area_sq_m / 10000).toFixed(2) : '1.50';
-                const area_acres = props.area_hectares ? (parseFloat(props.area_hectares) * 2.47105).toFixed(2) :
-                                  props.area_sq_m ? (props.area_sq_m * 0.000247105).toFixed(2) : '3.71';
-                const area_sq_m = props.area_sq_m || (props.area_hectares ? props.area_hectares * 10000 : 15000);
+                const area_hectares = props.area_hectares || (props.area_sq_m ? props.area_sq_m / 10000 : 1.5);
+                const area_ha = area_hectares.toFixed(2);
+                const area_acres = (area_hectares * 2.47105).toFixed(2);
+                const area_sq_m = props.area_sq_m || (area_hectares * 10000);
                 
                 const popupContent = `
                     <div style="min-width: 320px; font-family: 'Segoe UI', sans-serif; line-height: 1.4; max-height: 500px; overflow-y: auto;">
