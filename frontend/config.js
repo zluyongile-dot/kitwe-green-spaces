@@ -21,7 +21,7 @@ const isLocal = window.location.hostname === 'localhost' ||
 // Export the appropriate config
 window.APP_CONFIG = isLocal ? CONFIG.local : CONFIG.production;
 
-console.log('🔧 Environment:', isLocal ? 'Local Development' : 'Production (GitHub Pages)');
+console.log('🔧 Environment:', isLocal ? 'Local Development' : 'Production (Vercel)');
 console.log('🌐 API Base URL:', window.APP_CONFIG.API_BASE_URL);
 console.log('📍 Current hostname:', window.location.hostname);
 

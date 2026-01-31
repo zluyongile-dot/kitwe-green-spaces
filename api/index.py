@@ -36,11 +36,20 @@ def home():
 def test_db():
     """Test Supabase connection via REST API"""
     try:
+        # Check if Supabase is properly configured
+        if SUPABASE_URL == 'https://your-project.supabase.co' or SUPABASE_ANON_KEY == 'your-anon-key':
+            return jsonify({
+                "status": "warning",
+                "message": "Supabase not configured - using fallback data",
+                "platform": "Vercel + Fallback Data",
+                "note": "Set SUPABASE_URL and SUPABASE_ANON_KEY environment variables for live database"
+            })
+        
         # Test connection by getting count of green spaces
         url = f"{SUPABASE_URL}/rest/v1/green_spaces?select=count"
         headers = get_supabase_headers()
         
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=5)
         
         if response.status_code == 200:
             data = response.json()
@@ -54,24 +63,30 @@ def test_db():
             return jsonify({
                 "status": "error",
                 "message": f"Supabase connection failed: {response.status_code}",
-                "details": response.text
-            }), 500
+                "details": response.text,
+                "fallback": "Using fallback data instead"
+            }), 200  # Return 200 instead of 500 to avoid breaking the frontend
             
     except Exception as e:
         return jsonify({
             "status": "error", 
-            "message": f"Connection test failed: {str(e)}"
-        }), 500
+            "message": f"Connection test failed: {str(e)}",
+            "fallback": "Using fallback data instead"
+        }), 200  # Return 200 instead of 500
 
 @app.route('/api/green-spaces')
 def get_green_spaces():
     """Get all green spaces as GeoJSON using Supabase REST API"""
     try:
+        # Check if Supabase is properly configured
+        if SUPABASE_URL == 'https://your-project.supabase.co' or SUPABASE_ANON_KEY == 'your-anon-key':
+            return get_fallback_green_spaces()
+        
         # Get all green spaces from Supabase
         url = f"{SUPABASE_URL}/rest/v1/green_spaces?select=*&order=name"
         headers = get_supabase_headers()
         
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=10)
         
         if response.status_code != 200:
             # Fallback to static data if Supabase fails
@@ -115,12 +130,12 @@ def get_green_spaces():
 
 def get_fallback_green_spaces():
     """Fallback green spaces data if Supabase is not available"""
-    # Static data for demonstration
+    # Enhanced static data for demonstration
     fallback_spaces = [
         {
             "id": 1,
             "name": "Kitwe City Square",
-            "type": "public_square",
+            "type": "park",
             "area_hectares": 1.8,
             "ward": "City Centre",
             "latitude": -12.817778,
@@ -155,8 +170,72 @@ def get_fallback_green_spaces():
             "facilities": "Nature trails, research areas, educational signage",
             "accessibility": "Partially accessible",
             "environmental_impact": "Very high - carbon sequestration, biodiversity conservation"
+        },
+        {
+            "id": 4,
+            "name": "Mindolo Dam Recreation Area",
+            "type": "recreational",
+            "area_hectares": 12.5,
+            "ward": "Mindolo",
+            "latitude": -12.835000,
+            "longitude": 28.240000,
+            "description": "Large recreational area around Mindolo Dam",
+            "facilities": "Fishing spots, picnic areas, boat launch",
+            "accessibility": "Limited accessibility",
+            "environmental_impact": "Water conservation, wildlife habitat"
+        },
+        {
+            "id": 5,
+            "name": "Nkana Golf Course",
+            "type": "golf course",
+            "area_hectares": 45.0,
+            "ward": "Nkana East",
+            "latitude": -12.820000,
+            "longitude": 28.200000,
+            "description": "18-hole championship golf course",
+            "facilities": "Golf course, clubhouse, pro shop, restaurant",
+            "accessibility": "Members and guests only",
+            "environmental_impact": "Large green space, water management"
+        },
+        {
+            "id": 6,
+            "name": "Chimwemwe Township Park",
+            "type": "park",
+            "area_hectares": 2.1,
+            "ward": "Chimwemwe",
+            "latitude": -12.840000,
+            "longitude": 28.220000,
+            "description": "Community park serving Chimwemwe township",
+            "facilities": "Playground, community center, sports field",
+            "accessibility": "Fully accessible",
+            "environmental_impact": "Community green space, air quality improvement"
+        },
+        {
+            "id": 7,
+            "name": "Wusakile Community Garden",
+            "type": "garden",
+            "area_hectares": 0.8,
+            "ward": "Wusakile",
+            "latitude": -12.830000,
+            "longitude": 28.190000,
+            "description": "Community vegetable garden and green space",
+            "facilities": "Garden plots, tool shed, water access",
+            "accessibility": "Community members",
+            "environmental_impact": "Food security, soil conservation"
+        },
+        {
+            "id": 8,
+            "name": "Buchi Township Green Belt",
+            "type": "forest",
+            "area_hectares": 8.3,
+            "ward": "Buchi",
+            "latitude": -12.845000,
+            "longitude": 28.235000,
+            "description": "Protected green belt area in Buchi township",
+            "facilities": "Walking trails, bird watching areas",
+            "accessibility": "Public access during daylight",
+            "environmental_impact": "Biodiversity conservation, erosion control"
         }
-        # Add more fallback data as needed
     ]
     
     features = []
@@ -175,31 +254,39 @@ def get_fallback_green_spaces():
         "type": "FeatureCollection",
         "features": features,
         "fallback": True,
-        "message": "Using fallback data - configure Supabase for full dataset"
+        "message": "Using enhanced fallback data - Supabase not configured"
     })
 
 @app.route('/api/environmental-data')
 def get_environmental_data():
     """Get environmental monitoring data"""
     try:
-        # Try to get real data from Supabase
-        url = f"{SUPABASE_URL}/rest/v1/green_spaces?select=area_hectares,ward,type"
-        headers = get_supabase_headers()
-        
-        response = requests.get(url, headers=headers)
-        
-        if response.status_code == 200:
-            spaces = response.json()
-            total_area = sum(float(space.get('area_hectares', 0)) for space in spaces)
-            ward_count = len(set(space.get('ward') for space in spaces if space.get('ward')))
-            type_count = len(set(space.get('type') for space in spaces if space.get('type')))
-            total_spaces = len(spaces)
-        else:
-            # Fallback values
+        # Check if Supabase is properly configured
+        if SUPABASE_URL == 'https://your-project.supabase.co' or SUPABASE_ANON_KEY == 'your-anon-key':
+            # Use fallback values when Supabase is not configured
             total_area = 261.5
             ward_count = 16
             type_count = 7
             total_spaces = 51
+        else:
+            # Try to get real data from Supabase
+            url = f"{SUPABASE_URL}/rest/v1/green_spaces?select=area_hectares,ward,type"
+            headers = get_supabase_headers()
+            
+            response = requests.get(url, headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                spaces = response.json()
+                total_area = sum(float(space.get('area_hectares', 0)) for space in spaces)
+                ward_count = len(set(space.get('ward') for space in spaces if space.get('ward')))
+                type_count = len(set(space.get('type') for space in spaces if space.get('type')))
+                total_spaces = len(spaces)
+            else:
+                # Fallback values
+                total_area = 261.5
+                ward_count = 16
+                type_count = 7
+                total_spaces = 51
         
         # Calculate environmental metrics
         base_aqi = max(20, 50 - (total_area / 100) * 5)
