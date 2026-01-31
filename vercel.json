@@ -4,6 +4,10 @@
     {
       "src": "api/index.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -14,6 +18,14 @@
     {
       "src": "/test-db",
       "dest": "/api/index.py"
+    },
+    {
+      "src": "/favicon\\.(ico|png)",
+      "dest": "/frontend/favicon.ico"
+    },
+    {
+      "src": "/frontend/(.*)",
+      "dest": "/frontend/$1"
     },
     {
       "src": "/(.*\\.(html|css|js|png|jpg|jpeg|gif|svg|ico|json))",
