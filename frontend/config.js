@@ -7,7 +7,7 @@ const CONFIG = {
     
     // Production deployment
     production: {
-        API_BASE_URL: 'https://YOUR_ACTUAL_RAILWAY_URL_HERE', // Replace with your Railway URL
+        API_BASE_URL: 'https://kitwe-green-spaces-fze8.vercel.app', // Vercel deployment
         USE_FALLBACK: true // Use fallback data when backend is not available
     }
 };
