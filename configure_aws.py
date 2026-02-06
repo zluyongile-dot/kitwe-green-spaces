@@ -9,7 +9,7 @@ def configure_aws():
     print("🔧 AWS Configuration Helper")
     print("=" * 30)
     
-    print("\n📋 You need to get your AWS credentials from:")
+  what  print("\n📋 You need to get your AWS credentials from:")
     print("1. Go to AWS Console → IAM → Users → Your User")
     print("2. Security credentials tab → Create access key")
     print("3. Select 'Command Line Interface (CLI)'")

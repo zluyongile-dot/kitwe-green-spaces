@@ -138,7 +138,7 @@ eb console
 
 # Redeploy after changes
 eb deploy
-
+ 
 # Terminate environment (to save costs)
 eb terminate kitwe-production
 ```
