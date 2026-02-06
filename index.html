@@ -22,43 +22,65 @@
     <!-- Custom CSS -->
     <style>
         :root {
-            /* Modern GIS/Environmental Color Palette */
+            /* Nature-Inspired Color Palette - WCAG AAA Compliant */
+            /* Primary Colors - Forest Green */
             --primary-color: #1B5E20;
             --primary-light: #4CAF50;
             --primary-dark: #0D4E14;
+            --primary-hover: #2E7D32;
+            
+            /* Secondary Colors - Earth Tones */
             --secondary-color: #2E7D32;
+            --earth-brown: #6D4C41;
+            --earth-tan: #A1887F;
+            --earth-sand: #D7CCC8;
+            --sky-blue: #0288D1;
+            --water-blue: #0097A7;
+            
+            /* Accent Colors */
             --accent-color: #66BB6A;
+            --accent-orange: #FF6F00;
+            --accent-yellow: #FFA000;
+            
+            /* Semantic Colors */
             --success-color: #4CAF50;
             --warning-color: #FF8F00;
             --error-color: #D32F2F;
-            --info-color: #1976D2;
+            --info-color: #0288D1;
             
-            /* Neutral Colors */
+            /* Neutral Colors - High Contrast */
             --background-primary: #FAFAFA;
             --background-secondary: #FFFFFF;
             --background-tertiary: #F5F5F5;
             --surface-color: #FFFFFF;
             --surface-elevated: #FFFFFF;
             
-            /* Text Colors */
+            /* Text Colors - WCAG AAA */
             --text-primary: #212121;
-            --text-secondary: #757575;
+            --text-secondary: #616161;
             --text-tertiary: #9E9E9E;
             --text-inverse: #FFFFFF;
+            --text-on-primary: #FFFFFF;
             
             /* Border Colors */
             --border-light: #E0E0E0;
             --border-medium: #BDBDBD;
-            --border-dark: #9E9E9E;
+            --border-dark: #757575;
             
-            /* Shadows */
+            /* Shadows - Elevation System */
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
             --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
             --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
             --shadow-xl: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
             
+            /* Nature-Inspired Gradients */
+            --gradient-primary: linear-gradient(135deg, #1B5E20 0%, #4CAF50 100%);
+            --gradient-earth: linear-gradient(135deg, #6D4C41 0%, #A1887F 100%);
+            --gradient-sky: linear-gradient(135deg, #0288D1 0%, #4FC3F7 100%);
+            --gradient-forest: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #4CAF50 100%);
+            
             /* Layout */
-            --sidebar-width: 400px;
+            --sidebar-width: 420px;
             --navbar-height: 72px;
             --border-radius-sm: 6px;
             --border-radius-md: 12px;
@@ -622,6 +644,152 @@
         .search-option-btn.active {
             background: var(--primary-color);
             color: var(--text-inverse);
+        }
+        
+        /* Find Parks Near Me Button */
+        .find-near-me-btn {
+            width: 100%;
+            background: var(--gradient-primary);
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--border-radius-lg);
+            color: var(--text-on-primary);
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-base);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-lg);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-family-primary);
+        }
+        
+        .find-near-me-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left var(--transition-slow);
+        }
+        
+        .find-near-me-btn:hover::before {
+            left: 100%;
+        }
+        
+        .find-near-me-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .find-near-me-btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .find-near-me-btn i {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Nearest Parks List */
+        .nearest-parks {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .nearest-parks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .nearest-parks-header h5 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        .close-nearest {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+        }
+        
+        .close-nearest:hover {
+            background: var(--background-tertiary);
+            color: var(--error-color);
+        }
+        
+        .nearest-parks-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+        
+        .nearest-park-item {
+            background: var(--background-tertiary);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .nearest-park-item:hover {
+            background: var(--surface-color);
+            box-shadow: var(--shadow-sm);
+            transform: translateX(4px);
+        }
+        
+        .nearest-park-name {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .nearest-park-distance {
+            font-size: var(--font-size-sm);
+            color: var(--primary-color);
+            font-weight: var(--font-weight-medium);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .nearest-park-details {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
         }
         
         /* Enhanced Filter Styles */
@@ -1328,7 +1496,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(250, 250, 250, 0.95);
+            background: rgba(250, 250, 250, 0.98);
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
@@ -1340,40 +1508,53 @@
         
         .loading-container {
             text-align: center;
-            max-width: 400px;
+            max-width: 450px;
             padding: var(--spacing-2xl);
             background: var(--surface-elevated);
             border-radius: var(--border-radius-lg);
             box-shadow: var(--shadow-xl);
             border: 1px solid var(--border-light);
+            position: relative;
+            z-index: 2;
         }
         
         .spinner-container {
             position: relative;
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             margin: 0 auto var(--spacing-xl);
         }
         
         .spinner {
-            width: 80px;
-            height: 80px;
-            border: 4px solid var(--border-light);
-            border-top: 4px solid var(--primary-color);
+            width: 100px;
+            height: 100px;
+            border: 5px solid var(--border-light);
+            border-top: 5px solid var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
         
         .spinner-inner {
             position: absolute;
-            top: 12px;
-            left: 12px;
-            width: 56px;
-            height: 56px;
-            border: 3px solid transparent;
-            border-top: 3px solid var(--accent-color);
+            top: 15px;
+            left: 15px;
+            width: 70px;
+            height: 70px;
+            border: 4px solid transparent;
+            border-top: 4px solid var(--accent-color);
             border-radius: 50%;
             animation: spin 1.5s linear infinite reverse;
+        }
+        
+        .loading-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary-color);
+            font-family: var(--font-family-mono);
         }
         
         @keyframes spin {
@@ -1405,20 +1586,22 @@
         
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 10px;
             background: var(--border-light);
-            border-radius: 4px;
+            border-radius: 5px;
             overflow: hidden;
             margin-bottom: var(--spacing-sm);
+            position: relative;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-            border-radius: 4px;
+            background: var(--gradient-primary);
+            border-radius: 5px;
             width: 0%;
             transition: width var(--transition-slow);
             position: relative;
+            overflow: hidden;
         }
         
         .progress-fill::after {
@@ -1428,14 +1611,26 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
             animation: shimmer 2s infinite;
+        }
+        
+        .progress-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .progress-text {
             font-size: var(--font-size-sm);
             font-weight: var(--font-weight-semibold);
             color: var(--primary-color);
+            font-family: var(--font-family-mono);
+        }
+        
+        .progress-speed {
+            font-size: var(--font-size-xs);
+            color: var(--text-tertiary);
             font-family: var(--font-family-mono);
         }
         
@@ -1454,6 +1649,7 @@
             border-radius: var(--border-radius-sm);
             transition: all var(--transition-fast);
             opacity: 0.5;
+            position: relative;
         }
         
         .step.active {
@@ -1467,6 +1663,14 @@
             color: var(--success-color);
         }
         
+        .step.completed .step-status::after {
+            content: '✓';
+            position: absolute;
+            right: var(--spacing-md);
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
         .step i {
             width: 20px;
             text-align: center;
@@ -1476,6 +1680,107 @@
         .step span {
             font-size: var(--font-size-sm);
             font-weight: var(--font-weight-medium);
+            flex: 1;
+        }
+        
+        .step-status {
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* Skeleton Screens */
+        .skeleton-map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            z-index: 1;
+            opacity: 0.3;
+        }
+        
+        .skeleton-sidebar {
+            width: var(--sidebar-width);
+            background: var(--surface-color);
+            padding: var(--spacing-xl);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+        
+        .skeleton-header,
+        .skeleton-search,
+        .skeleton-stat,
+        .skeleton-filter {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: var(--border-radius-md);
+        }
+        
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .skeleton-header {
+            height: 80px;
+        }
+        
+        .skeleton-search {
+            height: 48px;
+        }
+        
+        .skeleton-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+        }
+        
+        .skeleton-stat {
+            height: 80px;
+        }
+        
+        .skeleton-filters {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+        
+        .skeleton-filter {
+            height: 60px;
+        }
+        
+        .skeleton-map-area {
+            flex: 1;
+            background: var(--background-tertiary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skeleton-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            opacity: 0.1;
+            animation: skeleton-pulse 2s infinite;
+        }
+        
+        @keyframes skeleton-pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
         }
         
         /* Error State */
@@ -1938,6 +2243,32 @@
             filter: drop-shadow(var(--shadow-md));
             transform: scale(1.1);
         }
+        
+        /* User Location Marker */
+        .user-location-marker {
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .user-location-marker div {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+        
+        /* Distance Lines */
+        .distance-line {
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -2103,6 +2434,24 @@
                             <i class="fas fa-leaf"></i>
                         </button>
                     </div>
+                </div>
+                
+                <!-- Find Parks Near Me Button -->
+                <button class="find-near-me-btn" id="findNearMeBtn" aria-label="Find parks near my location">
+                    <i class="fas fa-location-arrow me-2"></i>
+                    <span>Find Parks Near Me</span>
+                    <div class="btn-shine"></div>
+                </button>
+                
+                <!-- Nearest Parks List -->
+                <div class="nearest-parks d-none" id="nearestParks">
+                    <div class="nearest-parks-header">
+                        <h5><i class="fas fa-map-marker-alt me-2"></i>Nearest Parks</h5>
+                        <button class="close-nearest" id="closeNearest" aria-label="Close nearest parks">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="nearest-parks-list" id="nearestParksList"></div>
                 </div>
                 
                 <!-- Search Results -->
@@ -2391,12 +2740,13 @@
                 </button>
             </div>
             
-            <!-- Loading Overlay -->
+            <!-- Enhanced Loading Overlay with Skeleton Screens -->
             <div class="loading-overlay" id="loadingOverlay">
                 <div class="loading-container">
                     <div class="spinner-container">
                         <div class="spinner"></div>
                         <div class="spinner-inner"></div>
+                        <div class="loading-percentage" id="loadingPercentage">0%</div>
                     </div>
                     <div class="loading-content">
                         <h3 class="loading-title" id="loadingTitle">Loading Green Spaces</h3>
@@ -2405,26 +2755,54 @@
                             <div class="progress-bar">
                                 <div class="progress-fill" id="progressFill"></div>
                             </div>
-                            <div class="progress-text" id="progressText">0%</div>
+                            <div class="progress-details">
+                                <span class="progress-text" id="progressText">0%</span>
+                                <span class="progress-speed" id="progressSpeed"></span>
+                            </div>
                         </div>
                         <div class="loading-steps" id="loadingSteps">
                             <div class="step" id="step1">
                                 <i class="fas fa-database"></i>
                                 <span>Connecting to database</span>
+                                <div class="step-status"></div>
                             </div>
                             <div class="step" id="step2">
                                 <i class="fas fa-download"></i>
                                 <span>Fetching green spaces data</span>
+                                <div class="step-status"></div>
                             </div>
                             <div class="step" id="step3">
                                 <i class="fas fa-map-marked-alt"></i>
                                 <span>Rendering map markers</span>
+                                <div class="step-status"></div>
                             </div>
                             <div class="step" id="step4">
                                 <i class="fas fa-chart-bar"></i>
                                 <span>Calculating statistics</span>
+                                <div class="step-status"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                
+                <!-- Skeleton Screen for Map -->
+                <div class="skeleton-map" id="skeletonMap">
+                    <div class="skeleton-sidebar">
+                        <div class="skeleton-header"></div>
+                        <div class="skeleton-search"></div>
+                        <div class="skeleton-stats">
+                            <div class="skeleton-stat"></div>
+                            <div class="skeleton-stat"></div>
+                            <div class="skeleton-stat"></div>
+                        </div>
+                        <div class="skeleton-filters">
+                            <div class="skeleton-filter"></div>
+                            <div class="skeleton-filter"></div>
+                            <div class="skeleton-filter"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-map-area">
+                        <div class="skeleton-pulse"></div>
                     </div>
                 </div>
             </div>
@@ -3040,6 +3418,281 @@
             });
             
             console.log('✅ Enhanced filters setup complete');
+            
+            // Find Parks Near Me functionality
+            const findNearMeBtn = document.getElementById('findNearMeBtn');
+            const closeNearestBtn = document.getElementById('closeNearest');
+            
+            if (findNearMeBtn) {
+                findNearMeBtn.addEventListener('click', findParksNearMe);
+            }
+            
+            if (closeNearestBtn) {
+                closeNearestBtn.addEventListener('click', function() {
+                    document.getElementById('nearestParks').classList.add('d-none');
+                    // Remove user location marker if exists
+                    if (userLocationMarker) {
+                        map.removeLayer(userLocationMarker);
+                        userLocationMarker = null;
+                    }
+                    // Remove distance lines if exist
+                    if (distanceLines) {
+                        distanceLines.forEach(line => map.removeLayer(line));
+                        distanceLines = [];
+                    }
+                });
+            }
+        }
+        
+        // Find Parks Near Me - Geolocation Feature
+        let userLocationMarker = null;
+        let distanceLines = [];
+        
+        function findParksNearMe() {
+            const btn = document.getElementById('findNearMeBtn');
+            
+            // Check if geolocation is supported
+            if (!navigator.geolocation) {
+                showNotification('❌ Geolocation is not supported by your browser', 'error');
+                return;
+            }
+            
+            // Show loading state
+            ButtonLoader.setLoading(btn, true);
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i><span>Locating...</span>';
+            
+            showNotification('📍 Getting your location...', 'info');
+            
+            // Get user's current position
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    
+                    console.log(`📍 User location: ${userLat}, ${userLng}`);
+                    
+                    // Add "You are here" marker
+                    if (userLocationMarker) {
+                        map.removeLayer(userLocationMarker);
+                    }
+                    
+                    // Create custom icon for user location
+                    const userIcon = L.divIcon({
+                        className: 'user-location-marker',
+                        html: `
+                            <div style="
+                                width: 40px;
+                                height: 40px;
+                                background: linear-gradient(135deg, #2196F3, #1976D2);
+                                border: 4px solid white;
+                                border-radius: 50%;
+                                box-shadow: 0 4px 12px rgba(33, 150, 243, 0.5);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                animation: pulse 2s infinite;
+                            ">
+                                <i class="fas fa-user" style="color: white; font-size: 16px;"></i>
+                            </div>
+                        `,
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20]
+                    });
+                    
+                    userLocationMarker = L.marker([userLat, userLng], { icon: userIcon })
+                        .addTo(map)
+                        .bindPopup(`
+                            <div style="text-align: center; padding: 8px;">
+                                <h6 style="margin: 0 0 8px 0; color: #2196F3;">
+                                    <i class="fas fa-map-marker-alt me-2"></i>You Are Here
+                                </h6>
+                                <p style="margin: 0; font-size: 12px; color: #666;">
+                                    Lat: ${userLat.toFixed(6)}<br>
+                                    Lng: ${userLng.toFixed(6)}
+                                </p>
+                            </div>
+                        `);
+                    
+                    // Calculate distances to all parks
+                    const parksWithDistance = allGreenSpaces.map(space => {
+                        const coords = space.geometry.coordinates;
+                        const parkLat = coords[1];
+                        const parkLng = coords[0];
+                        
+                        // Calculate distance using Haversine formula
+                        const distance = calculateDistance(userLat, userLng, parkLat, parkLng);
+                        
+                        return {
+                            space: space,
+                            distance: distance,
+                            lat: parkLat,
+                            lng: parkLng
+                        };
+                    });
+                    
+                    // Sort by distance and get top 5
+                    const nearestParks = parksWithDistance
+                        .sort((a, b) => a.distance - b.distance)
+                        .slice(0, 5);
+                    
+                    // Display nearest parks list
+                    displayNearestParks(nearestParks, userLat, userLng);
+                    
+                    // Draw connection lines to nearest parks (optional - can be toggled)
+                    drawDistanceLines(userLat, userLng, nearestParks);
+                    
+                    // Zoom to show user and nearest parks
+                    const bounds = L.latLngBounds([[userLat, userLng]]);
+                    nearestParks.forEach(park => {
+                        bounds.extend([park.lat, park.lng]);
+                    });
+                    map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
+                    
+                    // Reset button state
+                    ButtonLoader.setLoading(btn, false);
+                    btn.innerHTML = '<i class="fas fa-location-arrow me-2"></i><span>Find Parks Near Me</span>';
+                    
+                    showNotification(`✅ Found ${nearestParks.length} parks near you!`, 'success');
+                },
+                function(error) {
+                    // Handle errors
+                    ButtonLoader.setLoading(btn, false);
+                    btn.innerHTML = '<i class="fas fa-location-arrow me-2"></i><span>Find Parks Near Me</span>';
+                    
+                    let errorMessage = 'Unable to get your location';
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = 'Location permission denied. Please enable location access in your browser settings.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = 'Location information is unavailable. Please try again.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = 'Location request timed out. Please try again.';
+                            break;
+                    }
+                    
+                    showNotification(`❌ ${errorMessage}`, 'error');
+                    console.error('Geolocation error:', error);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+        
+        // Calculate distance between two coordinates using Haversine formula
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of Earth in kilometers
+            const dLat = toRadians(lat2 - lat1);
+            const dLon = toRadians(lon2 - lon1);
+            
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                     Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+                     Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = R * c; // Distance in kilometers
+            
+            return distance;
+        }
+        
+        function toRadians(degrees) {
+            return degrees * (Math.PI / 180);
+        }
+        
+        // Display nearest parks in the sidebar
+        function displayNearestParks(nearestParks, userLat, userLng) {
+            const nearestParksContainer = document.getElementById('nearestParks');
+            const nearestParksList = document.getElementById('nearestParksList');
+            
+            if (!nearestParksContainer || !nearestParksList) return;
+            
+            // Clear previous results
+            nearestParksList.innerHTML = '';
+            
+            // Show the container
+            nearestParksContainer.classList.remove('d-none');
+            
+            // Add each park to the list
+            nearestParks.forEach((park, index) => {
+                const props = park.space.properties;
+                const distanceKm = park.distance;
+                const distanceText = distanceKm < 1 
+                    ? `${(distanceKm * 1000).toFixed(0)} m` 
+                    : `${distanceKm.toFixed(2)} km`;
+                
+                const parkItem = document.createElement('div');
+                parkItem.className = 'nearest-park-item';
+                parkItem.innerHTML = `
+                    <div class="nearest-park-name">
+                        ${index + 1}. ${props.name}
+                    </div>
+                    <div class="nearest-park-distance">
+                        <i class="fas fa-route me-1"></i>
+                        ${distanceText} away
+                    </div>
+                    <div class="nearest-park-details">
+                        <i class="fas fa-map-marker-alt me-1"></i>${props.ward || 'Kitwe'} • 
+                        <i class="fas fa-leaf me-1"></i>${props.type} • 
+                        <i class="fas fa-expand-arrows-alt me-1"></i>${props.area_hectares ? parseFloat(props.area_hectares).toFixed(1) : (props.area_sq_m / 10000).toFixed(1)} ha
+                    </div>
+                `;
+                
+                // Add click handler to zoom to park
+                parkItem.addEventListener('click', function() {
+                    map.flyTo([park.lat, park.lng], 16, {
+                        animate: true,
+                        duration: 1.5
+                    });
+                    
+                    // Find and open the marker popup
+                    setTimeout(() => {
+                        allMarkers.forEach(marker => {
+                            const markerLatLng = marker.getLatLng();
+                            if (Math.abs(markerLatLng.lat - park.lat) < 0.0001 && 
+                                Math.abs(markerLatLng.lng - park.lng) < 0.0001) {
+                                marker.openPopup();
+                            }
+                        });
+                    }, 1600);
+                    
+                    showNotification(`📍 Viewing: ${props.name}`, 'info');
+                });
+                
+                nearestParksList.appendChild(parkItem);
+            });
+            
+            // Scroll to the nearest parks list
+            nearestParksContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Draw lines from user location to nearest parks
+        function drawDistanceLines(userLat, userLng, nearestParks) {
+            // Remove existing lines
+            if (distanceLines && distanceLines.length > 0) {
+                distanceLines.forEach(line => map.removeLayer(line));
+                distanceLines = [];
+            }
+            
+            // Draw lines to top 3 nearest parks
+            nearestParks.slice(0, 3).forEach((park, index) => {
+                const line = L.polyline(
+                    [[userLat, userLng], [park.lat, park.lng]],
+                    {
+                        color: index === 0 ? '#4CAF50' : index === 1 ? '#66BB6A' : '#81C784',
+                        weight: 3,
+                        opacity: 0.6,
+                        dashArray: '10, 10',
+                        className: 'distance-line'
+                    }
+                ).addTo(map);
+                
+                distanceLines.push(line);
+            });
         }
         
         // Apply quick filters
@@ -4005,113 +4658,203 @@
                 const marker = L.marker([coords[1], coords[0]], { icon: icon })
                     .addTo(layerGroups[props.type] || layerGroups.other);
                 
-                // Create popup with enhanced information
+                // Create enhanced popup with rich information
                 const area_hectares = props.area_hectares || (props.area_sq_m ? props.area_sq_m / 10000 : 1.5);
                 const area_ha = area_hectares.toFixed(2);
                 const area_acres = (area_hectares * 2.47105).toFixed(2);
                 const area_sq_m = props.area_sq_m || (area_hectares * 10000);
                 
+                // Determine facilities based on type and size
+                const facilities = getFacilitiesForPopup(props.type, area_sq_m);
+                const accessibility = getAccessibilityForPopup(props.type, area_sq_m);
+                
+                // Google Maps directions link
+                const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${coords[1]},${coords[0]}`;
+                
                 const popupContent = `
-                    <div style="min-width: 320px; font-family: 'Segoe UI', sans-serif; line-height: 1.4; max-height: 500px; overflow-y: auto;">
-                        <div style="background: linear-gradient(135deg, ${color}, ${color}dd); color: white; margin: -10px -10px 15px -10px; padding: 15px; border-radius: 8px 8px 0 0;">
-                            <h5 style="margin: 0; font-size: 18px; font-weight: 600;">
-                                <i class="fas fa-tree" style="margin-right: 8px;"></i>${props.name}
+                    <div style="min-width: 360px; font-family: var(--font-family-primary); line-height: 1.5; max-height: 600px; overflow-y: auto;">
+                        <!-- Header with gradient -->
+                        <div style="background: linear-gradient(135deg, ${color}, ${color}dd); color: white; margin: -10px -10px 15px -10px; padding: 18px; border-radius: 12px 12px 0 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <h5 style="margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -0.02em;">
+                                <i class="fas fa-tree" style="margin-right: 10px;"></i>${props.name}
                             </h5>
-                            <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">
-                                <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>${props.ward || 'Location not specified'}
+                            <p style="margin: 6px 0 0 0; opacity: 0.95; font-size: 14px; font-weight: 500;">
+                                <i class="fas fa-map-marker-alt" style="margin-right: 6px;"></i>${props.ward || 'Kitwe, Zambia'}
                             </p>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
-                            <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 20px; font-weight: 700; color: ${color};">${area_ha}</div>
-                                <div style="font-size: 12px; color: #666; font-weight: 500;">Hectares</div>
-                            </div>
-                            <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; text-align: center;">
-                                <div style="font-size: 20px; font-weight: 700; color: ${color};">${area_acres}</div>
-                                <div style="font-size: 12px; color: #666; font-weight: 500;">Acres</div>
+                            <div style="margin-top: 8px; display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">
+                                ${props.type.toUpperCase()}
                             </div>
                         </div>
                         
-                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
-                            <h6 style="margin: 0 0 8px 0; color: #333; font-size: 14px; font-weight: 600;">
-                                <i class="fas fa-info-circle" style="margin-right: 6px; color: ${color};"></i>Details
+                        <!-- Size Information -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+                            <div style="background: linear-gradient(135deg, #f8f9fa, #ffffff); padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #e9ecef;">
+                                <div style="font-size: 22px; font-weight: 800; color: ${color}; font-family: var(--font-family-mono);">${area_ha}</div>
+                                <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Hectares</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #f8f9fa, #ffffff); padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #e9ecef;">
+                                <div style="font-size: 22px; font-weight: 800; color: ${color}; font-family: var(--font-family-mono);">${area_acres}</div>
+                                <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Acres</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #f8f9fa, #ffffff); padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #e9ecef;">
+                                <div style="font-size: 22px; font-weight: 800; color: ${color}; font-family: var(--font-family-mono);">${(area_sq_m/1000).toFixed(1)}k</div>
+                                <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Sq Meters</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Facilities Section -->
+                        ${facilities.length > 0 ? `
+                        <div style="background: #f8f9fa; padding: 14px; border-radius: 10px; margin-bottom: 14px; border-left: 4px solid ${color};">
+                            <h6 style="margin: 0 0 10px 0; color: #212529; font-size: 14px; font-weight: 700; display: flex; align-items: center;">
+                                <i class="fas fa-tools" style="margin-right: 8px; color: ${color};"></i>Available Facilities
                             </h6>
-                            <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; font-size: 13px;">
-                                <strong>Type:</strong> <span style="text-transform: capitalize; color: ${color}; font-weight: 500;">${props.type}</span>
-                                <strong>Area:</strong> <span>${area_sq_m.toLocaleString()} m²</span>
-                                <strong>ID:</strong> <span>#${props.id}</span>
-                                <strong>Status:</strong> <span style="color: #28a745; font-weight: 500;">Active</span>
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                ${facilities.map(facility => `
+                                    <span style="background: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #495057; border: 1px solid #dee2e6; display: inline-flex; align-items: center; gap: 6px;">
+                                        <i class="${facility.icon}" style="color: ${color};"></i>${facility.name}
+                                    </span>
+                                `).join('')}
                             </div>
                         </div>
+                        ` : ''}
                         
-                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
-                            <h6 style="margin: 0 0 8px 0; color: #333; font-size: 14px; font-weight: 600;">
-                                <i class="fas fa-leaf" style="margin-right: 6px; color: #28a745;"></i>Environmental Impact
+                        <!-- Accessibility Features -->
+                        ${accessibility.length > 0 ? `
+                        <div style="background: #e7f5ff; padding: 14px; border-radius: 10px; margin-bottom: 14px; border-left: 4px solid #0288D1;">
+                            <h6 style="margin: 0 0 10px 0; color: #212529; font-size: 14px; font-weight: 700; display: flex; align-items: center;">
+                                <i class="fas fa-universal-access" style="margin-right: 8px; color: #0288D1;"></i>Accessibility
                             </h6>
-                            <div style="font-size: 13px; color: #666;">
-                                <div style="margin-bottom: 4px;">
-                                    <i class="fas fa-wind" style="margin-right: 6px; color: #17a2b8;"></i>
-                                    Est. CO₂ absorbed: <strong>${Math.round(area_sq_m * 0.0002)} kg/year</strong>
-                                </div>
-                                <div style="margin-bottom: 4px;">
-                                    <i class="fas fa-tint" style="margin-right: 6px; color: #007bff;"></i>
-                                    Rainwater capacity: <strong>${Math.round(area_sq_m * 0.001)} L</strong>
-                                </div>
-                                <div>
-                                    <i class="fas fa-thermometer-half" style="margin-right: 6px; color: #fd7e14;"></i>
-                                    Cooling effect: <strong>${Math.round(area_sq_m * 0.00001)} °C</strong>
-                                </div>
+                            <div style="display: flex; flex-direction: column; gap: 6px;">
+                                ${accessibility.map(feature => `
+                                    <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #495057;">
+                                        <i class="fas fa-check-circle" style="color: #28a745; font-size: 14px;"></i>
+                                        <span style="font-weight: 500;">${feature}</span>
+                                    </div>
+                                `).join('')}
                             </div>
                         </div>
+                        ` : ''}
                         
-                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
-                            <h6 style="margin: 0 0 8px 0; color: #333; font-size: 14px; font-weight: 600;">
-                                <i class="fas fa-users" style="margin-right: 6px; color: #6f42c1;"></i>Community Benefits
+                        <!-- Environmental Impact -->
+                        <div style="background: linear-gradient(135deg, #d4edda, #c3e6cb); padding: 14px; border-radius: 10px; margin-bottom: 14px; border-left: 4px solid #28a745;">
+                            <h6 style="margin: 0 0 10px 0; color: #155724; font-size: 14px; font-weight: 700; display: flex; align-items: center;">
+                                <i class="fas fa-leaf" style="margin-right: 8px;"></i>Environmental Impact
                             </h6>
-                            <div style="font-size: 13px; color: #666;">
-                                <div style="margin-bottom: 4px;">
-                                    <i class="fas fa-walking" style="margin-right: 6px; color: #28a745;"></i>
-                                    Recreation space for <strong>${Math.round(area_sq_m / 100)}</strong> people
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: #155724;">
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <i class="fas fa-wind" style="color: #17a2b8;"></i>
+                                    <span><strong>${Math.round(area_sq_m * 0.0002)}</strong> kg CO₂/yr</span>
                                 </div>
-                                <div style="margin-bottom: 4px;">
-                                    <i class="fas fa-home" style="margin-right: 6px; color: #dc3545;"></i>
-                                    Property value boost: <strong>+${Math.round(area_sq_m * 0.00001)}%</strong>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <i class="fas fa-tint" style="color: #007bff;"></i>
+                                    <span><strong>${Math.round(area_sq_m * 0.001)}</strong> L water</span>
                                 </div>
-                                <div>
-                                    <i class="fas fa-heart" style="margin-right: 6px; color: #e83e8c;"></i>
-                                    Health benefit radius: <strong>${Math.round(Math.sqrt(area_sq_m / Math.PI))}m</strong>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <i class="fas fa-thermometer-half" style="color: #fd7e14;"></i>
+                                    <span><strong>${(area_sq_m * 0.00001).toFixed(2)}</strong>°C cooling</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <i class="fas fa-users" style="color: #6f42c1;"></i>
+                                    <span><strong>${Math.round(area_sq_m / 100)}</strong> people</span>
                                 </div>
                             </div>
                         </div>
                         
-                        <div style="display: flex; gap: 8px; margin-top: 15px;">
+                        <!-- Action Buttons -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px;">
+                            <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer"
+                               style="background: linear-gradient(135deg, #4285F4, #34A853); color: white; border: none; padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3); transition: all 0.2s;">
+                                <i class="fas fa-directions"></i>
+                                <span>Get Directions</span>
+                            </a>
                             <button onclick="showDetailedInfo(${props.id})" 
-                                    style="flex: 1; background: ${color}; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
-                                <i class="fas fa-info-circle" style="margin-right: 6px;"></i>More Details
-                            </button>
-                            <button onclick="window.location.href='feedback.html?space=${props.id}'" 
-                                    style="flex: 1; background: white; color: ${color}; border: 2px solid ${color}; padding: 10px 15px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
-                                <i class="fas fa-flag" style="margin-right: 6px;"></i>Report Issue
+                                    style="background: ${color}; color: white; border: none; padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.2s;">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Full Details</span>
                             </button>
                         </div>
                         
-                        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #eee; font-size: 11px; color: #999; text-align: center;">
-                            <i class="fas fa-map-marked-alt" style="margin-right: 4px;"></i>
-                            Coordinates: ${coords[1].toFixed(4)}, ${coords[0].toFixed(4)}
+                        <button onclick="window.location.href='feedback.html?space=${props.id}'" 
+                                style="width: 100%; background: white; color: #dc3545; border: 2px solid #dc3545; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;">
+                            <i class="fas fa-flag"></i>
+                            <span>Report Issue</span>
+                        </button>
+                        
+                        <!-- Footer with coordinates -->
+                        <div style="margin-top: 14px; padding-top: 12px; border-top: 2px solid #e9ecef; font-size: 11px; color: #6c757d; text-align: center; font-family: var(--font-family-mono);">
+                            <i class="fas fa-map-marked-alt" style="margin-right: 6px;"></i>
+                            ${coords[1].toFixed(6)}, ${coords[0].toFixed(6)}
                         </div>
                     </div>
                 `;
                 
                 marker.bindPopup(popupContent, {
-                    maxWidth: 400,
-                    maxHeight: 500,
+                    maxWidth: 420,
+                    maxHeight: 650,
                     autoPan: true,
                     keepInView: true,
                     className: 'custom-popup'
                 });
                 allMarkers.push(marker);
             });
+        }
+        
+        // Helper function to get facilities for popup
+        function getFacilitiesForPopup(type, area) {
+            const facilities = [];
+            
+            if (type === 'park') {
+                facilities.push({ name: 'Walking Paths', icon: 'fas fa-walking' });
+                if (area > 10000) facilities.push({ name: 'Playground', icon: 'fas fa-child' });
+                if (area > 15000) facilities.push({ name: 'Benches', icon: 'fas fa-chair' });
+                if (area > 20000) facilities.push({ name: 'Picnic Areas', icon: 'fas fa-utensils' });
+                if (area > 25000) facilities.push({ name: 'Parking', icon: 'fas fa-parking' });
+                if (area > 30000) facilities.push({ name: 'Restrooms', icon: 'fas fa-restroom' });
+            } else if (type === 'recreational') {
+                facilities.push({ name: 'Sports Fields', icon: 'fas fa-futbol' });
+                facilities.push({ name: 'Equipment', icon: 'fas fa-dumbbell' });
+                if (area > 15000) facilities.push({ name: 'Changing Rooms', icon: 'fas fa-door-open' });
+                if (area > 20000) facilities.push({ name: 'Parking', icon: 'fas fa-parking' });
+            } else if (type === 'garden') {
+                facilities.push({ name: 'Gardens', icon: 'fas fa-seedling' });
+                facilities.push({ name: 'Seating', icon: 'fas fa-chair' });
+                if (area > 5000) facilities.push({ name: 'Greenhouse', icon: 'fas fa-home' });
+            } else if (type === 'forest') {
+                facilities.push({ name: 'Nature Trails', icon: 'fas fa-hiking' });
+                facilities.push({ name: 'Wildlife', icon: 'fas fa-paw' });
+                if (area > 50000) facilities.push({ name: 'Visitor Center', icon: 'fas fa-info' });
+            } else if (type === 'golf course') {
+                facilities.push({ name: 'Golf Course', icon: 'fas fa-golf-ball' });
+                facilities.push({ name: 'Clubhouse', icon: 'fas fa-building' });
+                facilities.push({ name: 'Pro Shop', icon: 'fas fa-store' });
+            }
+            
+            return facilities;
+        }
+        
+        // Helper function to get accessibility features for popup
+        function getAccessibilityForPopup(type, area) {
+            const features = [];
+            
+            if (['park', 'recreational'].includes(type)) {
+                features.push('Wheelchair Accessible Paths');
+                features.push('Family Friendly');
+                if (area > 15000) features.push('Accessible Parking');
+            }
+            
+            if (type === 'garden') {
+                features.push('Paved Walkways');
+                features.push('Guided Tours Available');
+            }
+            
+            features.push('Public Access');
+            features.push('Near Public Transport');
+            
+            if (area > 20000) {
+                features.push('Good Lighting');
+            }
+            
+            return features;
         }
         
         // Update statistics with intro stats
