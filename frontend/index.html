@@ -462,6 +462,380 @@
             max-height: calc(100vh - var(--navbar-height) - 200px);
         }
         
+        /* Map Introduction Styles */
+        .map-intro {
+            background: linear-gradient(135deg, var(--surface-elevated) 0%, var(--background-tertiary) 100%);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            border: 1px solid var(--border-light);
+            position: relative;
+        }
+        
+        .intro-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .intro-description {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .intro-stats {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+        
+        .stat-badge {
+            background: rgba(27, 94, 32, 0.1);
+            color: var(--primary-color);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-medium);
+            display: flex;
+            align-items: center;
+        }
+        
+        .help-toggle {
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            background: var(--primary-color);
+            color: var(--text-inverse);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: var(--font-size-sm);
+        }
+        
+        .help-toggle:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+        
+        /* Help Panel Styles */
+        .help-panel {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .help-title {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .help-section {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .help-section h6 {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .help-section p {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            margin: 0;
+            line-height: 1.4;
+        }
+        
+        /* Enhanced Search Styles */
+        .search-options {
+            position: absolute;
+            right: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 2px;
+        }
+        
+        .search-option-btn {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            padding: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 12px;
+        }
+        
+        .search-option-btn:hover,
+        .search-option-btn.active {
+            background: var(--primary-color);
+            color: var(--text-inverse);
+        }
+        
+        /* Enhanced Filter Styles */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .help-btn {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+        }
+        
+        .help-btn:hover {
+            background: var(--background-tertiary);
+            color: var(--primary-color);
+        }
+        
+        .quick-filters {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .quick-filter-btn {
+            background: var(--surface-color);
+            border: 2px solid var(--border-light);
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .quick-filter-btn:hover {
+            border-color: var(--primary-color);
+            background: rgba(27, 94, 32, 0.05);
+        }
+        
+        .quick-filter-btn.active {
+            background: var(--primary-color);
+            color: var(--text-inverse);
+            border-color: var(--primary-color);
+        }
+        
+        .quick-filter-btn i {
+            font-size: var(--font-size-base);
+        }
+        
+        .detailed-filters {
+            border-top: 1px solid var(--border-light);
+            padding-top: var(--spacing-lg);
+        }
+        
+        .tooltip-btn {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            margin-left: var(--spacing-xs);
+            padding: 2px;
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+            font-size: 12px;
+        }
+        
+        .tooltip-btn:hover {
+            background: var(--background-tertiary);
+            color: var(--primary-color);
+        }
+        
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-xs);
+            color: var(--text-tertiary);
+            margin-top: var(--spacing-xs);
+        }
+        
+        /* Checkbox Group Styles */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            border-radius: var(--border-radius-sm);
+            transition: all var(--transition-fast);
+            font-size: var(--font-size-sm);
+        }
+        
+        .checkbox-item:hover {
+            background: var(--background-tertiary);
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            display: none;
+        }
+        
+        .checkmark {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-medium);
+            border-radius: 4px;
+            margin-right: var(--spacing-sm);
+            position: relative;
+            transition: all var(--transition-fast);
+        }
+        
+        .checkbox-item input[type="checkbox"]:checked + .checkmark {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .checkbox-item input[type="checkbox"]:checked + .checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-inverse);
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* Accessibility Settings Styles */
+        .setting-item {
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .setting-item:hover {
+            background: var(--background-tertiary);
+        }
+        
+        .setting-label {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            margin: 0;
+        }
+        
+        .setting-checkbox {
+            margin-right: var(--spacing-sm);
+            transform: scale(1.2);
+        }
+        
+        .setting-text {
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .setting-description {
+            color: var(--text-secondary);
+            font-size: var(--font-size-xs);
+            line-height: 1.3;
+        }
+        
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-xs) 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .shortcut-item:last-child {
+            border-bottom: none;
+        }
+        
+        .shortcut-item kbd {
+            background: var(--background-tertiary);
+            border: 1px solid var(--border-medium);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: var(--font-size-xs);
+            font-family: var(--font-family-mono);
+        }
+        
+        /* High Contrast Mode */
+        .high-contrast {
+            --primary-color: #000000;
+            --secondary-color: #333333;
+            --background-primary: #FFFFFF;
+            --background-secondary: #F0F0F0;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --border-light: #000000;
+            --border-medium: #333333;
+        }
+        
+        .high-contrast .leaflet-tile {
+            filter: contrast(150%) brightness(110%);
+        }
+        
+        /* Large Text Mode */
+        .large-text {
+            --font-size-xs: 0.875rem;
+            --font-size-sm: 1rem;
+            --font-size-base: 1.125rem;
+            --font-size-lg: 1.375rem;
+            --font-size-xl: 1.5rem;
+        }
+        
+        /* Reduced Motion Mode */
+        .reduced-motion * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+        
+        /* Color Blind Friendly Mode */
+        .color-blind-mode .legend-color,
+        .color-blind-mode .custom-marker {
+            border: 2px solid #000;
+            position: relative;
+        }
+        
+        .color-blind-mode .legend-color::after {
+            content: attr(data-pattern);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8px;
+            color: #000;
+            font-weight: bold;
+        }
+        
         /* Modern Stats Grid */
         .stats-grid {
             display: grid;
@@ -1619,18 +1993,84 @@
                     </button>
                 </div>
                 
-                <!-- Search Bar -->
-                <div class="search-container">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" id="searchInput" 
-                           placeholder="Search green spaces...">
-                    <button class="search-clear" id="searchClear">
-                        <i class="fas fa-times"></i>
+                <!-- Map Introduction -->
+                <div class="map-intro">
+                    <div class="intro-content">
+                        <h4 class="intro-title">
+                            <i class="fas fa-map-marked-alt me-2"></i>
+                            Kitwe Green Spaces Map
+                        </h4>
+                        <p class="intro-description">
+                            This interactive map shows parks, forests, gardens, and recreational areas throughout Kitwe. 
+                            Use the filters below to explore different types of green spaces and find locations that match your needs.
+                        </p>
+                        <div class="intro-stats">
+                            <span class="stat-badge">
+                                <i class="fas fa-leaf me-1"></i>
+                                <span id="totalSpacesIntro">...</span> Green Spaces
+                            </span>
+                            <span class="stat-badge">
+                                <i class="fas fa-map-pin me-1"></i>
+                                <span id="totalWardsIntro">...</span> Wards
+                            </span>
+                        </div>
+                    </div>
+                    <button class="help-toggle" id="helpToggle" title="Show Help & Instructions" aria-label="Show help and instructions">
+                        <i class="fas fa-question-circle"></i>
                     </button>
                 </div>
                 
+                <!-- Help Panel -->
+                <div class="help-panel d-none" id="helpPanel">
+                    <div class="help-content">
+                        <h5 class="help-title">
+                            <i class="fas fa-info-circle me-2"></i>
+                            How to Use This Map
+                        </h5>
+                        <div class="help-section">
+                            <h6><i class="fas fa-search me-2"></i>Search</h6>
+                            <p>Type a green space name, ward, or type to find specific locations. Use keyboard arrows to navigate results.</p>
+                        </div>
+                        <div class="help-section">
+                            <h6><i class="fas fa-filter me-2"></i>Filters</h6>
+                            <p>Use filters to narrow down results by type, location, size, facilities, or accessibility features.</p>
+                        </div>
+                        <div class="help-section">
+                            <h6><i class="fas fa-mouse-pointer me-2"></i>Map Interaction</h6>
+                            <p>Click markers for details, use zoom controls, or toggle layers. Press Ctrl+B to hide/show sidebar.</p>
+                        </div>
+                        <div class="help-section">
+                            <h6><i class="fas fa-universal-access me-2"></i>Accessibility</h6>
+                            <p>Use Tab to navigate, Enter to select, and Escape to close dialogs. High contrast mode available in settings.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Enhanced Search Bar -->
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" 
+                           placeholder="Search by name, ward, or type..."
+                           aria-label="Search green spaces"
+                           autocomplete="off">
+                    <button class="search-clear" id="searchClear" title="Clear search" aria-label="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="search-options">
+                        <button class="search-option-btn" id="searchByName" title="Search by name" aria-label="Search by name">
+                            <i class="fas fa-tag"></i>
+                        </button>
+                        <button class="search-option-btn" id="searchByWard" title="Search by ward" aria-label="Search by ward">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </button>
+                        <button class="search-option-btn" id="searchByType" title="Search by type" aria-label="Search by type">
+                            <i class="fas fa-leaf"></i>
+                        </button>
+                    </div>
+                </div>
+                
                 <!-- Search Results -->
-                <div class="search-results d-none" id="searchResults"></div>
+                <div class="search-results d-none" id="searchResults" role="listbox" aria-label="Search results"></div>
             </div>
             
             <!-- Sidebar Content -->
@@ -1651,40 +2091,177 @@
                     </div>
                 </div>
                 
-                <!-- Filters Section -->
+                <!-- Enhanced Filters Section -->
                 <div class="filter-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-filter"></i> Filter Green Spaces
-                    </h3>
-                    
-                    <div class="filter-group">
-                        <label class="filter-label">Type</label>
-                        <select class="filter-select" id="filterType">
-                            <option value="all">All Types</option>
-                            <option value="park">🌳 Park</option>
-                            <option value="garden">🌺 Garden</option>
-                            <option value="forest">🌲 Forest</option>
-                            <option value="recreational">⚽ Recreational</option>
-                            <option value="golf course">🏌️ Golf Course</option>
-                            <option value="other">📌 Other</option>
-                        </select>
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-filter"></i> Filter Green Spaces
+                        </h3>
+                        <button class="help-btn" data-help="filters" title="Filter Help" aria-label="Show filter help">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
                     </div>
                     
-                    <div class="filter-group">
-                        <label class="filter-label">Ward</label>
-                        <select class="filter-select" id="filterWard">
-                            <option value="all">All Wards</option>
-                        </select>
+                    <!-- Quick Filters -->
+                    <div class="quick-filters">
+                        <button class="quick-filter-btn active" data-filter="all" title="Show all green spaces">
+                            <i class="fas fa-globe"></i>
+                            <span>All</span>
+                        </button>
+                        <button class="quick-filter-btn" data-filter="park" title="Show parks only">
+                            <i class="fas fa-tree"></i>
+                            <span>Parks</span>
+                        </button>
+                        <button class="quick-filter-btn" data-filter="large" title="Show large spaces (>2 hectares)">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                            <span>Large</span>
+                        </button>
+                        <button class="quick-filter-btn" data-filter="accessible" title="Show wheelchair accessible spaces">
+                            <i class="fas fa-wheelchair"></i>
+                            <span>Accessible</span>
+                        </button>
                     </div>
                     
-                    <div class="filter-group">
-                        <label class="filter-label">Minimum Area</label>
-                        <div class="range-container">
-                            <div class="range-header">
-                                <span>Area:</span>
-                                <span class="range-value" id="areaValue">5,000 m²</span>
+                    <!-- Detailed Filters -->
+                    <div class="detailed-filters">
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="fas fa-leaf me-2"></i>Type
+                                <button class="tooltip-btn" data-tooltip="Filter by green space category" aria-label="Type filter help">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </label>
+                            <select class="filter-select" id="filterType" aria-label="Filter by green space type">
+                                <option value="all">All Types</option>
+                                <option value="park">🌳 Park</option>
+                                <option value="garden">🌺 Garden</option>
+                                <option value="forest">🌲 Forest</option>
+                                <option value="recreational">⚽ Recreational</option>
+                                <option value="golf course">🏌️ Golf Course</option>
+                                <option value="other">📌 Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="fas fa-map-marker-alt me-2"></i>Ward
+                                <button class="tooltip-btn" data-tooltip="Filter by administrative ward" aria-label="Ward filter help">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </label>
+                            <select class="filter-select" id="filterWard" aria-label="Filter by ward">
+                                <option value="all">All Wards</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="fas fa-ruler-combined me-2"></i>Size Range
+                                <button class="tooltip-btn" data-tooltip="Filter by minimum area in square meters" aria-label="Size filter help">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </label>
+                            <div class="range-container">
+                                <div class="range-header">
+                                    <span>Minimum Area:</span>
+                                    <span class="range-value" id="areaValue">0 m²</span>
+                                </div>
+                                <input type="range" id="areaRange" min="0" max="50000" step="1000" value="0" aria-label="Minimum area filter">
+                                <div class="range-labels">
+                                    <span>0</span>
+                                    <span>25k</span>
+                                    <span>50k m²</span>
+                                </div>
                             </div>
-                            <input type="range" id="areaRange" min="0" max="50000" step="1000" value="5000">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="fas fa-sort me-2"></i>Sort By
+                                <button class="tooltip-btn" data-tooltip="Choose how to order the results" aria-label="Sort filter help">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </label>
+                            <select class="filter-select" id="sortBy" aria-label="Sort green spaces by">
+                                <option value="name">Name (A-Z)</option>
+                                <option value="name-desc">Name (Z-A)</option>
+                                <option value="size-desc">Size (Largest First)</option>
+                                <option value="size-asc">Size (Smallest First)</option>
+                                <option value="ward">Ward (A-Z)</option>
+                                <option value="type">Type (A-Z)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="fas fa-tools me-2"></i>Facilities
+                                <button class="tooltip-btn" data-tooltip="Filter by available facilities and amenities" aria-label="Facilities filter help">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="hasPlayground" value="playground">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-child me-2"></i>Playground
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="hasBenches" value="benches">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-chair me-2"></i>Benches
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="hasShade" value="shade">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-tree me-2"></i>Shade Trees
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="hasParking" value="parking">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-parking me-2"></i>Parking
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="hasRestrooms" value="restrooms">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-restroom me-2"></i>Restrooms
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="hasSports" value="sports">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-futbol me-2"></i>Sports Facilities
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="fas fa-universal-access me-2"></i>Accessibility
+                                <button class="tooltip-btn" data-tooltip="Filter by accessibility features" aria-label="Accessibility filter help">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="wheelchairAccessible" value="wheelchair">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-wheelchair me-2"></i>Wheelchair Accessible
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="publicTransport" value="transport">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-bus me-2"></i>Near Public Transport
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="pavedPaths" value="paved">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-road me-2"></i>Paved Paths
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="lighting" value="lighting">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-lightbulb me-2"></i>Good Lighting
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1746,31 +2323,34 @@
             
             <!-- Map Controls -->
             <div class="map-controls">
-                <button class="control-btn" id="toggleSidebarBtn" title="Toggle Sidebar">
+                <button class="control-btn" id="toggleSidebarBtn" title="Toggle Sidebar" aria-label="Toggle sidebar visibility">
                     <i class="fas fa-bars"></i>
                 </button>
-                <button class="control-btn" id="exportDataBtn" title="Export Data">
+                <button class="control-btn" id="accessibilityBtn" title="Accessibility Settings" aria-label="Open accessibility settings">
+                    <i class="fas fa-universal-access"></i>
+                </button>
+                <button class="control-btn" id="exportDataBtn" title="Export Data" aria-label="Export green spaces data">
                     <i class="fas fa-download"></i>
                 </button>
-                <button class="control-btn" id="analyticsBtn" title="Advanced Analytics">
+                <button class="control-btn" id="analyticsBtn" title="Advanced Analytics" aria-label="View advanced analytics">
                     <i class="fas fa-chart-line"></i>
                 </button>
-                <button class="control-btn" id="homeBtn" title="Go to Homepage">
+                <button class="control-btn" id="homeBtn" title="Go to Homepage" aria-label="Go to homepage">
                     <i class="fas fa-home"></i>
                 </button>
-                <button class="control-btn" id="locateBtn" title="Find my location">
+                <button class="control-btn" id="locateBtn" title="Find my location" aria-label="Find my current location">
                     <i class="fas fa-location-arrow"></i>
                 </button>
-                <button class="control-btn" id="fullscreenBtn" title="Toggle Fullscreen">
+                <button class="control-btn" id="fullscreenBtn" title="Toggle Fullscreen" aria-label="Toggle fullscreen mode">
                     <i class="fas fa-expand"></i>
                 </button>
-                <button class="control-btn" id="feedbackBtn" title="Report Issue">
+                <button class="control-btn" id="feedbackBtn" title="Report Issue" aria-label="Report an issue or provide feedback">
                     <i class="fas fa-flag"></i>
                 </button>
-                <button class="control-btn" id="dashboardBtn" title="View Dashboard">
+                <button class="control-btn" id="dashboardBtn" title="View Dashboard" aria-label="View statistics dashboard">
                     <i class="fas fa-chart-bar"></i>
                 </button>
-                <button class="control-btn" id="refreshBtn" title="Refresh Data">
+                <button class="control-btn" id="refreshBtn" title="Refresh Data" aria-label="Refresh green spaces data">
                     <i class="fas fa-sync-alt"></i>
                 </button>
             </div>
@@ -1815,6 +2395,158 @@
         </div>
     </div>
     
+    <!-- Accessibility Settings Modal -->
+    <div class="modal fade" id="accessibilityModal" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #1565C0, #1976D2); color: white;">
+                    <h5 class="modal-title" id="accessibilityModalLabel">
+                        <i class="fas fa-universal-access me-2"></i>Accessibility Settings
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0"><i class="fas fa-eye me-2"></i>Visual Settings</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="setting-item">
+                                        <label class="setting-label">
+                                            <input type="checkbox" id="highContrastMode" class="setting-checkbox">
+                                            <span class="setting-text">High Contrast Mode</span>
+                                            <small class="setting-description">Increases contrast for better visibility</small>
+                                        </label>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label class="setting-label">
+                                            <input type="checkbox" id="largeText" class="setting-checkbox">
+                                            <span class="setting-text">Large Text</span>
+                                            <small class="setting-description">Increases font size throughout the interface</small>
+                                        </label>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label class="setting-label">
+                                            <input type="checkbox" id="reducedMotion" class="setting-checkbox">
+                                            <span class="setting-text">Reduce Motion</span>
+                                            <small class="setting-description">Minimizes animations and transitions</small>
+                                        </label>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label class="setting-label">
+                                            <input type="checkbox" id="colorBlindMode" class="setting-checkbox">
+                                            <span class="setting-text">Color Blind Friendly</span>
+                                            <small class="setting-description">Uses patterns and shapes in addition to colors</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="fas fa-keyboard me-2"></i>Navigation Settings</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="setting-item">
+                                        <label class="setting-label">
+                                            <input type="checkbox" id="keyboardNavigation" class="setting-checkbox" checked>
+                                            <span class="setting-text">Enhanced Keyboard Navigation</span>
+                                            <small class="setting-description">Improved Tab and arrow key navigation</small>
+                                        </label>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label class="setting-label">
+                                            <input type="checkbox" id="focusIndicators" class="setting-checkbox" checked>
+                                            <span class="setting-text">Enhanced Focus Indicators</span>
+                                            <small class="setting-description">More visible focus outlines</small>
+                                        </label>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label class="setting-label">
+                                            <input type="checkbox" id="skipLinks" class="setting-checkbox">
+                                            <span class="setting-text">Skip Navigation Links</span>
+                                            <small class="setting-description">Adds skip-to-content links</small>
+                                        </label>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label class="setting-label">
+                                            <input type="checkbox" id="screenReaderMode" class="setting-checkbox">
+                                            <span class="setting-text">Screen Reader Optimized</span>
+                                            <small class="setting-description">Enhanced descriptions and ARIA labels</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0"><i class="fas fa-keyboard me-2"></i>Keyboard Shortcuts</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="shortcut-item">
+                                                <kbd>Ctrl + B</kbd>
+                                                <span>Toggle Sidebar</span>
+                                            </div>
+                                            <div class="shortcut-item">
+                                                <kbd>Ctrl + F</kbd>
+                                                <span>Focus Search</span>
+                                            </div>
+                                            <div class="shortcut-item">
+                                                <kbd>Ctrl + H</kbd>
+                                                <span>Show/Hide Help</span>
+                                            </div>
+                                            <div class="shortcut-item">
+                                                <kbd>Escape</kbd>
+                                                <span>Close Dialogs</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="shortcut-item">
+                                                <kbd>Arrow Keys</kbd>
+                                                <span>Navigate Search Results</span>
+                                            </div>
+                                            <div class="shortcut-item">
+                                                <kbd>Enter</kbd>
+                                                <span>Select/Activate</span>
+                                            </div>
+                                            <div class="shortcut-item">
+                                                <kbd>Tab</kbd>
+                                                <span>Navigate Elements</span>
+                                            </div>
+                                            <div class="shortcut-item">
+                                                <kbd>Space</kbd>
+                                                <span>Toggle Checkboxes</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAccessibilitySettings()">
+                        <i class="fas fa-save me-2"></i>Save Settings
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" onclick="resetAccessibilitySettings()">
+                        <i class="fas fa-undo me-2"></i>Reset to Default
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Advanced Analytics Modal -->
     <div class="modal fade" id="analyticsModal" tabindex="-1" aria-labelledby="analyticsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -2136,9 +2868,279 @@
                 initializeMap();
                 setupSidebar();
                 setupControls();
+                setupAccessibility();
+                setupEnhancedFilters();
                 loadGreenSpaces();
             }, 500); // Small delay to show loading state
         });
+        
+        // Setup enhanced accessibility features
+        function setupAccessibility() {
+            console.log('♿ Setting up accessibility features...');
+            
+            // Load saved accessibility settings
+            loadAccessibilitySettings();
+            
+            // Setup keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl + B: Toggle sidebar
+                if (e.ctrlKey && e.key === 'b') {
+                    e.preventDefault();
+                    document.getElementById('sidebarToggle').click();
+                }
+                
+                // Ctrl + F: Focus search
+                if (e.ctrlKey && e.key === 'f') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+                
+                // Ctrl + H: Toggle help
+                if (e.ctrlKey && e.key === 'h') {
+                    e.preventDefault();
+                    document.getElementById('helpToggle').click();
+                }
+                
+                // Escape: Close modals and dialogs
+                if (e.key === 'Escape') {
+                    const openModal = document.querySelector('.modal.show');
+                    if (openModal) {
+                        bootstrap.Modal.getInstance(openModal).hide();
+                    }
+                    
+                    const helpPanel = document.getElementById('helpPanel');
+                    if (!helpPanel.classList.contains('d-none')) {
+                        helpPanel.classList.add('d-none');
+                    }
+                    
+                    const searchResults = document.getElementById('searchResults');
+                    if (!searchResults.classList.contains('d-none')) {
+                        searchResults.classList.add('d-none');
+                    }
+                }
+            });
+            
+            // Setup accessibility button
+            const accessibilityBtn = document.getElementById('accessibilityBtn');
+            if (accessibilityBtn) {
+                accessibilityBtn.addEventListener('click', function() {
+                    const modal = new bootstrap.Modal(document.getElementById('accessibilityModal'));
+                    modal.show();
+                });
+            }
+            
+            // Setup help toggle
+            const helpToggle = document.getElementById('helpToggle');
+            const helpPanel = document.getElementById('helpPanel');
+            if (helpToggle && helpPanel) {
+                helpToggle.addEventListener('click', function() {
+                    helpPanel.classList.toggle('d-none');
+                    const isVisible = !helpPanel.classList.contains('d-none');
+                    helpToggle.setAttribute('title', isVisible ? 'Hide Help' : 'Show Help & Instructions');
+                    helpToggle.setAttribute('aria-expanded', isVisible);
+                });
+            }
+            
+            // Setup tooltips
+            setupTooltips();
+            
+            console.log('✅ Accessibility features setup complete');
+        }
+        
+        // Setup enhanced filters
+        function setupEnhancedFilters() {
+            console.log('🔍 Setting up enhanced filters...');
+            
+            // Quick filters
+            const quickFilterBtns = document.querySelectorAll('.quick-filter-btn');
+            quickFilterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    quickFilterBtns.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Apply quick filter
+                    const filterType = this.dataset.filter;
+                    applyQuickFilter(filterType);
+                });
+            });
+            
+            // Enhanced search options
+            const searchOptionBtns = document.querySelectorAll('.search-option-btn');
+            searchOptionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    searchOptionBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const searchInput = document.getElementById('searchInput');
+                    const searchType = this.id.replace('searchBy', '').toLowerCase();
+                    
+                    const placeholders = {
+                        name: 'Search by green space name...',
+                        ward: 'Search by ward name...',
+                        type: 'Search by type (park, garden, forest)...'
+                    };
+                    
+                    searchInput.placeholder = placeholders[searchType] || 'Search green spaces...';
+                    searchInput.focus();
+                });
+            });
+            
+            // Sort functionality
+            const sortSelect = document.getElementById('sortBy');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', function() {
+                    applySortAndFilter();
+                });
+            }
+            
+            // Facility checkboxes
+            const facilityCheckboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
+            facilityCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    applySortAndFilter();
+                });
+            });
+            
+            console.log('✅ Enhanced filters setup complete');
+        }
+        
+        // Apply quick filters
+        function applyQuickFilter(filterType) {
+            let filtered = [...allGreenSpaces];
+            
+            switch(filterType) {
+                case 'all':
+                    // Show all spaces
+                    break;
+                case 'park':
+                    filtered = filtered.filter(space => space.properties.type === 'park');
+                    break;
+                case 'large':
+                    filtered = filtered.filter(space => (space.properties.area_sq_m || 0) > 20000);
+                    break;
+                case 'accessible':
+                    // For demo purposes, assume parks and recreational areas are more accessible
+                    filtered = filtered.filter(space => 
+                        ['park', 'recreational'].includes(space.properties.type)
+                    );
+                    break;
+            }
+            
+            displayGreenSpaces(filtered);
+            updateStatistics(filtered);
+            
+            const filterName = filterType === 'all' ? 'all green spaces' : 
+                              filterType === 'large' ? 'large green spaces (>2 hectares)' :
+                              filterType === 'accessible' ? 'accessible green spaces' :
+                              `${filterType}s`;
+            
+            showNotification(`🔍 Showing ${filtered.length} ${filterName}`, 'info');
+        }
+        
+        // Enhanced sort and filter function
+        function applySortAndFilter() {
+            const btn = document.getElementById('applyFilters');
+            if (btn) ButtonLoader.setLoading(btn, true);
+            
+            try {
+                let filtered = [...allGreenSpaces];
+                
+                // Apply type filter
+                const typeFilter = document.getElementById('filterType').value;
+                if (typeFilter !== 'all') {
+                    filtered = filtered.filter(space => space.properties.type === typeFilter);
+                }
+                
+                // Apply ward filter
+                const wardFilter = document.getElementById('filterWard').value;
+                if (wardFilter !== 'all') {
+                    filtered = filtered.filter(space => space.properties.ward === wardFilter);
+                }
+                
+                // Apply area filter
+                const areaFilter = parseInt(document.getElementById('areaRange').value);
+                if (areaFilter > 0) {
+                    filtered = filtered.filter(space => (space.properties.area_sq_m || 0) >= areaFilter);
+                }
+                
+                // Apply facility filters
+                const facilityFilters = [];
+                const facilityCheckboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
+                facilityCheckboxes.forEach(checkbox => {
+                    facilityFilters.push(checkbox.value);
+                });
+                
+                if (facilityFilters.length > 0) {
+                    filtered = filtered.filter(space => {
+                        // For demo purposes, apply some logic based on space type and size
+                        const props = space.properties;
+                        const hasPlayground = props.type === 'park' && (props.area_sq_m || 0) > 10000;
+                        const hasBenches = ['park', 'garden'].includes(props.type);
+                        const hasShade = ['park', 'forest', 'garden'].includes(props.type);
+                        const hasParking = (props.area_sq_m || 0) > 25000;
+                        const hasRestrooms = (props.area_sq_m || 0) > 20000;
+                        const hasSports = props.type === 'recreational';
+                        const wheelchairAccessible = ['park', 'recreational'].includes(props.type);
+                        const publicTransport = true; // Assume all are near transport
+                        const pavedPaths = ['park', 'recreational'].includes(props.type);
+                        const lighting = (props.area_sq_m || 0) > 15000;
+                        
+                        const facilities = {
+                            playground: hasPlayground,
+                            benches: hasBenches,
+                            shade: hasShade,
+                            parking: hasParking,
+                            restrooms: hasRestrooms,
+                            sports: hasSports,
+                            wheelchair: wheelchairAccessible,
+                            transport: publicTransport,
+                            paved: pavedPaths,
+                            lighting: lighting
+                        };
+                        
+                        return facilityFilters.every(filter => facilities[filter]);
+                    });
+                }
+                
+                // Apply sorting
+                const sortBy = document.getElementById('sortBy').value;
+                filtered.sort((a, b) => {
+                    const propsA = a.properties;
+                    const propsB = b.properties;
+                    
+                    switch(sortBy) {
+                        case 'name':
+                            return propsA.name.localeCompare(propsB.name);
+                        case 'name-desc':
+                            return propsB.name.localeCompare(propsA.name);
+                        case 'size-desc':
+                            return (propsB.area_sq_m || 0) - (propsA.area_sq_m || 0);
+                        case 'size-asc':
+                            return (propsA.area_sq_m || 0) - (propsB.area_sq_m || 0);
+                        case 'ward':
+                            return (propsA.ward || '').localeCompare(propsB.ward || '');
+                        case 'type':
+                            return propsA.type.localeCompare(propsB.type);
+                        default:
+                            return 0;
+                    }
+                });
+                
+                setTimeout(() => {
+                    displayGreenSpaces(filtered);
+                    updateStatistics(filtered);
+                    
+                    if (btn) ButtonLoader.setLoading(btn, false);
+                    showNotification(`✅ Showing ${filtered.length} filtered and sorted green spaces`, 'success');
+                }, 300);
+                
+            } catch (error) {
+                if (btn) ButtonLoader.setLoading(btn, false);
+                showNotification(`❌ Filter error: ${error.message}`, 'error');
+            }
+        }
         
         // Initialize the map
         function initializeMap() {
@@ -3076,7 +4078,7 @@
             });
         }
         
-        // Update statistics
+        // Update statistics with intro stats
         function updateStatistics(greenSpaces) {
             const totalSpaces = greenSpaces.length;
             // Use area_hectares if available, otherwise convert from area_sq_m
@@ -3097,12 +4099,221 @@
             const statArea = document.getElementById('statArea');
             const statWards = document.getElementById('statWards');
             
+            // Update main stats
             if (statSpaces) statSpaces.textContent = totalSpaces;
             if (statArea) statArea.textContent = Math.round(totalAreaHa * 10) / 10; // Round to 1 decimal
             if (statWards) statWards.textContent = wards.length;
             
+            // Update intro stats
+            const totalSpacesIntro = document.getElementById('totalSpacesIntro');
+            const totalWardsIntro = document.getElementById('totalWardsIntro');
+            if (totalSpacesIntro) totalSpacesIntro.textContent = totalSpaces;
+            if (totalWardsIntro) totalWardsIntro.textContent = wards.length;
+            
             console.log(`📊 Stats updated: ${totalSpaces} spaces, ${Math.round(totalAreaHa * 10) / 10} ha, ${wards.length} wards`);
         }
+        
+        // Setup tooltips system
+        function setupTooltips() {
+            const tooltipBtns = document.querySelectorAll('[data-tooltip]');
+            tooltipBtns.forEach(btn => {
+                btn.addEventListener('mouseenter', function(e) {
+                    showTooltip(e.target, this.dataset.tooltip);
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    hideTooltip();
+                });
+                
+                btn.addEventListener('focus', function(e) {
+                    showTooltip(e.target, this.dataset.tooltip);
+                });
+                
+                btn.addEventListener('blur', function() {
+                    hideTooltip();
+                });
+            });
+        }
+        
+        function showTooltip(element, text) {
+            hideTooltip(); // Remove any existing tooltip
+            
+            const tooltip = document.createElement('div');
+            tooltip.className = 'custom-tooltip';
+            tooltip.textContent = text;
+            tooltip.style.cssText = `
+                position: absolute;
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 500;
+                z-index: 10000;
+                pointer-events: none;
+                white-space: nowrap;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(10px);
+            `;
+            
+            document.body.appendChild(tooltip);
+            
+            const rect = element.getBoundingClientRect();
+            const tooltipRect = tooltip.getBoundingClientRect();
+            
+            let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+            let top = rect.top - tooltipRect.height - 8;
+            
+            // Adjust if tooltip goes off screen
+            if (left < 8) left = 8;
+            if (left + tooltipRect.width > window.innerWidth - 8) {
+                left = window.innerWidth - tooltipRect.width - 8;
+            }
+            if (top < 8) {
+                top = rect.bottom + 8;
+            }
+            
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
+            tooltip.style.opacity = '0';
+            tooltip.style.transform = 'translateY(4px)';
+            tooltip.style.transition = 'all 0.2s ease';
+            
+            setTimeout(() => {
+                tooltip.style.opacity = '1';
+                tooltip.style.transform = 'translateY(0)';
+            }, 10);
+        }
+        
+        function hideTooltip() {
+            const tooltip = document.querySelector('.custom-tooltip');
+            if (tooltip) {
+                tooltip.style.opacity = '0';
+                tooltip.style.transform = 'translateY(4px)';
+                setTimeout(() => tooltip.remove(), 200);
+            }
+        }
+        
+        // Accessibility settings functions
+        function loadAccessibilitySettings() {
+            const settings = JSON.parse(localStorage.getItem('accessibilitySettings') || '{}');
+            
+            // Apply saved settings
+            if (settings.highContrastMode) {
+                document.body.classList.add('high-contrast');
+                document.getElementById('highContrastMode').checked = true;
+            }
+            
+            if (settings.largeText) {
+                document.body.classList.add('large-text');
+                document.getElementById('largeText').checked = true;
+            }
+            
+            if (settings.reducedMotion) {
+                document.body.classList.add('reduced-motion');
+                document.getElementById('reducedMotion').checked = true;
+            }
+            
+            if (settings.colorBlindMode) {
+                document.body.classList.add('color-blind-mode');
+                document.getElementById('colorBlindMode').checked = true;
+            }
+            
+            if (settings.screenReaderMode) {
+                document.body.classList.add('screen-reader-mode');
+                document.getElementById('screenReaderMode').checked = true;
+                enhanceScreenReaderSupport();
+            }
+        }
+        
+        function saveAccessibilitySettings() {
+            const settings = {
+                highContrastMode: document.getElementById('highContrastMode').checked,
+                largeText: document.getElementById('largeText').checked,
+                reducedMotion: document.getElementById('reducedMotion').checked,
+                colorBlindMode: document.getElementById('colorBlindMode').checked,
+                keyboardNavigation: document.getElementById('keyboardNavigation').checked,
+                focusIndicators: document.getElementById('focusIndicators').checked,
+                skipLinks: document.getElementById('skipLinks').checked,
+                screenReaderMode: document.getElementById('screenReaderMode').checked
+            };
+            
+            localStorage.setItem('accessibilitySettings', JSON.stringify(settings));
+            
+            // Apply settings immediately
+            document.body.classList.toggle('high-contrast', settings.highContrastMode);
+            document.body.classList.toggle('large-text', settings.largeText);
+            document.body.classList.toggle('reduced-motion', settings.reducedMotion);
+            document.body.classList.toggle('color-blind-mode', settings.colorBlindMode);
+            document.body.classList.toggle('screen-reader-mode', settings.screenReaderMode);
+            
+            if (settings.screenReaderMode) {
+                enhanceScreenReaderSupport();
+            }
+            
+            showNotification('✅ Accessibility settings saved successfully!', 'success');
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('accessibilityModal'));
+            modal.hide();
+        }
+        
+        function resetAccessibilitySettings() {
+            // Reset all checkboxes
+            document.getElementById('highContrastMode').checked = false;
+            document.getElementById('largeText').checked = false;
+            document.getElementById('reducedMotion').checked = false;
+            document.getElementById('colorBlindMode').checked = false;
+            document.getElementById('keyboardNavigation').checked = true;
+            document.getElementById('focusIndicators').checked = true;
+            document.getElementById('skipLinks').checked = false;
+            document.getElementById('screenReaderMode').checked = false;
+            
+            // Remove all accessibility classes
+            document.body.classList.remove('high-contrast', 'large-text', 'reduced-motion', 'color-blind-mode', 'screen-reader-mode');
+            
+            // Clear localStorage
+            localStorage.removeItem('accessibilitySettings');
+            
+            showNotification('🔄 Accessibility settings reset to default', 'info');
+        }
+        
+        function enhanceScreenReaderSupport() {
+            // Add more descriptive ARIA labels
+            const markers = document.querySelectorAll('.custom-marker');
+            markers.forEach((marker, index) => {
+                const space = allGreenSpaces[index];
+                if (space) {
+                    const props = space.properties;
+                    const description = `${props.name}, ${props.type} in ${props.ward || 'Kitwe'}, area ${props.area_sq_m || 'unknown'} square meters`;
+                    marker.setAttribute('aria-label', description);
+                    marker.setAttribute('role', 'button');
+                    marker.setAttribute('tabindex', '0');
+                }
+            });
+            
+            // Add live region for dynamic updates
+            if (!document.getElementById('liveRegion')) {
+                const liveRegion = document.createElement('div');
+                liveRegion.id = 'liveRegion';
+                liveRegion.setAttribute('aria-live', 'polite');
+                liveRegion.setAttribute('aria-atomic', 'true');
+                liveRegion.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
+                document.body.appendChild(liveRegion);
+            }
+        }
+        
+        // Announce changes to screen readers
+        function announceToScreenReader(message) {
+            const liveRegion = document.getElementById('liveRegion');
+            if (liveRegion) {
+                liveRegion.textContent = message;
+            }
+        }
+        
+        // Make functions globally accessible
+        window.saveAccessibilitySettings = saveAccessibilitySettings;
+        window.resetAccessibilitySettings = resetAccessibilitySettings;
         
         // Populate ward filter
         function populateWardFilter(greenSpaces) {
