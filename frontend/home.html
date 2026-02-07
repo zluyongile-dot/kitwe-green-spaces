@@ -14,151 +14,600 @@
     <!-- Your Custom CSS -->
     <link rel="stylesheet" href="style.css">
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    
     <!-- Home Page Specific Styles -->
     <style>
-        /* Fix scrolling issues */
+        /* ========================================
+           NATURE-INSPIRED COLOR PALETTE
+           ======================================== */
+        :root {
+            /* Primary Greens - Forest & Nature */
+            --forest-green: #1B5E20;
+            --leaf-green: #2E7D32;
+            --spring-green: #4CAF50;
+            --light-green: #66BB6A;
+            --mint-green: #81C784;
+            
+            /* Earth Tones */
+            --earth-brown: #6D4C41;
+            --sand-beige: #D7CCC8;
+            --stone-gray: #90A4AE;
+            
+            /* Sky & Water */
+            --sky-blue: #0288D1;
+            --water-blue: #0097A7;
+            
+            /* Accent Colors */
+            --sunset-orange: #FF6F00;
+            --flower-pink: #E91E63;
+            --sunshine-yellow: #FFA000;
+            
+            /* Neutrals */
+            --white: #FFFFFF;
+            --off-white: #FAFAFA;
+            --light-gray: #F5F5F5;
+            --medium-gray: #E0E0E0;
+            --dark-gray: #424242;
+            --charcoal: #212121;
+            
+            /* Semantic Colors */
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #F44336;
+            --info: #2196F3;
+            
+            /* Typography */
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-display: 'Playfair Display', Georgia, serif;
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2.5rem;
+            --spacing-xl: 4rem;
+            --spacing-2xl: 6rem;
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(27, 94, 32, 0.08);
+            --shadow-md: 0 4px 16px rgba(27, 94, 32, 0.12);
+            --shadow-lg: 0 8px 32px rgba(27, 94, 32, 0.16);
+            --shadow-xl: 0 16px 48px rgba(27, 94, 32, 0.20);
+        }
+        
+        /* ========================================
+           GLOBAL STYLES & TYPOGRAPHY
+           ======================================== */
         html, body {
             overflow-x: hidden !important;
             overflow-y: auto !important;
             height: auto !important;
             min-height: 100vh !important;
             max-height: none !important;
+            scroll-behavior: smooth;
         }
         
-        /* Override any conflicting styles */
         * {
             max-height: none !important;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: var(--font-primary);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--charcoal);
+            background: var(--off-white);
             position: static !important;
             height: auto !important;
             overflow: visible !important;
             overflow-y: auto !important;
             overflow-x: hidden !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Ensure main container doesn't restrict height */
         .main-container {
             height: auto !important;
             min-height: 100vh !important;
             overflow: visible !important;
         }
         
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(rgba(46, 125, 50, 0.9), rgba(76, 175, 80, 0.8)),
-                        url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-            border-radius: 0 0 30px 30px;
-            margin-bottom: 50px;
-        }
-        
-        /* Feature Cards */
-        .feature-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
-            height: 100%;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-        
-        .feature-icon {
-            font-size: 48px;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-        
-        /* Home Page Specific Stats */
-        .home-stat-number {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            line-height: 1;
-        }
-        
-        /* Project Info */
-        .project-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border: 1px solid #e0e0e0;
-        }
-        
-        /* Map Preview */
-        .map-preview {
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        
-        .map-preview:hover {
-            transform: scale(1.02);
-        }
-        
-        /* Footer for Home */
-        .home-footer {
-            background-color: #2C3E50;
-            color: white;
-            padding: 50px 0 20px;
-            margin-top: 50px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-section {
-                padding: 60px 0;
-            }
-            
-            .home-stat-number {
-                font-size: 2rem;
-            }
-        }
-        
-        /* Ensure all containers allow scrolling */
-        .container, .container-fluid {
-            overflow: visible !important;
-        }
-        
-        /* Fix any potential viewport issues */
         .main-content {
             overflow-y: auto;
             overflow-x: hidden;
             height: auto;
         }
         
-        /* Smooth scrolling for anchor links */
-        html {
-            scroll-behavior: smooth;
+        .container, .container-fluid {
+            overflow: visible !important;
+            max-width: 1200px;
+            padding-left: var(--spacing-md);
+            padding-right: var(--spacing-md);
         }
         
-        /* Enhanced styling for green spaces content */
-        #green-spaces-info {
-            scroll-margin-top: 80px; /* Account for sticky navbar */
+        /* Typography Enhancements */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--forest-green);
+            margin-bottom: var(--spacing-md);
         }
         
-        /* Improved readability for long content */
-        #green-spaces-info p {
-            line-height: 1.6;
-        }
+        h1 { font-size: 3.5rem; letter-spacing: -0.02em; }
+        h2 { font-size: 2.75rem; letter-spacing: -0.01em; }
+        h3 { font-size: 2rem; }
+        h4 { font-size: 1.5rem; }
+        h5 { font-size: 1.25rem; }
+        h6 { font-size: 1.1rem; }
         
-        #green-spaces-info ul {
+        p {
+            margin-bottom: var(--spacing-md);
             line-height: 1.8;
+            color: var(--dark-gray);
+        }
+        
+        .lead {
+            font-size: 1.25rem;
+            font-weight: 400;
+            line-height: 1.8;
+            color: var(--stone-gray);
+        }
+        
+        /* ========================================
+           HERO SECTION - ENHANCED
+           ======================================== */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(27, 94, 32, 0.95) 0%, rgba(46, 125, 50, 0.90) 50%, rgba(76, 175, 80, 0.85) 100%),
+                        url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--white);
+            padding: var(--spacing-2xl) 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23ffffff"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23ffffff"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23ffffff"/></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.1;
+        }
+        
+        .hero-section .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-section h1 {
+            color: var(--white);
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            margin-bottom: var(--spacing-md);
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .hero-section .lead {
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            margin: 0 auto var(--spacing-lg);
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* ========================================
+           SECTION STYLING
+           ======================================== */
+        section {
+            padding: var(--spacing-xl) 0;
+            position: relative;
+        }
+        
+        section.bg-light {
+            background: linear-gradient(180deg, var(--off-white) 0%, var(--light-gray) 100%);
+        }
+        
+        /* Section Headers with Nature Accents */
+        section h2 {
+            position: relative;
+            display: inline-block;
+            padding-bottom: var(--spacing-sm);
+        }
+        
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--forest-green), var(--spring-green));
+            border-radius: 2px;
+        }
+        
+        section h2 i {
+            color: var(--spring-green);
+            margin-right: var(--spacing-sm);
+        }
+        
+        /* ========================================
+           CARDS & CONTAINERS
+           ======================================== */
+        .feature-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--forest-green), var(--spring-green), var(--light-green));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-12px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--spring-green);
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-icon {
+            font-size: 56px;
+            color: var(--spring-green);
+            margin-bottom: var(--spacing-md);
+            transition: transform 0.4s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .project-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--medium-gray);
+            transition: all 0.3s ease;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .project-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+        }
+        
+        /* ========================================
+           STATS SECTION
+           ======================================== */
+        .home-stat-number {
+            font-size: 4rem;
+            font-weight: 800;
+            font-family: var(--font-display);
+            background: linear-gradient(135deg, var(--forest-green), var(--spring-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        /* ========================================
+           PULL QUOTES
+           ======================================== */
+        .pull-quote {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            border-left: 6px solid var(--spring-green);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+            border-radius: var(--radius-md);
+            position: relative;
+            font-style: italic;
+        }
+        
+        .pull-quote::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--spring-green);
+            opacity: 0.2;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-family: Georgia, serif;
+        }
+        
+        .pull-quote p {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--forest-green);
+            margin: 0;
+            padding-left: var(--spacing-md);
+        }
+        
+        /* ========================================
+           NATURE-THEMED ICONS & BULLETS
+           ======================================== */
+        .nature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .nature-list li {
+            position: relative;
+            padding-left: 2.5rem;
+            margin-bottom: var(--spacing-md);
+            line-height: 1.8;
+        }
+        
+        .nature-list li::before {
+            content: '🌿';
+            position: absolute;
+            left: 0;
+            font-size: 1.5rem;
+        }
+        
+        .nature-list.leaf li::before { content: '🍃'; }
+        .nature-list.tree li::before { content: '🌳'; }
+        .nature-list.flower li::before { content: '🌸'; }
+        .nature-list.seedling li::before { content: '🌱'; }
+        
+        /* Icon Badges */
+        .icon-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--forest-green), var(--spring-green));
+            color: var(--white);
+            font-size: 28px;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease;
+        }
+        
+        .icon-badge:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+        
+        /* ========================================
+           MAP PREVIEW
+           ======================================== */
+        .map-preview {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .map-preview::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(27, 94, 32, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .map-preview:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .map-preview:hover::after {
+            opacity: 1;
+        }
+        
+        /* ========================================
+           CONTACT ICONS
+           ======================================== */
+        .contact-method {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md);
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-md);
+            transition: all 0.3s ease;
+        }
+        
+        .contact-method:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(8px);
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--forest-green), var(--spring-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 24px;
+            margin-right: var(--spacing-md);
+            flex-shrink: 0;
+        }
+        
+        /* ========================================
+           INVOLVEMENT CARDS
+           ======================================== */
+        .involvement-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            border-left: 6px solid var(--spring-green);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .involvement-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-left-width: 8px;
+        }
+        
+        .involvement-card h5 {
+            color: var(--forest-green);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .involvement-card .d-flex {
+            transition: transform 0.2s ease;
+        }
+        
+        .involvement-card .d-flex:hover {
+            transform: translateX(8px);
+        }
+        
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .home-footer {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+            color: var(--white);
+            padding: var(--spacing-xl) 0 var(--spacing-lg);
+            margin-top: var(--spacing-2xl);
+            position: relative;
+        }
+        
+        .home-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--spring-green), var(--light-green), var(--mint-green));
+        }
+        
+        .home-footer a {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.3s ease;
+        }
+        
+        .home-footer a:hover {
+            color: var(--white);
+            text-decoration: underline;
+        }
+        
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 992px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.75rem; }
+            
+            .hero-section {
+                padding: var(--spacing-xl) 0;
+            }
+            
+            .home-stat-number {
+                font-size: 3rem;
+            }
+            
+            section {
+                padding: var(--spacing-lg) 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            :root {
+                --spacing-xl: 3rem;
+                --spacing-2xl: 4rem;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            
+            .container {
+                padding-left: var(--spacing-sm);
+                padding-right: var(--spacing-sm);
+            }
+            
+            .home-stat-number {
+                font-size: 2.5rem;
+            }
+            
+            .feature-card {
+                margin-bottom: var(--spacing-md);
+            }
+        }
+        
+        /* ========================================
+           SCROLL ENHANCEMENTS
+           ======================================== */
+        #green-spaces-info {
+            scroll-margin-top: 80px;
+        }
+        
+        /* Smooth reveal animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -221,17 +670,30 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section with Enhanced Banner -->
     <section class="hero-section">
         <div class="container">
-            <div class="logo-icon" style="width: 120px; height: 120px; margin: 0 auto 30px; background: white;">
-                <i class="fas fa-tree" style="color: var(--primary-color); font-size: 60px;"></i>
+            <div class="icon-badge mb-4" style="width: 100px; height: 100px; margin: 0 auto;">
+                <i class="fas fa-tree" style="font-size: 48px;"></i>
             </div>
-            <h1 class="display-4 fw-bold mb-3">Kitwe Urban Green Space Mapping System</h1>
-            <p class="lead mb-4">A GIS-based web application for mapping, analyzing, and managing urban green spaces in Kitwe, Zambia</p>
-            <div class="row justify-content-center g-4">
+            <h1 class="display-3 fw-bold mb-4">Kitwe Urban Green Space<br>Mapping System</h1>
+            <p class="lead mb-5">A GIS-based web application for mapping, analyzing, and managing<br>urban green spaces in Kitwe, Zambia</p>
+            
+            <!-- Pull Quote in Hero -->
+            <div class="pull-quote mx-auto" style="max-width: 700px; background: rgba(255, 255, 255, 0.15); border-left-color: white; backdrop-filter: blur(10px);">
+                <p style="color: white; font-size: 1.1rem;">
+                    Green spaces are the lungs of our city, providing essential environmental services and improving quality of life for all residents.
+                </p>
+            </div>
+            
+            <div class="row justify-content-center g-4 mt-4">
                 <div class="col-auto">
-                    <a href="#green-spaces-info" class="btn btn-outline-light btn-lg fw-semibold px-4">
+                    <a href="index.html" class="btn btn-light btn-lg fw-semibold px-5 py-3" style="border-radius: var(--radius-md); box-shadow: var(--shadow-lg);">
+                        <i class="fas fa-map-marked-alt me-2"></i>Explore Interactive Map
+                    </a>
+                </div>
+                <div class="col-auto">
+                    <a href="#green-spaces-info" class="btn btn-outline-light btn-lg fw-semibold px-5 py-3" style="border-radius: var(--radius-md); border-width: 2px;">
                         <i class="fas fa-info-circle me-2"></i>Learn More
                     </a>
                 </div>
@@ -603,76 +1065,99 @@
             <!-- Call to Action -->
             <div class="row">
                 <div class="col-md-12">
-                    <div class="project-card" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 15px;">
-                        <div class="text-center mb-5">
-                            <h3 class="text-primary mb-3">
-                                <i class="fas fa-hands-helping me-3" style="color: #2E7D32;"></i>Get Involved in Kitwe's Green Future
-                            </h3>
-                            <p class="lead text-muted" style="line-height: 1.8; max-width: 800px; margin: 0 auto;">
-                                Green spaces are community assets that require collective care and advocacy. 
-                                Here's how you can contribute to making Kitwe greener and more sustainable.
-                            </p>
-                        </div>
-                        
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="h-100 p-4" style="background: white; border-radius: 12px; border-left: 4px solid #2E7D32;">
-                                    <h5 class="mb-4" style="color: #2E7D32;">
-                                        <i class="fas fa-users me-2"></i>Community Action
-                                    </h5>
-                                    <div class="d-flex flex-column gap-3">
-                                        <div class="d-flex align-items-start">
-                                            <i class="fas fa-seedling me-3 mt-1" style="color: #4CAF50; font-size: 16px;"></i>
-                                            <span style="line-height: 1.6;">Participate in tree planting initiatives</span>
-                                        </div>
-                                        <div class="d-flex align-items-start">
-                                            <i class="fas fa-leaf me-3 mt-1" style="color: #4CAF50; font-size: 16px;"></i>
-                                            <span style="line-height: 1.6;">Join community garden projects</span>
-                                        </div>
-                                        <div class="d-flex align-items-start">
-                                            <i class="fas fa-tools me-3 mt-1" style="color: #4CAF50; font-size: 16px;"></i>
-                                            <span style="line-height: 1.6;">Volunteer for park maintenance</span>
-                                        </div>
-                                        <div class="d-flex align-items-start">
-                                            <i class="fas fa-megaphone me-3 mt-1" style="color: #4CAF50; font-size: 16px;"></i>
-                                            <span style="line-height: 1.6;">Advocate for new green spaces</span>
-                                        </div>
+                    <div class="text-center mb-5">
+                        <h3 style="font-size: 2.5rem; color: var(--forest-green);">
+                            <i class="fas fa-hands-helping me-3" style="color: var(--spring-green);"></i>
+                            Get Involved in Kitwe's Green Future
+                        </h3>
+                        <p class="lead" style="max-width: 800px; margin: var(--spacing-md) auto 0;">
+                            Green spaces are community assets that require collective care and advocacy. 
+                            Here's how you can contribute to making Kitwe greener and more sustainable.
+                        </p>
+                    </div>
+                    
+                    <div class="row g-4 mb-5">
+                        <!-- Community Action Card -->
+                        <div class="col-md-6">
+                            <div class="involvement-card">
+                                <div class="d-flex align-items-center mb-4">
+                                    <div class="icon-badge me-3" style="background: linear-gradient(135deg, #2E7D32, #4CAF50);">
+                                        <i class="fas fa-users"></i>
                                     </div>
+                                    <h5 class="mb-0">Community Action</h5>
                                 </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <div class="h-100 p-4" style="background: white; border-radius: 12px; border-left: 4px solid #1976D2;">
-                                    <h5 class="mb-4" style="color: #1976D2;">
-                                        <i class="fas fa-lightbulb me-2"></i>Contribute & Improve
-                                    </h5>
-                                    <div class="d-flex flex-column gap-3">
-                                        <div class="d-flex align-items-start">
-                                            <i class="fas fa-lightbulb me-3 mt-1" style="color: #2196F3; font-size: 16px;"></i>
-                                            <span style="line-height: 1.6;">Share improvement ideas for existing spaces</span>
-                                        </div>
-                                        <div class="d-flex align-items-start">
-                                            <i class="fas fa-map-pin me-3 mt-1" style="color: #2196F3; font-size: 16px;"></i>
-                                            <span style="line-height: 1.6;">Identify potential new green space locations</span>
-                                        </div>
-                                        <div class="d-flex align-items-start">
-                                            <i class="fas fa-star me-3 mt-1" style="color: #2196F3; font-size: 16px;"></i>
-                                            <span style="line-height: 1.6;">Share success stories and positive impacts</span>
-                                        </div>
-                                        <div class="d-flex align-items-start">
-                                            <i class="fas fa-users me-3 mt-1" style="color: #2196F3; font-size: 16px;"></i>
-                                            <span style="line-height: 1.6;">Connect with other environmental advocates</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                
+                                <ul class="nature-list seedling">
+                                    <li>Participate in tree planting initiatives</li>
+                                    <li>Join community garden projects</li>
+                                    <li>Volunteer for park maintenance</li>
+                                    <li>Advocate for new green spaces</li>
+                                </ul>
                             </div>
                         </div>
                         
-                        <div class="text-center mt-5 pt-4" style="border-top: 1px solid #e9ecef;">
-                            <a href="index.html" class="btn btn-primary btn-lg px-4 py-3" style="background: #2E7D32; border-color: #2E7D32; border-radius: 10px;">
-                                <i class="fas fa-map me-2"></i>Launch Interactive Map
-                            </a>
+                        <!-- Contribute & Improve Card -->
+                        <div class="col-md-6">
+                            <div class="involvement-card" style="border-left-color: var(--sky-blue);">
+                                <div class="d-flex align-items-center mb-4">
+                                    <div class="icon-badge me-3" style="background: linear-gradient(135deg, #0288D1, #2196F3);">
+                                        <i class="fas fa-lightbulb"></i>
+                                    </div>
+                                    <h5 class="mb-0">Contribute & Improve</h5>
+                                </div>
+                                
+                                <ul class="nature-list leaf">
+                                    <li>Share improvement ideas for existing spaces</li>
+                                    <li>Identify potential new green space locations</li>
+                                    <li>Share success stories and positive impacts</li>
+                                    <li>Connect with other environmental advocates</li>
+                                </ul>
+                            </div>
                         </div>
+                        
+                        <!-- Report Issues Card -->
+                        <div class="col-md-6">
+                            <div class="involvement-card" style="border-left-color: var(--sunset-orange);">
+                                <div class="d-flex align-items-center mb-4">
+                                    <div class="icon-badge me-3" style="background: linear-gradient(135deg, #FF6F00, #FF9800);">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </div>
+                                    <h5 class="mb-0">Report & Monitor</h5>
+                                </div>
+                                
+                                <ul class="nature-list flower">
+                                    <li>Report maintenance issues in green spaces</li>
+                                    <li>Document environmental concerns</li>
+                                    <li>Track changes in your local parks</li>
+                                    <li>Provide feedback on accessibility</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Education & Awareness Card -->
+                        <div class="col-md-6">
+                            <div class="involvement-card" style="border-left-color: var(--flower-pink);">
+                                <div class="d-flex align-items-center mb-4">
+                                    <div class="icon-badge me-3" style="background: linear-gradient(135deg, #E91E63, #F06292);">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <h5 class="mb-0">Education & Awareness</h5>
+                                </div>
+                                
+                                <ul class="nature-list tree">
+                                    <li>Organize environmental education workshops</li>
+                                    <li>Share knowledge about local biodiversity</li>
+                                    <li>Promote sustainable practices</li>
+                                    <li>Engage youth in conservation efforts</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center pt-4" style="border-top: 2px solid var(--medium-gray);">
+                        <a href="index.html" class="btn btn-lg px-5 py-3" style="background: linear-gradient(135deg, var(--forest-green), var(--spring-green)); color: white; border: none; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); font-weight: 600;">
+                            <i class="fas fa-map me-2"></i>Launch Interactive Map
+                        </a>
                     </div>
                 </div>
             </div>
@@ -745,15 +1230,37 @@
                     </ul>
                 </div>
                 <div class="col-md-4">
-                    <h5>Contact</h5>
-                    <p>
-                        <i class="fas fa-university me-2"></i>Mulungushi University<br>
-                        <small>School of Engineering and Technology</small><br>
-                        <small>Department of Computer Science & IT</small>
-                    </p>
-                    <p class="mb-0">
-                        <i class="fas fa-calendar-alt me-2"></i>2024/2025 Academic Year
-                    </p>
+                    <h5 class="mb-4">Contact Information</h5>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div>
+                            <strong>Mulungushi University</strong><br>
+                            <small>School of Engineering and Technology</small>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <strong>Email</strong><br>
+                            <small>info@kitwe-greenspaces.org</small>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <strong>Location</strong><br>
+                            <small>Kitwe, Copperbelt Province, Zambia</small>
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr class="mt-4 mb-3" style="border-color: rgba(255,255,255,0.1);">
