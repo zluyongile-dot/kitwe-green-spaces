@@ -226,7 +226,9 @@
             top: var(--navbar-height);
             height: calc(100vh - var(--navbar-height));
             backdrop-filter: blur(20px);
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: var(--spacing-xl);
         }
         
         .sidebar.collapsed {
@@ -234,22 +236,14 @@
             visibility: hidden;
         }
         
-        /* Sidebar Header - Fixed */
-        .sidebar-header {
-            padding: var(--spacing-xl);
-            border-bottom: 1px solid var(--border-light);
-            background: linear-gradient(135deg, var(--surface-color) 0%, var(--background-tertiary) 100%);
-            flex-shrink: 0;
-            overflow-y: auto;
-            max-height: 50vh;
-        }
-        
-        /* Sidebar Content - Scrollable */
+        /* Remove the separate header and content sections */
+        .sidebar-header,
         .sidebar-content {
-            flex: 1;
-            padding: var(--spacing-xl);
-            overflow-y: auto;
-            overflow-x: hidden;
+            padding: 0;
+            border: none;
+            flex: none;
+            overflow: visible;
+            max-height: none;
         }
         
         .logo-container {
@@ -497,26 +491,22 @@
         }
         
         /* Sidebar scrollbar styling */
-        .sidebar-header::-webkit-scrollbar,
-        .sidebar-content::-webkit-scrollbar {
+        .sidebar::-webkit-scrollbar {
             width: 8px;
         }
         
-        .sidebar-header::-webkit-scrollbar-track,
-        .sidebar-content::-webkit-scrollbar-track {
+        .sidebar::-webkit-scrollbar-track {
             background: var(--background-tertiary);
             border-radius: 4px;
         }
         
-        .sidebar-header::-webkit-scrollbar-thumb,
-        .sidebar-content::-webkit-scrollbar-thumb {
+        .sidebar::-webkit-scrollbar-thumb {
             background: var(--border-medium);
             border-radius: 4px;
             transition: background var(--transition-fast);
         }
         
-        .sidebar-header::-webkit-scrollbar-thumb:hover,
-        .sidebar-content::-webkit-scrollbar-thumb:hover {
+        .sidebar::-webkit-scrollbar-thumb:hover {
             background: var(--primary-color);
         }
         
@@ -1965,14 +1955,7 @@
                 z-index: 1500;
                 top: var(--navbar-height);
                 transform: translateX(-100%);
-            }
-            
-            .sidebar:not(.collapsed) {
-                transform: translateX(0);
-            }
-            
-            .sidebar.collapsed {
-                transform: translateX(-100%);
+                padding: var(--spacing-lg);
             }
             
             .map-container {
@@ -1983,15 +1966,6 @@
             
             #map {
                 height: 100%;
-            }
-            
-            .sidebar-content {
-                max-height: calc(100vh - var(--navbar-height) - 150px);
-                padding: var(--spacing-lg);
-            }
-            
-            .sidebar-header {
-                padding: var(--spacing-lg);
             }
             
             .sidebar-toggle {
@@ -2073,14 +2047,6 @@
             .legend-container {
                 padding: var(--spacing-lg);
             }
-            
-            .sidebar-header {
-                padding: var(--spacing-md);
-            }
-            
-            .sidebar-content {
-                padding: var(--spacing-md);
-            }
         }
         
         /* Modern Utility Classes */
@@ -2139,20 +2105,20 @@
         
         /* Modern Custom Scrollbars */
         .modal-body::-webkit-scrollbar,
-        .sidebar-content::-webkit-scrollbar,
+        .sidebar::-webkit-scrollbar,
         .search-results::-webkit-scrollbar {
             width: 8px;
         }
         
         .modal-body::-webkit-scrollbar-track,
-        .sidebar-content::-webkit-scrollbar-track,
+        .sidebar::-webkit-scrollbar-track,
         .search-results::-webkit-scrollbar-track {
             background: var(--background-tertiary);
             border-radius: 4px;
         }
         
         .modal-body::-webkit-scrollbar-thumb,
-        .sidebar-content::-webkit-scrollbar-thumb,
+        .sidebar::-webkit-scrollbar-thumb,
         .search-results::-webkit-scrollbar-thumb {
             background: var(--border-medium);
             border-radius: 4px;
@@ -2160,7 +2126,7 @@
         }
         
         .modal-body::-webkit-scrollbar-thumb:hover,
-        .sidebar-content::-webkit-scrollbar-thumb:hover,
+        .sidebar::-webkit-scrollbar-thumb:hover,
         .search-results::-webkit-scrollbar-thumb:hover {
             background: var(--primary-color);
         }
@@ -2276,57 +2242,58 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center" href="home.html">
-                <div class="logo-icon me-3" style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-tree text-white" style="font-size: 20px;"></i>
+                <div class="logo-icon me-3" style="width: 50px; height: 50px; background: rgba(255, 255, 255, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-tree text-white" style="font-size: 28px;"></i>
                 </div>
-                <div>
-                    <span class="fw-bold">Kitwe Green Spaces</span>
+                <div class="d-flex flex-column justify-content-center">
+                    <span class="fw-bold mb-0 text-white" style="line-height: 1.2; font-size: 1.1rem;">Kitwe Green Space</span>
+                    <small class="text-white-50" style="font-size: 0.8rem; line-height: 1;">Mapping System</small>
                 </div>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: rgba(255,255,255,0.3);">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="home.html">
+                        <a class="nav-link fw-semibold px-3 py-2" href="home.html" style="color: rgba(255, 255, 255, 0.9) !important;">
                             <i class="fas fa-home me-2"></i>Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active px-3" href="index.html">
-                            <i class="fas fa-map-marked-alt me-2"></i>Map
+                        <a class="nav-link active fw-semibold px-3 py-2" href="index.html" style="color: white !important; background: rgba(255, 255, 255, 0.15); border-radius: 8px;">
+                            <i class="fas fa-map-marked-alt me-2"></i>Interactive Map
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="simpledashboard.html">
+                        <a class="nav-link fw-semibold px-3 py-2" href="simpledashboard.html" style="color: rgba(255, 255, 255, 0.9) !important;">
                             <i class="fas fa-chart-bar me-2"></i>Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="feedback.html">
-                            <i class="fas fa-comment-dots me-2"></i>Feedback
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-3" href="documentation.html">
+                        <a class="nav-link fw-semibold px-3 py-2" href="documentation.html" style="color: rgba(255, 255, 255, 0.9) !important;">
                             <i class="fas fa-book me-2"></i>Documentation
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="about-green-spaces.html">
+                        <a class="nav-link fw-semibold px-3 py-2" href="environmental-monitoring.html" style="color: rgba(255, 255, 255, 0.9) !important;">
+                            <i class="fas fa-leaf me-2"></i>Environmental Monitor
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold px-3 py-2" href="about-green-spaces.html" style="color: rgba(255, 255, 255, 0.9) !important;">
                             <i class="fas fa-info-circle me-2"></i>About Green Spaces
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle px-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle fw-semibold px-3 py-2" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" style="color: rgba(255, 255, 255, 0.9) !important;">
                             <i class="fas fa-tools me-2"></i>Tools
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="environmental-monitoring.html"><i class="fas fa-leaf me-2"></i>Environmental Monitor</a></li>
-                            <li><a class="dropdown-item" href="advanced-stats.html"><i class="fas fa-chart-line me-2"></i>Advanced Statistics</a></li>
-                            <li><a class="dropdown-item" href="report-generator.html"><i class="fas fa-file-pdf me-2"></i>Generate Report</a></li>
-                            <li><a class="dropdown-item" href="bibliography.html"><i class="fas fa-book me-2"></i>Bibliography</a></li>
+                        <ul class="dropdown-menu" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                            <li><a class="dropdown-item" href="environmental-monitoring.html" style="color: #1B5E20 !important;"><i class="fas fa-leaf me-2 text-success"></i>Environmental Monitor</a></li>
+                            <li><a class="dropdown-item" href="advanced-stats.html" style="color: #1B5E20 !important;"><i class="fas fa-chart-line me-2 text-primary"></i>Advanced Statistics</a></li>
+                            <li><a class="dropdown-item" href="report-generator.html" style="color: #1B5E20 !important;"><i class="fas fa-file-pdf me-2 text-danger"></i>Generate Report</a></li>
+                            <li><a class="dropdown-item" href="bibliography.html" style="color: #1B5E20 !important;"><i class="fas fa-book me-2 text-info"></i>Bibliography</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -2343,22 +2310,20 @@
     <div class="main-container">
         <!-- Left Sidebar -->
         <div class="sidebar" id="sidebar">
-            <!-- Sidebar Header -->
-            <div class="sidebar-header">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div class="logo-container">
-                        <div class="logo-icon">
-                            <i class="fas fa-tree text-white" style="font-size: 24px;"></i>
-                        </div>
-                        <div class="logo-text">
-                            <h3>Green Spaces</h3>
-                            <p>Interactive GIS Map</p>
-                        </div>
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-tree text-white" style="font-size: 24px;"></i>
                     </div>
-                    <button class="btn btn-sm btn-outline-secondary d-md-none" id="sidebarCloseBtn" title="Close Sidebar">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    <div class="logo-text">
+                        <h3>Green Spaces</h3>
+                        <p>Interactive GIS Map</p>
+                    </div>
                 </div>
+                <button class="btn btn-sm btn-outline-secondary d-md-none" id="sidebarCloseBtn" title="Close Sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
                 
                 <!-- Map Introduction -->
                 <div class="map-intro">
@@ -2456,11 +2421,8 @@
                 
                 <!-- Search Results -->
                 <div class="search-results d-none" id="searchResults" role="listbox" aria-label="Search results"></div>
-            </div>
             
-            <!-- Sidebar Content -->
-            <div class="sidebar-content">
-                <!-- Stats -->
+            <!-- Stats -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-number" id="statSpaces">...</div>
