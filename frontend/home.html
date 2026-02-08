@@ -533,14 +533,39 @@
             background: linear-gradient(90deg, var(--spring-green), var(--light-green), var(--mint-green));
         }
         
-        .home-footer a {
+        .home-footer h5 {
+            color: var(--white);
+            font-weight: 600;
+        }
+        
+        .home-footer p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .home-footer small {
             color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .home-footer a {
+            color: rgba(255, 255, 255, 0.9);
             transition: color 0.3s ease;
+            text-decoration: none;
         }
         
         .home-footer a:hover {
             color: var(--white);
             text-decoration: underline;
+        }
+        
+        .home-footer .contact-method {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .home-footer .contact-method:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(8px);
         }
         
         /* ========================================
@@ -1274,31 +1299,29 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Configuration and Fallback Data -->
+    <script src="config.js"></script>
+    <script src="fallback-data.js"></script>
+    
     <script>
-        // Load real stats from API
+        // Load real stats from API with fallback support
         document.addEventListener('DOMContentLoaded', function() {
             loadRealStats();
         });
         
         async function loadRealStats() {
             try {
-                const timestamp = new Date().getTime();
-                const response = await fetch(`http://127.0.0.1:5000/api/green-spaces?t=${timestamp}`, {
-                    cache: 'no-cache',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                });
-                const data = await response.json();
+                // Use the centralized data loading function
+                const data = await window.loadGreenSpacesWithFallback();
                 const spaces = data.features;
                 
                 // Calculate real statistics
                 const totalSpaces = spaces.length;
                 const totalAreaSqM = spaces.reduce((sum, space) => sum + (space.properties.area_sq_m || 0), 0);
                 const totalAreaHa = Math.round(totalAreaSqM / 10000); // Convert to hectares
-                const uniqueWards = [...new Set(spaces.map(space => space.properties.ward))].length;
-                const uniqueTypes = [...new Set(spaces.map(space => space.properties.type))].length;
+                const uniqueWards = [...new Set(spaces.map(space => space.properties.ward))].filter(Boolean).length;
+                const uniqueTypes = [...new Set(spaces.map(space => space.properties.type))].filter(Boolean).length;
                 
                 // Update the stats on page
                 document.getElementById('stats-parks').textContent = totalSpaces;
@@ -1306,11 +1329,15 @@
                 document.getElementById('stats-wards').textContent = uniqueWards;
                 document.getElementById('stats-types').textContent = uniqueTypes;
                 
-                console.log(`Updated homepage stats: ${totalSpaces} spaces, ${totalAreaHa} hectares, ${uniqueWards} wards, ${uniqueTypes} types`);
+                console.log(`✅ Updated homepage stats: ${totalSpaces} spaces, ${totalAreaHa} hectares, ${uniqueWards} wards, ${uniqueTypes} types`);
                 
             } catch (error) {
-                console.error('Error loading stats:', error);
-                // Keep default values if API fails
+                console.error('❌ Error loading stats:', error);
+                // Keep default values if both API and fallback fail
+                document.getElementById('stats-parks').textContent = '51';
+                document.getElementById('stats-area').textContent = '314';
+                document.getElementById('stats-wards').textContent = '16';
+                document.getElementById('stats-types').textContent = '6';
             }
         }
     </script>
