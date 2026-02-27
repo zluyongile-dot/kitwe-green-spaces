@@ -202,11 +202,11 @@
         
         /* Modern Layout */
         .main-container {
-            display: block;
+            display: flex;
             min-height: calc(100vh - var(--navbar-height));
             margin-top: var(--navbar-height);
-            overflow: visible !important;
-            height: auto !important;
+            overflow: hidden !important;
+            height: calc(100vh - var(--navbar-height)) !important;
             position: relative;
             background: var(--background-primary);
         }
@@ -481,9 +481,10 @@
             flex: 1;
             position: relative;
             background: var(--background-tertiary);
-            min-height: calc(100vh - var(--navbar-height));
+            height: calc(100vh - var(--navbar-height));
             margin-left: var(--sidebar-width);
             transition: margin-left var(--transition-normal);
+            overflow: hidden;
         }
         
         .map-container.sidebar-hidden {
@@ -3856,6 +3857,31 @@
                     position: 'topright',
                     collapsed: true
                 }).addTo(map);
+                
+                // Fix map layout after initialization
+                setTimeout(() => {
+                    if (map) {
+                        map.invalidateSize();
+                        console.log('🔄 Map size invalidated for proper layout');
+                    }
+                }, 100);
+                
+                // Also fix on window load
+                window.addEventListener('load', () => {
+                    setTimeout(() => {
+                        if (map) {
+                            map.invalidateSize();
+                            console.log('🔄 Map size invalidated after window load');
+                        }
+                    }, 200);
+                });
+                
+                // Fix on window resize
+                window.addEventListener('resize', () => {
+                    if (map) {
+                        map.invalidateSize();
+                    }
+                });
                 
                 console.log('✅ Map initialized successfully');
                 
