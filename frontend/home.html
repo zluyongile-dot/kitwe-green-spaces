@@ -853,7 +853,7 @@
                                 <div class="project-card" style="background: #fff3cd; border-left: 3px solid #ffc107;">
                                     <h5><i class="fas fa-globe text-warning me-2"></i>WHO Recommendation:</h5>
                                     <p>The World Health Organization recommends a minimum of <strong>9 square meters of green space per person</strong> in urban areas for optimal health and well-being.</p>
-                                    <p class="mb-0"><strong>Kitwe Current Status:</strong> <span class="text-danger">6.1 m² per capita</span> (Below WHO standard)</p>
+                                    <p class="mb-0"><strong>Kitwe Current Status:</strong> <span id="who-status" class="text-danger">...</span> m² per capita (<span id="who-comparison">...</span>)</p>
                                 </div>
                             </div>
                         </div>
@@ -874,25 +874,25 @@
                     <div class="row mt-4 text-center">
                         <div class="col-md-3">
                             <div class="project-card">
-                                <div class="home-stat-number text-success">51</div>
+                                <div class="home-stat-number text-success" id="context-stats-parks">...</div>
                                 <p>Mapped Green Spaces</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="project-card">
-                                <div class="home-stat-number text-info">16</div>
+                                <div class="home-stat-number text-info" id="context-stats-wards">...</div>
                                 <p>Wards Covered</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="project-card">
-                                <div class="home-stat-number text-warning">314</div>
+                                <div class="home-stat-number text-warning" id="context-stats-area">...</div>
                                 <p>Hectares Total Area</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="project-card">
-                                <div class="home-stat-number text-danger">6.1</div>
+                                <div class="home-stat-number text-danger" id="context-stats-percapita">...</div>
                                 <p>m² per Capita</p>
                             </div>
                         </div>
@@ -1029,26 +1029,26 @@
                 <div class="col-md-12">
                     <div class="project-card" style="background: linear-gradient(135deg, #e8f5e8, #f1f8e9); border-left: 5px solid var(--primary-color);">
                         <h3 class="text-success mb-4"><i class="fas fa-calculator me-2"></i>Environmental Impact in Kitwe</h3>
-                        <p class="lead">Based on our mapping of 314 hectares of green space in Kitwe:</p>
+                        <p class="lead">Based on our mapping of <span id="impact-hectares">...</span> hectares of green space in Kitwe:</p>
                         
                         <div class="row text-center">
                             <div class="col-md-4">
                                 <div class="project-card" style="background: white;">
-                                    <div class="home-stat-number text-success">628</div>
+                                    <div class="home-stat-number text-success" id="impact-co2">...</div>
                                     <p>kg CO₂ absorbed annually</p>
-                                    <small class="text-muted">Equivalent to taking 136 cars off the road for a year</small>
+                                    <small class="text-muted">Equivalent to taking <span id="impact-cars">...</span> cars off the road for a year</small>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="project-card" style="background: white;">
-                                    <div class="home-stat-number text-primary">3.14M</div>
+                                    <div class="home-stat-number text-primary" id="impact-water">...</div>
                                     <p>Liters rainwater capacity</p>
                                     <small class="text-muted">Helps prevent flooding during rainy season</small>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="project-card" style="background: white;">
-                                    <div class="home-stat-number text-warning">31.4°C</div>
+                                    <div class="home-stat-number text-warning" id="impact-temp">...</div>
                                     <p>Temperature reduction</p>
                                     <small class="text-muted">Cooling effect across the city</small>
                                 </div>
@@ -1064,7 +1064,7 @@
                     <div class="project-card" style="border-left: 4px solid #f44336;">
                         <h4><i class="fas fa-exclamation-triangle text-danger me-2"></i>Current Challenges</h4>
                         <ul>
-                            <li><strong>Limited Coverage:</strong> Below WHO recommendations (6.1 vs 9 m²/capita)</li>
+                            <li><strong>Limited Coverage:</strong> <span id="challenge-coverage">Below WHO recommendations</span></li>
                             <li><strong>Uneven Distribution:</strong> Some wards lack adequate green spaces</li>
                             <li><strong>Industrial Impact:</strong> Mining activities affect land availability</li>
                             <li><strong>Maintenance:</strong> Limited resources for upkeep</li>
@@ -1323,13 +1323,55 @@
                 const uniqueWards = [...new Set(spaces.map(space => space.properties.ward))].filter(Boolean).length;
                 const uniqueTypes = [...new Set(spaces.map(space => space.properties.type))].filter(Boolean).length;
                 
-                // Update the stats on page
+                // Calculate per capita (Kitwe population: 517,543)
+                const kitwePop = 517543;
+                const perCapita = ((totalAreaSqM / kitwePop)).toFixed(1);
+                const whoStandard = 9;
+                const whoComparison = perCapita < whoStandard ? 'Below WHO standard' : 'Meets WHO standard';
+                const whoStatusClass = perCapita < whoStandard ? 'text-danger' : 'text-success';
+                
+                // Calculate environmental impact
+                // CO2 absorption: ~2 kg per hectare per year
+                const co2Absorbed = Math.round(totalAreaHa * 2);
+                // Cars equivalent: average car emits ~4.6 tons CO2/year
+                const carsEquivalent = Math.round(co2Absorbed / 4.6);
+                // Rainwater capacity: ~10,000 liters per hectare
+                const rainwaterCapacity = totalAreaHa * 10000;
+                const rainwaterFormatted = rainwaterCapacity >= 1000000 
+                    ? (rainwaterCapacity / 1000000).toFixed(2) + 'M' 
+                    : (rainwaterCapacity / 1000).toFixed(1) + 'K';
+                // Temperature reduction: ~0.1°C per hectare
+                const tempReduction = (totalAreaHa * 0.1).toFixed(1);
+                
+                // Update the stats on page (top section)
                 document.getElementById('stats-parks').textContent = totalSpaces;
                 document.getElementById('stats-area').textContent = totalAreaHa;
                 document.getElementById('stats-wards').textContent = uniqueWards;
                 document.getElementById('stats-types').textContent = uniqueTypes;
                 
-                console.log(`✅ Updated homepage stats: ${totalSpaces} spaces, ${totalAreaHa} hectares, ${uniqueWards} wards, ${uniqueTypes} types`);
+                // Update the context section stats
+                document.getElementById('context-stats-parks').textContent = totalSpaces;
+                document.getElementById('context-stats-wards').textContent = uniqueWards;
+                document.getElementById('context-stats-area').textContent = totalAreaHa;
+                document.getElementById('context-stats-percapita').textContent = perCapita;
+                
+                // Update environmental impact section
+                document.getElementById('impact-hectares').textContent = totalAreaHa;
+                document.getElementById('impact-co2').textContent = co2Absorbed.toLocaleString();
+                document.getElementById('impact-cars').textContent = carsEquivalent;
+                document.getElementById('impact-water').textContent = rainwaterFormatted;
+                document.getElementById('impact-temp').textContent = tempReduction + '°C';
+                
+                // Update WHO comparison section
+                const whoStatusElement = document.getElementById('who-status');
+                whoStatusElement.textContent = perCapita;
+                whoStatusElement.className = whoStatusClass;
+                document.getElementById('who-comparison').textContent = whoComparison;
+                
+                // Update challenges section
+                document.getElementById('challenge-coverage').textContent = `Below WHO recommendations (${perCapita} vs ${whoStandard} m²/capita)`;
+                
+                console.log(`✅ Updated homepage stats: ${totalSpaces} spaces, ${totalAreaHa} hectares, ${uniqueWards} wards, ${uniqueTypes} types, ${perCapita} m²/capita`);
                 
             } catch (error) {
                 console.error('❌ Error loading stats:', error);
@@ -1338,6 +1380,24 @@
                 document.getElementById('stats-area').textContent = '314';
                 document.getElementById('stats-wards').textContent = '16';
                 document.getElementById('stats-types').textContent = '6';
+                
+                // Update context section with fallback values
+                document.getElementById('context-stats-parks').textContent = '51';
+                document.getElementById('context-stats-wards').textContent = '16';
+                document.getElementById('context-stats-area').textContent = '314';
+                document.getElementById('context-stats-percapita').textContent = '6.1';
+                
+                // Update environmental impact with fallback values
+                document.getElementById('impact-hectares').textContent = '314';
+                document.getElementById('impact-co2').textContent = '628';
+                document.getElementById('impact-cars').textContent = '136';
+                document.getElementById('impact-water').textContent = '3.14M';
+                document.getElementById('impact-temp').textContent = '31.4°C';
+                
+                // Update WHO comparison with fallback values
+                document.getElementById('who-status').textContent = '6.1';
+                document.getElementById('who-comparison').textContent = 'Below WHO standard';
+                document.getElementById('challenge-coverage').textContent = 'Below WHO recommendations (6.1 vs 9 m²/capita)';
             }
         }
     </script>
