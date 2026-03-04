@@ -870,33 +870,6 @@
                         <h4><i class="fas fa-city text-primary me-2"></i>About Kitwe</h4>
                         <p>Kitwe is Zambia's second-largest city and the heart of the Copperbelt Province. With a population of approximately 517,543 people, it's a major industrial and mining center that faces unique urban planning challenges.</p>
                     </div>
-                    
-                    <div class="row mt-4 text-center">
-                        <div class="col-md-3">
-                            <div class="project-card">
-                                <div class="home-stat-number text-success" id="context-stats-parks">...</div>
-                                <p>Mapped Green Spaces</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="project-card">
-                                <div class="home-stat-number text-info" id="context-stats-wards">...</div>
-                                <p>Wards Covered</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="project-card">
-                                <div class="home-stat-number text-warning" id="context-stats-area">...</div>
-                                <p>Hectares Total Area</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="project-card">
-                                <div class="home-stat-number text-danger" id="context-stats-percapita">...</div>
-                                <p>m² per Capita</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -1349,12 +1322,6 @@
                 document.getElementById('stats-wards').textContent = uniqueWards;
                 document.getElementById('stats-types').textContent = uniqueTypes;
                 
-                // Update the context section stats
-                document.getElementById('context-stats-parks').textContent = totalSpaces;
-                document.getElementById('context-stats-wards').textContent = uniqueWards;
-                document.getElementById('context-stats-area').textContent = totalAreaHa;
-                document.getElementById('context-stats-percapita').textContent = perCapita;
-                
                 // Update environmental impact section
                 document.getElementById('impact-hectares').textContent = totalAreaHa;
                 document.getElementById('impact-co2').textContent = co2Absorbed.toLocaleString();
@@ -1380,12 +1347,6 @@
                 document.getElementById('stats-area').textContent = '314';
                 document.getElementById('stats-wards').textContent = '16';
                 document.getElementById('stats-types').textContent = '6';
-                
-                // Update context section with fallback values
-                document.getElementById('context-stats-parks').textContent = '51';
-                document.getElementById('context-stats-wards').textContent = '16';
-                document.getElementById('context-stats-area').textContent = '314';
-                document.getElementById('context-stats-percapita').textContent = '6.1';
                 
                 // Update environmental impact with fallback values
                 document.getElementById('impact-hectares').textContent = '314';
