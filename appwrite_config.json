@@ -1,0 +1,7 @@
+{
+  "project_id": "YOUR_APPWRITE_PROJECT_ID",
+  "endpoint": "https://cloud.appwrite.io/v1",
+  "database_id": "kitwe_green_spaces",
+  "collection_id": "green_spaces",
+  "api_key": "YOUR_API_KEY_HERE"
+}

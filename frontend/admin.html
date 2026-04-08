@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Add Green Space</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { background: #f5f5f5; padding: 20px; border-radius: 8px; }
+        h2 { color: #2E7D32; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #45a049; }
+        .message { margin-top: 15px; padding: 10px; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .back-link { 
+            display: inline-block; 
+            margin-bottom: 15px; 
+            color: #2E7D32; 
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Map</a>
+    
+    <div class="container">
+        <h2>Add New Green Space</h2>
+        <form id="greenSpaceForm">
+            <div class="form-group">
+                <label for="name">Green Space Name *</label>
+                <input type="text" id="name" required placeholder="e.g., Kitwe Central Park">
+            </div>
+            
+            <div class="form-group">
+                <label for="type">Type</label>
+                <select id="type">
+                    <option value="park">Park</option>
+                    <option value="garden">Garden</option>
+                    <option value="forest">Forest</option>
+                    <option value="recreational">Recreational Area</option>
+                    <option value="golf course">Golf Course</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="area">Area (m²)</label>
+                <input type="number" id="area" placeholder="e.g., 50000">
+            </div>
+            
+            <div class="form-group">
+                <label for="ward">Ward</label>
+                <input type="text" id="ward" placeholder="e.g., City Centre">
+            </div>
+            
+            <div class="form-group">
+                <label for="longitude">Longitude *</label>
+                <input type="number" step="any" id="longitude" required placeholder="e.g., 28.2200">
+            </div>
+            
+            <div class="form-group">
+                <label for="latitude">Latitude *</label>
+                <input type="number" step="any" id="latitude" required placeholder="e.g., -12.8130">
+            </div>
+            
+            <button type="submit">Add Green Space</button>
+        </form>
+        
+        <div id="message" class="message" style="display: none;"></div>
+    </div>
+    
+    <script>
+        document.getElementById('greenSpaceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const formData = {
+                name: document.getElementById('name').value,
+                type: document.getElementById('type').value,
+                area_sq_m: document.getElementById('area').value || null,
+                ward: document.getElementById('ward').value || null,
+                longitude: parseFloat(document.getElementById('longitude').value),
+                latitude: parseFloat(document.getElementById('latitude').value)
+            };
+            
+            // Clear previous message
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'none';
+            messageDiv.className = 'message';
+            
+            try {
+                // Send to backend API
+                const response = await fetch('http://localhost:5000/api/add-green-space', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Show success message
+                    messageDiv.textContent = `✅ ${result.message} (ID: ${result.id})`;
+                    messageDiv.className = 'message success';
+                    messageDiv.style.display = 'block';
+                    
+                    // Clear form
+                    document.getElementById('greenSpaceForm').reset();
+                } else {
+                    // Show error message
+                    messageDiv.textContent = `❌ Error: ${result.message}`;
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                }
+            } catch (error) {
+                messageDiv.textContent = `❌ Network error: ${error.message}`;
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
