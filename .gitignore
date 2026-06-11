@@ -47,3 +47,6 @@ test_features.html
 
 # Local configuration
 config_local.js
+
+# Archives
+*.zip

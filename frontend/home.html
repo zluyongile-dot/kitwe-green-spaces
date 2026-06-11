@@ -2,1366 +2,765 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kitwe Green Space Mapping | Mulungushi University</title>
-    
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Kitwe Green Spaces — Urban GIS Mapping System</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Your Custom CSS -->
-    <link rel="stylesheet" href="style.css">
-    
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     
-    <!-- Home Page Specific Styles -->
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f1fcf2',
+                            100: '#dcfce0',
+                            200: '#bbf7c4',
+                            300: '#86ef95',
+                            400: '#4caf50',
+                            500: '#2e7d32',
+                            600: '#1b5e20',
+                            700: '#165319',
+                            800: '#0d4e14',
+                            900: '#08320c',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-up': 'fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-in': 'fadeIn 0.6s ease forwards',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
-        /* ========================================
-           NATURE-INSPIRED COLOR PALETTE
-           ======================================== */
-        :root {
-            /* Primary Greens - Forest & Nature */
-            --forest-green: #1B5E20;
-            --leaf-green: #2E7D32;
-            --spring-green: #4CAF50;
-            --light-green: #66BB6A;
-            --mint-green: #81C784;
-            
-            /* Earth Tones */
-            --earth-brown: #6D4C41;
-            --sand-beige: #D7CCC8;
-            --stone-gray: #90A4AE;
-            
-            /* Sky & Water */
-            --sky-blue: #0288D1;
-            --water-blue: #0097A7;
-            
-            /* Accent Colors */
-            --sunset-orange: #FF6F00;
-            --flower-pink: #E91E63;
-            --sunshine-yellow: #FFA000;
-            
-            /* Neutrals */
-            --white: #FFFFFF;
-            --off-white: #FAFAFA;
-            --light-gray: #F5F5F5;
-            --medium-gray: #E0E0E0;
-            --dark-gray: #424242;
-            --charcoal: #212121;
-            
-            /* Semantic Colors */
-            --success: #4CAF50;
-            --warning: #FF9800;
-            --error: #F44336;
-            --info: #2196F3;
-            
-            /* Typography */
-            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --font-display: 'Playfair Display', Georgia, serif;
-            
-            /* Spacing */
-            --spacing-xs: 0.5rem;
-            --spacing-sm: 1rem;
-            --spacing-md: 1.5rem;
-            --spacing-lg: 2.5rem;
-            --spacing-xl: 4rem;
-            --spacing-2xl: 6rem;
-            
-            /* Border Radius */
-            --radius-sm: 8px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            --radius-xl: 32px;
-            
-            /* Shadows */
-            --shadow-sm: 0 2px 8px rgba(27, 94, 32, 0.08);
-            --shadow-md: 0 4px 16px rgba(27, 94, 32, 0.12);
-            --shadow-lg: 0 8px 32px rgba(27, 94, 32, 0.16);
-            --shadow-xl: 0 16px 48px rgba(27, 94, 32, 0.20);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+        
+        .hover-lift {
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .hover-lift:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 35px -12px rgba(27, 94, 32, 0.15);
         }
         
-        /* ========================================
-           GLOBAL STYLES & TYPOGRAPHY
-           ======================================== */
-        html, body {
-            overflow-x: hidden !important;
-            overflow-y: auto !important;
-            height: auto !important;
-            min-height: 100vh !important;
-            max-height: none !important;
-            scroll-behavior: smooth;
+        .card-glass {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .dark .card-glass {
+            background: rgba(17, 17, 17, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
         
-        * {
-            max-height: none !important;
-        }
-        
-        body {
-            font-family: var(--font-primary);
-            font-size: 16px;
-            line-height: 1.7;
-            color: var(--charcoal);
-            background: var(--off-white);
-            position: static !important;
-            height: auto !important;
-            overflow: visible !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        
-        .main-container {
-            height: auto !important;
-            min-height: 100vh !important;
-            overflow: visible !important;
-        }
-        
-        .main-content {
-            overflow-y: auto;
-            overflow-x: hidden;
-            height: auto;
-        }
-        
-        .container, .container-fluid {
-            overflow: visible !important;
-            max-width: 1200px;
-            padding-left: var(--spacing-md);
-            padding-right: var(--spacing-md);
-        }
-        
-        /* Typography Enhancements */
-        h1, h2, h3, h4, h5, h6 {
-            font-family: var(--font-display);
-            font-weight: 700;
-            line-height: 1.3;
-            color: var(--forest-green);
-            margin-bottom: var(--spacing-md);
-        }
-        
-        h1 { font-size: 3.5rem; letter-spacing: -0.02em; }
-        h2 { font-size: 2.75rem; letter-spacing: -0.01em; }
-        h3 { font-size: 2rem; }
-        h4 { font-size: 1.5rem; }
-        h5 { font-size: 1.25rem; }
-        h6 { font-size: 1.1rem; }
-        
-        p {
-            margin-bottom: var(--spacing-md);
-            line-height: 1.8;
-            color: var(--dark-gray);
-        }
-        
-        .lead {
-            font-size: 1.25rem;
-            font-weight: 400;
-            line-height: 1.8;
-            color: var(--stone-gray);
-        }
-        
-        /* ========================================
-           HERO SECTION - ENHANCED
-           ======================================== */
-        .hero-section {
-            background: linear-gradient(135deg, rgba(27, 94, 32, 0.95) 0%, rgba(46, 125, 50, 0.90) 50%, rgba(76, 175, 80, 0.85) 100%),
-                        url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--white);
-            padding: var(--spacing-2xl) 0;
-            text-align: center;
+        .gradient-border {
             position: relative;
-            overflow: hidden;
+            background: white;
+            border-radius: 28px;
         }
-        
-        .hero-section::before {
+        .dark .gradient-border { background: #111; }
+        .gradient-border::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23ffffff"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23ffffff"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23ffffff"/></svg>') no-repeat bottom;
-            background-size: cover;
-            opacity: 0.1;
+            inset: 0;
+            border-radius: 28px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(27, 94, 32, 0.25), rgba(27, 94, 32, 0.05));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
         
-        .hero-section .container {
-            position: relative;
-            z-index: 1;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #1b5e20; }
+        .dark ::-webkit-scrollbar-track { background: #1a1a1a; }
+        .dark ::-webkit-scrollbar-thumb { background: #2a2a2a; }
         
-        .hero-section h1 {
-            color: var(--white);
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            margin-bottom: var(--spacing-md);
-            animation: fadeInUp 0.8s ease-out;
+        .step-line {
+            background: linear-gradient(90deg, #e5e7eb, rgba(27, 94, 32, 0.25), #e5e7eb);
         }
-        
-        .hero-section .lead {
-            color: rgba(255, 255, 255, 0.95);
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            max-width: 800px;
-            margin: 0 auto var(--spacing-lg);
-            animation: fadeInUp 1s ease-out;
+        .dark .step-line {
+            background: linear-gradient(90deg, #2a2a2a, rgba(27, 94, 32, 0.35), #2a2a2a);
         }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        /* Immersive Leaf Animations */
+        @keyframes float-leaf-y {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(12deg); }
         }
-        
-        /* ========================================
-           SECTION STYLING
-           ======================================== */
-        section {
-            padding: var(--spacing-xl) 0;
-            position: relative;
+        @keyframes float-leaf-x {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(12px); }
         }
-        
-        section.bg-light {
-            background: linear-gradient(180deg, var(--off-white) 0%, var(--light-gray) 100%);
-        }
-        
-        /* Section Headers with Nature Accents */
-        section h2 {
-            position: relative;
-            display: inline-block;
-            padding-bottom: var(--spacing-sm);
-        }
-        
-        section h2::after {
-            content: '';
+        .floating-leaf {
+            animation: float-leaf-y 7s ease-in-out infinite alternate, float-leaf-x 9s ease-in-out infinite alternate;
+            pointer-events: none;
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--forest-green), var(--spring-green));
-            border-radius: 2px;
+            z-index: 5;
         }
-        
-        section h2 i {
-            color: var(--spring-green);
-            margin-right: var(--spacing-sm);
+        .floating-leaf-delay-1 {
+            animation-delay: 2s, 0.8s;
+            animation-duration: 9s, 11s;
         }
-        
-        /* ========================================
-           CARDS & CONTAINERS
-           ======================================== */
-        .feature-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-lg);
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            height: 100%;
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--forest-green), var(--spring-green), var(--light-green));
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-12px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--spring-green);
-        }
-        
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .feature-icon {
-            font-size: 56px;
-            color: var(--spring-green);
-            margin-bottom: var(--spacing-md);
-            transition: transform 0.4s ease;
-        }
-        
-        .feature-card:hover .feature-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-        
-        .project-card {
-            background: var(--white);
-            border-radius: var(--radius-md);
-            padding: var(--spacing-lg);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--medium-gray);
-            transition: all 0.3s ease;
-            margin-bottom: var(--spacing-md);
-        }
-        
-        .project-card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-4px);
-        }
-        
-        /* ========================================
-           STATS SECTION
-           ======================================== */
-        .home-stat-number {
-            font-size: 4rem;
-            font-weight: 800;
-            font-family: var(--font-display);
-            background: linear-gradient(135deg, var(--forest-green), var(--spring-green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1;
-            margin-bottom: var(--spacing-sm);
-        }
-        
-        /* ========================================
-           PULL QUOTES
-           ======================================== */
-        .pull-quote {
-            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
-            border-left: 6px solid var(--spring-green);
-            padding: var(--spacing-lg);
-            margin: var(--spacing-lg) 0;
-            border-radius: var(--radius-md);
-            position: relative;
-            font-style: italic;
-        }
-        
-        .pull-quote::before {
-            content: '"';
-            font-size: 4rem;
-            color: var(--spring-green);
-            opacity: 0.2;
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            font-family: Georgia, serif;
-        }
-        
-        .pull-quote p {
-            font-size: 1.25rem;
-            line-height: 1.8;
-            color: var(--forest-green);
-            margin: 0;
-            padding-left: var(--spacing-md);
-        }
-        
-        /* ========================================
-           NATURE-THEMED ICONS & BULLETS
-           ======================================== */
-        .nature-list {
-            list-style: none;
-            padding-left: 0;
-        }
-        
-        .nature-list li {
-            position: relative;
-            padding-left: 2.5rem;
-            margin-bottom: var(--spacing-md);
-            line-height: 1.8;
-        }
-        
-        .nature-list li::before {
-            content: '🌿';
-            position: absolute;
-            left: 0;
-            font-size: 1.5rem;
-        }
-        
-        .nature-list.leaf li::before { content: '🍃'; }
-        .nature-list.tree li::before { content: '🌳'; }
-        .nature-list.flower li::before { content: '🌸'; }
-        .nature-list.seedling li::before { content: '🌱'; }
-        
-        /* Icon Badges */
-        .icon-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--forest-green), var(--spring-green));
-            color: var(--white);
-            font-size: 28px;
-            box-shadow: var(--shadow-md);
-            transition: transform 0.3s ease;
-        }
-        
-        .icon-badge:hover {
-            transform: scale(1.1) rotate(10deg);
-        }
-        
-        /* ========================================
-           MAP PREVIEW
-           ======================================== */
-        .map-preview {
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            transition: all 0.4s ease;
-            position: relative;
-        }
-        
-        .map-preview::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(27, 94, 32, 0.1), transparent);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        
-        .map-preview:hover {
-            transform: scale(1.03);
-            box-shadow: var(--shadow-xl);
-        }
-        
-        .map-preview:hover::after {
-            opacity: 1;
-        }
-        
-        /* ========================================
-           CONTACT ICONS
-           ======================================== */
-        .contact-method {
-            display: flex;
-            align-items: center;
-            padding: var(--spacing-md);
-            background: var(--white);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            margin-bottom: var(--spacing-md);
-            transition: all 0.3s ease;
-        }
-        
-        .contact-method:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateX(8px);
-        }
-        
-        .contact-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--forest-green), var(--spring-green));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 24px;
-            margin-right: var(--spacing-md);
-            flex-shrink: 0;
-        }
-        
-        /* ========================================
-           INVOLVEMENT CARDS
-           ======================================== */
-        .involvement-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-lg);
-            box-shadow: var(--shadow-md);
-            border-left: 6px solid var(--spring-green);
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        
-        .involvement-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
-            border-left-width: 8px;
-        }
-        
-        .involvement-card h5 {
-            color: var(--forest-green);
-            margin-bottom: var(--spacing-md);
-        }
-        
-        .involvement-card .d-flex {
-            transition: transform 0.2s ease;
-        }
-        
-        .involvement-card .d-flex:hover {
-            transform: translateX(8px);
-        }
-        
-        /* ========================================
-           FOOTER
-           ======================================== */
-        .home-footer {
-            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
-            color: var(--white);
-            padding: var(--spacing-xl) 0 var(--spacing-lg);
-            margin-top: var(--spacing-2xl);
-            position: relative;
-        }
-        
-        .home-footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--spring-green), var(--light-green), var(--mint-green));
-        }
-        
-        .home-footer h5 {
-            color: var(--white);
-            font-weight: 600;
-        }
-        
-        .home-footer p {
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .home-footer small {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .home-footer a {
-            color: rgba(255, 255, 255, 0.9);
-            transition: color 0.3s ease;
-            text-decoration: none;
-        }
-        
-        .home-footer a:hover {
-            color: var(--white);
-            text-decoration: underline;
-        }
-        
-        .home-footer .contact-method {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-        }
-        
-        .home-footer .contact-method:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateX(8px);
-        }
-        
-        /* ========================================
-           RESPONSIVE DESIGN
-           ======================================== */
-        @media (max-width: 992px) {
-            h1 { font-size: 2.5rem; }
-            h2 { font-size: 2rem; }
-            h3 { font-size: 1.75rem; }
-            
-            .hero-section {
-                padding: var(--spacing-xl) 0;
-            }
-            
-            .home-stat-number {
-                font-size: 3rem;
-            }
-            
-            section {
-                padding: var(--spacing-lg) 0;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            :root {
-                --spacing-xl: 3rem;
-                --spacing-2xl: 4rem;
-            }
-            
-            h1 { font-size: 2rem; }
-            h2 { font-size: 1.75rem; }
-            
-            .container {
-                padding-left: var(--spacing-sm);
-                padding-right: var(--spacing-sm);
-            }
-            
-            .home-stat-number {
-                font-size: 2.5rem;
-            }
-            
-            .feature-card {
-                margin-bottom: var(--spacing-md);
-            }
-        }
-        
-        /* ========================================
-           SCROLL ENHANCEMENTS
-           ======================================== */
-        #green-spaces-info {
-            scroll-margin-top: 80px;
-        }
-        
-        /* Smooth reveal animations */
-        .fade-in {
-            animation: fadeIn 0.8s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .floating-leaf-delay-2 {
+            animation-delay: 4s, 1.6s;
+            animation-duration: 8s, 10s;
         }
     </style>
 </head>
-<body>
-    <div class="main-content">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="home.html">
-                <div class="logo-icon d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; margin-right: 15px; background: rgba(46, 125, 50, 0.1); border-radius: 12px;">
-                    <i class="fas fa-tree" style="color: #2E7D32; font-size: 28px;"></i>
+<body class="antialiased">
+
+    <!-- Sticky Transparent Navigation Bar -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-white/90 dark:bg-black/90 backdrop-blur-xl border-b border-black/5 dark:border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2.5 group">
+                <div class="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-105">
+                    <i class="fas fa-tree text-lg"></i>
                 </div>
-                <div class="d-flex flex-column justify-content-center">
-                    <span class="fw-bold mb-0" style="color: var(--primary-color); line-height: 1.2;">Kitwe Green Space</span>
-                    <small class="text-muted" style="font-size: 0.8rem; line-height: 1;">Mapping System</small>
+                <div>
+                    <span class="font-bold text-lg tracking-tight text-dark dark:text-white">Kitwe Green Space</span>
+                    <p class="text-[10px] text-gray-500 -mt-0.5">Mapping System</p>
                 </div>
             </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link active fw-semibold px-3 py-2" href="home.html">
-                            <i class="fas fa-home me-2"></i>Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-semibold px-3 py-2" href="index.html">
-                            <i class="fas fa-map-marked-alt me-2"></i>Interactive Map
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-semibold px-3 py-2" href="simpledashboard.html">
-                            <i class="fas fa-chart-bar me-2"></i>Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-semibold px-3 py-2" href="documentation.html">
-                            <i class="fas fa-book me-2"></i>Documentation
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-semibold px-3 py-2" href="environmental-monitoring.html">
-                            <i class="fas fa-leaf me-2"></i>Environmental Monitor
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-semibold px-3 py-2" href="about-green-spaces.html">
-                            <i class="fas fa-info-circle me-2"></i>About Green Spaces
-                        </a>
-                    </li>
-                    <li class="nav-item ms-2">
-                        <a class="btn btn-primary px-4 py-2" href="index.html" style="background: var(--primary-color); border-color: var(--primary-color); border-radius: 8px;">
-                            <i class="fas fa-play-circle me-2"></i>Launch App
-                        </a>
-                    </li>
-                </ul>
+            
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#services" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Services</a>
+                <a href="#how-it-works" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">How It Works</a>
+                <a href="#experience" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Experience</a>
+                <a href="#research" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Research</a>
+                <a href="#faq" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">FAQ</a>
+                <a href="index.html" class="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-md shadow-primary-500/25">Launch Map</a>
+                <a href="events.html" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 px-3 py-2 text-sm font-medium">Events</a>
+                <a href="simpledashboard.html" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 px-3 py-2 text-sm font-medium">Dashboard</a>
+                <a href="3d-view.html" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 px-3 py-2 text-sm font-medium">Satellite Tour</a>
+                <button id="darkModeToggle" class="ml-1 p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary-50">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:inline"></i>
+                </button>
             </div>
+            
+            <button id="mobileMenuBtn" class="md:hidden text-gray-700 dark:text-gray-200">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        
+        <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-black backdrop-blur-xl border-b border-black/5 dark:border-white/5 py-4 px-6 flex flex-col gap-4">
+            <a href="#services" class="text-gray-700 dark:text-gray-300 font-medium py-2">Services</a>
+            <a href="#how-it-works" class="text-gray-700 dark:text-gray-300 font-medium py-2">How It Works</a>
+            <a href="#experience" class="text-gray-700 dark:text-gray-300 font-medium py-2">Experience</a>
+            <a href="#research" class="text-gray-700 dark:text-gray-300 font-medium py-2">Research</a>
+            <a href="#faq" class="text-gray-700 dark:text-gray-300 font-medium py-2">FAQ</a>
+            <a href="index.html" class="bg-primary-600 text-white text-center py-3 rounded-full font-semibold">Launch Map</a>
+            <a href="events.html" class="border border-gray-300 dark:border-gray-700 text-center py-3 rounded-full font-semibold">Events</a>
+            <a href="simpledashboard.html" class="border border-gray-300 dark:border-gray-700 text-center py-3 rounded-full font-semibold">Dashboard</a>
+            <a href="environmental-monitoring.html" class="text-gray-600 dark:text-gray-400 text-center py-2">Environmental</a>
+            <a href="documentation.html" class="text-gray-600 dark:text-gray-400 text-center py-2">Docs</a>
         </div>
     </nav>
 
-    <!-- Hero Section with Enhanced Banner -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="icon-badge mb-4" style="width: 100px; height: 100px; margin: 0 auto;">
-                <i class="fas fa-tree" style="font-size: 48px;"></i>
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-28">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#f4faf5] via-white to-[#e8f5e9] dark:from-[#051707] dark:via-[#020b03] dark:to-black"></div>
+        <div class="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-primary-500/25 dark:bg-primary-500/35 rounded-full blur-[120px] transition-all"></div>
+        <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-primary-400/25 dark:bg-primary-400/35 rounded-full blur-[120px] transition-all"></div>
+        
+        <!-- Immersive Floating Leaves (Forest Green Brand Vibe) -->
+        <svg class="floating-leaf w-10 h-10 text-primary-600/20 dark:text-primary-400/25" style="top: 15%; left: 8%;" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17,2C17,2 9.03,5.82 5.5,11.5C3.76,14.3 3,17.5 3,17.5C3,17.5 6.2,16.74 9,15C14.68,11.47 18.5,3.5 18.5,3.5C18.5,3.5 18,2 17,2Z"/>
+        </svg>
+        <svg class="floating-leaf floating-leaf-delay-1 w-14 h-14 text-primary-500/20 dark:text-primary-300/20" style="top: 25%; right: 10%;" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21,3c-3,0-8,4-10,7C9,13,9,16,9,16s3,0,6-2c3-2,7-7,7-10V3z"/>
+        </svg>
+        <svg class="floating-leaf floating-leaf-delay-2 w-12 h-12 text-primary-400/25 dark:text-primary-500/30" style="bottom: 18%; left: 15%;" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17,2C17,2 9.03,5.82 5.5,11.5C3.76,14.3 3,17.5 3,17.5C3,17.5 6.2,16.74 9,15C14.68,11.47 18.5,3.5 18.5,3.5C18.5,3.5 18,2 17,2Z" transform="scale(-1, 1) translate(-24, 0)"/>
+        </svg>
+        
+        <div class="relative max-w-7xl mx-auto px-6 lg:px-8 py-20 text-center">
+            <div data-aos="fade-up" data-aos-duration="700">
+                <div class="inline-flex items-center gap-2 bg-primary-100/70 dark:bg-primary-950/40 border border-primary-300/50 dark:border-primary-800/80 rounded-full px-4 py-1.5 mb-8 shadow-sm">
+                    <i class="fas fa-leaf text-primary-600 dark:text-primary-400 text-sm animate-pulse"></i>
+                    <span class="text-xs font-semibold text-primary-800 dark:text-primary-200">Kitwe, Zambia • Live GIS Data</span>
+                </div>
             </div>
-            <h1 class="display-3 fw-bold mb-4">Kitwe Urban Green Space<br>Mapping System</h1>
-            <p class="lead mb-5">A GIS-based web application for mapping, analyzing, and managing<br>urban green spaces in Kitwe, Zambia</p>
             
-            <!-- Pull Quote in Hero -->
-            <div class="pull-quote mx-auto" style="max-width: 700px; background: rgba(255, 255, 255, 0.15); border-left-color: white; backdrop-filter: blur(10px);">
-                <p style="color: white; font-size: 1.1rem;">
-                    Green spaces are the lungs of our city, providing essential environmental services and improving quality of life for all residents.
-                </p>
+            <h1 data-aos="fade-up" data-aos-delay="100" class="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tighter leading-[1.1] mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-primary-800 to-primary-600 dark:from-white dark:via-primary-300 dark:to-primary-400">
+                Mapping Kitwe's<br>Urban Green Spaces
+            </h1>
+            
+            <p data-aos="fade-up" data-aos-delay="200" class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+                A comprehensive GIS-based platform for mapping, analyzing, and managing urban green spaces across Kitwe's 16 wards.
+            </p>
+            
+            <div data-aos="fade-up" data-aos-delay="300" class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <a href="index.html" class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-xl shadow-primary-500/40 hover:shadow-primary-500/60 inline-flex items-center gap-2">
+                    Explore Interactive Map <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="#services" class="border border-gray-300 dark:border-gray-700 bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 px-8 py-4 rounded-full font-semibold text-lg transition-all inline-flex items-center gap-2">
+                    Discover Features <i class="fas fa-chevron-down text-sm"></i>
+                </a>
+                <a href="documentation.html" class="border border-gray-300 dark:border-gray-700 bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 px-8 py-4 rounded-full font-semibold text-lg transition-all inline-flex items-center gap-2">
+                    <i class="fas fa-book"></i> Documentation
+                </a>
             </div>
             
-            <div class="row justify-content-center g-4 mt-4">
-                <div class="col-auto">
-                    <a href="index.html" class="btn btn-light btn-lg fw-semibold px-5 py-3" style="border-radius: var(--radius-md); box-shadow: var(--shadow-lg);">
-                        <i class="fas fa-map-marked-alt me-2"></i>Explore Interactive Map
-                    </a>
-                </div>
-                <div class="col-auto">
-                    <a href="#green-spaces-info" class="btn btn-outline-light btn-lg fw-semibold px-5 py-3" style="border-radius: var(--radius-md); border-width: 2px;">
-                        <i class="fas fa-info-circle me-2"></i>Learn More
-                    </a>
-                </div>
+            <div data-aos="fade-up" data-aos-delay="400" class="flex flex-wrap justify-center gap-12 pt-8 border-t border-gray-200 dark:border-gray-800 max-w-3xl mx-auto">
+                <div><span class="text-4xl font-black text-dark dark:text-white" id="hero-parks">51</span><span class="text-gray-500 dark:text-gray-400 text-sm ml-2">Green Spaces</span></div>
+                <div><span class="text-4xl font-black text-dark dark:text-white" id="hero-area">314</span><span class="text-gray-500 dark:text-gray-400 text-sm ml-2">Hectares</span></div>
+                <div><span class="text-4xl font-black text-dark dark:text-white" id="hero-wards">16</span><span class="text-gray-500 dark:text-gray-400 text-sm ml-2">Wards</span></div>
+                <div><span class="text-4xl font-black text-dark dark:text-white" id="hero-types">6</span><span class="text-gray-500 dark:text-gray-400 text-sm ml-2">Space Types</span></div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row text-center g-4">
-                <div class="col-md-3">
-                    <div class="home-stat-number" id="stats-parks">...</div>
-                    <p class="text-muted">Green Spaces Mapped</p>
-                </div>
-                <div class="col-md-3">
-                    <div class="home-stat-number" id="stats-area">...</div>
-                    <p class="text-muted">Hectares</p>
-                </div>
-                <div class="col-md-3">
-                    <div class="home-stat-number" id="stats-wards">...</div>
-                    <p class="text-muted">Wards Covered</p>
-                </div>
-                <div class="col-md-3">
-                    <div class="home-stat-number" id="stats-types">...</div>
-                    <p class="text-muted">Space Types</p>
-                </div>
+    <!-- Services Section -->
+    <section id="services" class="py-28 bg-white dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-primary-600 dark:text-primary-400 text-sm font-semibold tracking-wide uppercase">System Features</span>
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight mt-3 text-gray-900 dark:text-white">Everything you need to explore & manage</h2>
+                <p class="text-gray-600 dark:text-gray-400 mt-4 text-lg">Advanced GIS analytics, environmental tracking, and community insights.</p>
             </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5" style="color: var(--primary-color);">System Features</h2>
-            <div class="row g-4">
-                <div class="col-md-3">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-map-marked-alt"></i>
-                        </div>
-                        <h4>Interactive Mapping</h4>
-                        <p>Explore Kitwe's green spaces with our interactive GIS map. Zoom, pan, and click on locations for detailed information.</p>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
+                <div data-aos="fade-up" data-aos-delay="100" class="group card-glass rounded-3xl p-7 hover-lift cursor-pointer">
+                    <div class="w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-draw-polygon text-2xl text-primary-600 dark:text-primary-400"></i>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h4>Data Analytics</h4>
-                        <p>Analyze green space distribution, coverage, and trends with our comprehensive dashboard and visualization tools.</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h4>Community Engagement</h4>
-                        <p>Citizens can report issues, suggest improvements, and participate in urban green space management.</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-leaf"></i>
-                        </div>
-                        <h4>Sustainability</h4>
-                        <p>Support sustainable urban development and environmental conservation efforts in Kitwe.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Map Preview Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h2 class="mb-4" style="color: var(--primary-color);">Interactive Green Space Map</h2>
-                    <p class="lead">Our GIS-based mapping system provides real-time visualization of all registered green spaces in Kitwe.</p>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Filter by type, ward, and area</li>
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Search for specific locations</li>
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>View detailed information for each space</li>
-                    </ul>
-                    <a href="index.html" class="btn btn-primary mt-3" style="background: var(--primary-color); border-color: var(--primary-color);">
-                        <i class="fas fa-external-link-alt me-2"></i>Open Full Map
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <div class="map-preview">
-                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
-                             alt="Map Preview" class="img-fluid rounded">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Comprehensive Green Spaces Information -->
-    <section id="green-spaces-info" class="py-5 bg-light">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 style="color: var(--primary-color);">
-                    <i class="fas fa-leaf me-3"></i>Understanding Green Spaces in Kitwe
-                </h2>
-                <p class="lead">Comprehensive guide to urban green spaces and their impact on our city</p>
-            </div>
-
-            <!-- Definition Section -->
-            <div class="row mb-5">
-                <div class="col-md-12">
-                    <div class="project-card" style="background: linear-gradient(135deg, #e8f5e8, #f1f8e9); border-left: 5px solid var(--primary-color);">
-                        <h3 class="text-primary mb-4"><i class="fas fa-book-open me-2"></i>What are Green Spaces?</h3>
-                        <p class="lead">Green spaces are areas of land that are partly or completely covered with grass, trees, shrubs, or other vegetation. They include parks, community gardens, cemeteries, campuses, playgrounds, and greenways.</p>
-                        
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <h5><i class="fas fa-check-circle text-success me-2"></i>Key Characteristics:</h5>
-                                <ul class="list-unstyled">
-                                    <li><i class="fas fa-seedling text-success me-2"></i>Predominantly natural surfaces</li>
-                                    <li><i class="fas fa-users text-primary me-2"></i>Accessible to the public</li>
-                                    <li><i class="fas fa-wind text-info me-2"></i>Provide environmental services</li>
-                                    <li><i class="fas fa-bug text-warning me-2"></i>Support biodiversity</li>
-                                    <li><i class="fas fa-running text-danger me-2"></i>Offer recreational opportunities</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="project-card" style="background: #fff3cd; border-left: 3px solid #ffc107;">
-                                    <h5><i class="fas fa-globe text-warning me-2"></i>WHO Recommendation:</h5>
-                                    <p>The World Health Organization recommends a minimum of <strong>9 square meters of green space per person</strong> in urban areas for optimal health and well-being.</p>
-                                    <p class="mb-0"><strong>Kitwe Current Status:</strong> <span id="who-status" class="text-danger">...</span> m² per capita (<span id="who-comparison">...</span>)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kitwe Context -->
-            <div class="row mb-5">
-                <div class="col-md-12">
-                    <h3 class="text-primary mb-4"><i class="fas fa-map-marker-alt me-2"></i>Green Spaces in Kitwe Context</h3>
-                    
-                    <div class="project-card" style="background: linear-gradient(135deg, #e3f2fd, #f3e5f5); border-left: 4px solid #2196F3;">
-                        <h4><i class="fas fa-city text-primary me-2"></i>About Kitwe</h4>
-                        <p>Kitwe is Zambia's second-largest city and the heart of the Copperbelt Province. With a population of approximately 517,543 people, it's a major industrial and mining center that faces unique urban planning challenges.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Types of Green Spaces -->
-            <div class="row mb-5">
-                <div class="col-md-12">
-                    <h3 class="text-primary mb-4"><i class="fas fa-seedling me-2"></i>Types of Green Spaces in Kitwe</h3>
-                    
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="project-card">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div style="width: 50px; height: 50px; background: #4CAF50; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                        <i class="fas fa-tree text-white" style="font-size: 24px;"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-1">Parks</h5>
-                                        <p class="mb-0 text-muted">Public recreational areas with landscaping</p>
-                                    </div>
-                                </div>
-                                <p><strong>Examples:</strong> Central Park Kitwe, Parklands Community Park, Mukuba Park</p>
-                                <p><strong>Features:</strong> Walking paths, playground equipment, picnic areas, sports facilities</p>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="project-card">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div style="width: 50px; height: 50px; background: #2196F3; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                        <i class="fas fa-flower text-white" style="font-size: 24px;"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-1">Gardens</h5>
-                                        <p class="mb-0 text-muted">Cultivated areas with ornamental plants</p>
-                                    </div>
-                                </div>
-                                <p><strong>Examples:</strong> Riverside Gardens, Mindolo Ecumenical Centre Gardens</p>
-                                <p><strong>Features:</strong> Botanical displays, educational signage, greenhouse facilities</p>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="project-card">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div style="width: 50px; height: 50px; background: #9C27B0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                        <i class="fas fa-leaf text-white" style="font-size: 24px;"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-1">Forests & Natural Areas</h5>
-                                        <p class="mb-0 text-muted">Dense tree coverage and ecosystems</p>
-                                    </div>
-                                </div>
-                                <p><strong>Examples:</strong> Copperbelt University Arboretum, Buchi Community Forest</p>
-                                <p><strong>Features:</strong> Nature trails, wildlife habitat, conservation areas</p>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="project-card">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div style="width: 50px; height: 50px; background: #FF9800; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                        <i class="fas fa-futbol text-white" style="font-size: 24px;"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-1">Recreational Facilities</h5>
-                                        <p class="mb-0 text-muted">Sports and recreational complexes</p>
-                                    </div>
-                                </div>
-                                <p><strong>Examples:</strong> Nkana Sports Complex, Chimwemwe Football Ground</p>
-                                <p><strong>Features:</strong> Playing fields, sports equipment, spectator seating</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Benefits Section -->
-            <div class="row mb-5">
-                <div class="col-md-12">
-                    <h3 class="text-primary mb-4"><i class="fas fa-heart me-2"></i>Benefits of Green Spaces</h3>
-                    
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="project-card" style="border-left: 4px solid #4CAF50;">
-                                <h4><i class="fas fa-lungs text-success me-2"></i>Environmental Benefits</h4>
-                                
-                                <div class="mb-3">
-                                    <h6><i class="fas fa-wind text-info me-2"></i>Air Quality Improvement</h6>
-                                    <p>Trees and plants filter pollutants, absorb CO₂, and produce oxygen. In Kitwe's industrial environment, this is crucial for public health.</p>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <h6><i class="fas fa-thermometer-half text-warning me-2"></i>Temperature Regulation</h6>
-                                    <p>Green spaces reduce urban heat island effects through evapotranspiration and shade.</p>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <h6><i class="fas fa-tint text-primary me-2"></i>Stormwater Management</h6>
-                                    <p>Vegetation and soil absorb rainwater, reducing flood risks and improving water quality.</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="project-card" style="border-left: 4px solid #2196F3;">
-                                <h4><i class="fas fa-users text-primary me-2"></i>Social & Health Benefits</h4>
-                                
-                                <div class="mb-3">
-                                    <h6><i class="fas fa-running text-danger me-2"></i>Physical Health</h6>
-                                    <p>Green spaces encourage physical activity, reduce obesity rates, and improve cardiovascular health.</p>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <h6><i class="fas fa-brain text-info me-2"></i>Mental Well-being</h6>
-                                    <p>Access to nature reduces stress, anxiety, and depression while improving cognitive function.</p>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <h6><i class="fas fa-home text-warning me-2"></i>Property Values</h6>
-                                    <p>Proximity to green spaces increases property values and makes neighborhoods more desirable.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Environmental Impact -->
-            <div class="row mb-5">
-                <div class="col-md-12">
-                    <div class="project-card" style="background: linear-gradient(135deg, #e8f5e8, #f1f8e9); border-left: 5px solid var(--primary-color);">
-                        <h3 class="text-success mb-4"><i class="fas fa-calculator me-2"></i>Environmental Impact in Kitwe</h3>
-                        <p class="lead">Based on our mapping of <span id="impact-hectares">...</span> hectares of green space in Kitwe:</p>
-                        
-                        <div class="row text-center">
-                            <div class="col-md-4">
-                                <div class="project-card" style="background: white;">
-                                    <div class="home-stat-number text-success" id="impact-co2">...</div>
-                                    <p>kg CO₂ absorbed annually</p>
-                                    <small class="text-muted">Equivalent to taking <span id="impact-cars">...</span> cars off the road for a year</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="project-card" style="background: white;">
-                                    <div class="home-stat-number text-primary" id="impact-water">...</div>
-                                    <p>Liters rainwater capacity</p>
-                                    <small class="text-muted">Helps prevent flooding during rainy season</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="project-card" style="background: white;">
-                                    <div class="home-stat-number text-warning" id="impact-temp">...</div>
-                                    <p>Temperature reduction</p>
-                                    <small class="text-muted">Cooling effect across the city</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Challenges and Opportunities -->
-            <div class="row mb-5">
-                <div class="col-md-6">
-                    <div class="project-card" style="border-left: 4px solid #f44336;">
-                        <h4><i class="fas fa-exclamation-triangle text-danger me-2"></i>Current Challenges</h4>
-                        <ul>
-                            <li><strong>Limited Coverage:</strong> <span id="challenge-coverage">Below WHO recommendations</span></li>
-                            <li><strong>Uneven Distribution:</strong> Some wards lack adequate green spaces</li>
-                            <li><strong>Industrial Impact:</strong> Mining activities affect land availability</li>
-                            <li><strong>Maintenance:</strong> Limited resources for upkeep</li>
-                            <li><strong>Population Growth:</strong> Increasing pressure on existing spaces</li>
-                        </ul>
-                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Interactive Mapping</h3>
+                    <p class="text-gray-500 dark:text-gray-400 leading-relaxed">Explore Kitwe's green spaces with advanced GIS maps. Zoom, pan, and click for detailed info about each location.</p>
                 </div>
                 
-                <div class="col-md-6">
-                    <div class="project-card" style="border-left: 4px solid #4CAF50;">
-                        <h4><i class="fas fa-lightbulb text-success me-2"></i>Future Opportunities</h4>
-                        <ul>
-                            <li><strong>Mine Rehabilitation:</strong> Convert old mining sites to green spaces</li>
-                            <li><strong>Green Corridors:</strong> Connect existing spaces with tree-lined paths</li>
-                            <li><strong>Community Gardens:</strong> Promote food security and engagement</li>
-                            <li><strong>Rooftop Gardens:</strong> Utilize building tops for green space</li>
-                            <li><strong>Public-Private Partnerships:</strong> Collaborate with mining companies</li>
-                        </ul>
+                <div data-aos="fade-up" data-aos-delay="150" class="group card-glass rounded-3xl p-7 hover-lift">
+                    <div class="w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-chart-line text-2xl text-primary-600 dark:text-primary-400"></i>
                     </div>
+                    <h3 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Data Analytics</h3>
+                    <p class="text-gray-500 dark:text-gray-400 leading-relaxed">Analyze green space distribution, coverage, and trends with comprehensive dashboard and visualization tools.</p>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="200" class="group card-glass rounded-3xl p-7 hover-lift">
+                    <div class="w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-users text-2xl text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Community Engagement</h3>
+                    <p class="text-gray-500 dark:text-gray-400 leading-relaxed">Citizens can report issues, suggest improvements, and participate in urban green space management.</p>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="250" class="group card-glass rounded-3xl p-7 hover-lift">
+                    <div class="w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-leaf text-2xl text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Sustainability</h3>
+                    <p class="text-gray-500 dark:text-gray-400 leading-relaxed">Support sustainable urban development and environmental conservation efforts in Kitwe.</p>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="300" class="group card-glass rounded-3xl p-7 hover-lift">
+                    <div class="w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-thermometer-half text-2xl text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Environmental Monitoring</h3>
+                    <p class="text-gray-500 dark:text-gray-400 leading-relaxed">Real-time environmental data including air quality, temperature, and green space impact metrics.</p>
+                </div>
+                
+                <div data-aos="fade-up" data-aos-delay="350" class="group card-glass rounded-3xl p-7 hover-lift">
+                    <div class="w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-file-pdf text-2xl text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Professional Reports</h3>
+                    <p class="text-gray-500 dark:text-gray-400 leading-relaxed">Generate comprehensive PDF reports with statistics, analysis, and recommendations for city planning.</p>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Call to Action -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="text-center mb-5">
-                        <h3 style="font-size: 2.5rem; color: var(--forest-green);">
-                            <i class="fas fa-hands-helping me-3" style="color: var(--spring-green);"></i>
-                            Get Involved in Kitwe's Green Future
-                        </h3>
-                        <p class="lead" style="max-width: 800px; margin: var(--spacing-md) auto 0;">
-                            Green spaces are community assets that require collective care and advocacy. 
-                            Here's how you can contribute to making Kitwe greener and more sustainable.
-                        </p>
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-28 bg-[#f4faf5] dark:bg-[#071308] border-y border-primary-100 dark:border-primary-950/30">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-primary-600 dark:text-primary-400 text-sm font-semibold">Simple Process</span>
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight mt-2 text-gray-900 dark:text-white">How It Works</h2>
+                <p class="text-gray-600 dark:text-gray-400 mt-3">Simple, intuitive process to explore and manage green spaces</p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-8 relative">
+                <div class="hidden md:block absolute top-12 left-0 right-0 h-[1px] step-line"></div>
+                
+                <div data-aos="fade-up" class="text-center relative">
+                    <div class="w-20 h-20 mx-auto bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg border border-gray-100 dark:border-gray-700 relative z-10">
+                        <span class="text-2xl font-black text-primary-600">01</span>
                     </div>
-                    
-                    <div class="row g-4 mb-5">
-                        <!-- Community Action Card -->
-                        <div class="col-md-6">
-                            <div class="involvement-card">
-                                <div class="d-flex align-items-center mb-4">
-                                    <div class="icon-badge me-3" style="background: linear-gradient(135deg, #2E7D32, #4CAF50);">
-                                        <i class="fas fa-users"></i>
-                                    </div>
-                                    <h5 class="mb-0">Community Action</h5>
-                                </div>
-                                
-                                <ul class="nature-list seedling">
-                                    <li>Participate in tree planting initiatives</li>
-                                    <li>Join community garden projects</li>
-                                    <li>Volunteer for park maintenance</li>
-                                    <li>Advocate for new green spaces</li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <!-- Contribute & Improve Card -->
-                        <div class="col-md-6">
-                            <div class="involvement-card" style="border-left-color: var(--sky-blue);">
-                                <div class="d-flex align-items-center mb-4">
-                                    <div class="icon-badge me-3" style="background: linear-gradient(135deg, #0288D1, #2196F3);">
-                                        <i class="fas fa-lightbulb"></i>
-                                    </div>
-                                    <h5 class="mb-0">Contribute & Improve</h5>
-                                </div>
-                                
-                                <ul class="nature-list leaf">
-                                    <li>Share improvement ideas for existing spaces</li>
-                                    <li>Identify potential new green space locations</li>
-                                    <li>Share success stories and positive impacts</li>
-                                    <li>Connect with other environmental advocates</li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <!-- Report Issues Card -->
-                        <div class="col-md-6">
-                            <div class="involvement-card" style="border-left-color: var(--sunset-orange);">
-                                <div class="d-flex align-items-center mb-4">
-                                    <div class="icon-badge me-3" style="background: linear-gradient(135deg, #FF6F00, #FF9800);">
-                                        <i class="fas fa-exclamation-circle"></i>
-                                    </div>
-                                    <h5 class="mb-0">Report & Monitor</h5>
-                                </div>
-                                
-                                <ul class="nature-list flower">
-                                    <li>Report maintenance issues in green spaces</li>
-                                    <li>Document environmental concerns</li>
-                                    <li>Track changes in your local parks</li>
-                                    <li>Provide feedback on accessibility</li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <!-- Education & Awareness Card -->
-                        <div class="col-md-6">
-                            <div class="involvement-card" style="border-left-color: var(--flower-pink);">
-                                <div class="d-flex align-items-center mb-4">
-                                    <div class="icon-badge me-3" style="background: linear-gradient(135deg, #E91E63, #F06292);">
-                                        <i class="fas fa-graduation-cap"></i>
-                                    </div>
-                                    <h5 class="mb-0">Education & Awareness</h5>
-                                </div>
-                                
-                                <ul class="nature-list tree">
-                                    <li>Organize environmental education workshops</li>
-                                    <li>Share knowledge about local biodiversity</li>
-                                    <li>Promote sustainable practices</li>
-                                    <li>Engage youth in conservation efforts</li>
-                                </ul>
-                            </div>
-                        </div>
+                    <h4 class="font-bold text-xl mt-6 mb-2 text-gray-900 dark:text-white">Explore Map</h4>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Start by exploring Kitwe's green spaces on our interactive map.</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="100" class="text-center relative">
+                    <div class="w-20 h-20 mx-auto bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg">
+                        <span class="text-2xl font-black text-primary-600">02</span>
                     </div>
-                    
-                    <div class="text-center pt-4" style="border-top: 2px solid var(--medium-gray);">
-                        <a href="index.html" class="btn btn-lg px-5 py-3" style="background: linear-gradient(135deg, var(--forest-green), var(--spring-green)); color: white; border: none; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); font-weight: 600;">
-                            <i class="fas fa-map me-2"></i>Launch Interactive Map
-                        </a>
+                    <h4 class="font-bold text-xl mt-6 mb-2 text-gray-900 dark:text-white">View Details</h4>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Click on any green space to view detailed information including type and area.</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200" class="text-center relative">
+                    <div class="w-20 h-20 mx-auto bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg">
+                        <span class="text-2xl font-black text-primary-600">03</span>
+                    </div>
+                    <h4 class="font-bold text-xl mt-6 mb-2 text-gray-900 dark:text-white">Analyze Data</h4>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Use dashboard to understand green space distribution across wards.</p>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="300" class="text-center relative">
+                    <div class="w-20 h-20 mx-auto bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg">
+                        <span class="text-2xl font-black text-primary-600">04</span>
+                    </div>
+                    <h4 class="font-bold text-xl mt-6 mb-2 text-gray-900 dark:text-white">Take Action</h4>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Report issues, suggest improvements, or download data for analysis.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Experience Section -->
+    <section id="experience" class="py-28 bg-white dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div data-aos="fade-right" class="order-2 lg:order-1">
+                    <span class="text-primary-600 font-semibold text-sm uppercase tracking-wide">Precision & Reliability</span>
+                    <h2 class="text-4xl lg:text-5xl font-bold mt-3 mb-5 tracking-tight text-gray-900 dark:text-white">Real-time green space intelligence</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg mb-6 leading-relaxed">Leverage high-resolution satellite data and on-ground validation. Our platform updates dynamically, offering actionable insights for urban planners, researchers, and citizens.</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex gap-3"><i class="fas fa-check-circle text-primary-500 mt-1"></i><span class="text-gray-700 dark:text-gray-300">Live coverage of 314+ hectares</span></li>
+                        <li class="flex gap-3"><i class="fas fa-check-circle text-primary-500 mt-1"></i><span class="text-gray-700 dark:text-gray-300">6 distinct green space typologies</span></li>
+                        <li class="flex gap-3"><i class="fas fa-check-circle text-primary-500 mt-1"></i><span class="text-gray-700 dark:text-gray-300">Ward-level equity dashboards</span></li>
+                    </ul>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="index.html" class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-7 py-3.5 rounded-full font-semibold transition-all">Explore Map <i class="fas fa-arrow-right"></i></a>
+                        <a href="simpledashboard.html" class="inline-flex items-center gap-2 border border-gray-300 dark:border-gray-700 px-7 py-3.5 rounded-full font-semibold transition-all hover:bg-gray-50 dark:hover:bg-gray-800">View Dashboard</a>
+                        <a href="environmental-monitoring.html" class="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:underline">Environmental Data <i class="fas fa-external-link-alt text-xs"></i></a>
+                    </div>
+                </div>
+                <div data-aos="fade-left" class="order-1 lg:order-2">
+                    <div class="rounded-3xl overflow-hidden shadow-2xl gradient-border">
+                    <img src="images/gallery-ndeke-2.jpg" alt="Aerial view of Kitwe with greenery" class="w-full h-auto object-cover">
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- About This Project Section - Moved to End -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5" style="color: var(--primary-color);">About This Project</h2>
-            <div class="row">
-                <div class="col-md-8 mx-auto">
-                    <div class="project-card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Mulungushi University Capstone Project</h5>
-                            <p class="card-text">
-                                This system was developed as part of the ICT431 Capstone Project for the 
-                                Bachelor of Science in Computer Science program at Mulungushi University.
-                            </p>
-                            <div class="row mt-4">
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-user-graduate me-2"></i>Student</h6>
-                                    <p class="mb-0">Mukendwa Luyongile</p>
-                                    <small class="text-muted">ID: 202201912</small>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6><i class="fas fa-chalkboard-teacher me-2"></i>Supervisor</h6>
-                                    <p class="mb-0">Mr. Nyirenda</p>
-                                    <small class="text-muted">Department of Computer Science & IT</small>
-                                </div>
+    <!-- Testimonials Section -->
+    <section class="py-28 bg-[#f4faf5] dark:bg-[#071308] border-y border-primary-100 dark:border-primary-950/30">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <span class="text-primary-600 font-semibold text-sm">Social Proof</span>
+            <h2 class="text-4xl font-bold mt-2 mb-12 text-gray-900 dark:text-white">Trusted by city planners & citizens</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div data-aos="fade-up" class="card-glass rounded-2xl p-7 text-left">
+                    <div class="flex gap-1 text-primary-500 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-gray-700 dark:text-gray-300 mb-5">"The most comprehensive green space dataset for Kitwe. Transformed how we allocate environmental budgets."</p>
+                    <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center"><i class="fas fa-user text-primary-600"></i></div><div><strong>Mulenga C.</strong><p class="text-xs text-gray-500">Urban Planning, KCC</p></div></div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="100" class="card-glass rounded-2xl p-7 text-left">
+                    <div class="flex gap-1 text-primary-500 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-gray-700 dark:text-gray-300 mb-5">"Citizen reporting feature is a game-changer. We've already restored 3 neglected parks."</p>
+                    <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center"><i class="fas fa-leaf text-primary-600"></i></div><div><strong>Green Living Initiative</strong><p class="text-xs text-gray-500">NGO Partner</p></div></div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200" class="card-glass rounded-2xl p-7 text-left">
+                    <div class="flex gap-1 text-primary-500 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-gray-700 dark:text-gray-300 mb-5">"Essential for my research on urban heat islands. The interface is incredibly intuitive."</p>
+                    <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center"><i class="fas fa-graduation-cap text-primary-600"></i></div><div><strong>Dr. Banda</strong><p class="text-xs text-gray-500">CBU, Environmental Science</p></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research / Academic Collaboration Section -->
+    <section id="research" class="py-28 bg-primary-700 dark:bg-primary-800">
+        <div class="max-w-6xl mx-auto px-6 text-center text-white">
+            <h2 class="text-4xl md:text-5xl font-bold mb-5">Research & Collaboration</h2>
+            <p class="text-lg text-white/80 max-w-2xl mx-auto mb-9">Supporting environmental studies, urban forestry research, and GIS-based academic projects in Kitwe. Access open-source datasets and collaborate on local conservation initiatives.</p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="documentation.html" class="inline-block bg-white text-primary-700 px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:scale-105 transition">Academic Guides →</a>
+                <a href="bibliography.html" class="inline-block bg-primary-600 border border-white/30 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-primary-500 transition">View Bibliography</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion Section -->
+    <section id="faq" class="py-28 bg-white dark:bg-gray-900">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="border-b border-gray-200 dark:border-gray-800 pb-5 group cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center"><span class="font-semibold text-lg text-gray-800 dark:text-gray-200">How accurate is the green space data?</span><i class="fas fa-chevron-down text-primary-500 transition-transform"></i></div>
+                    <div class="hidden mt-3 text-gray-500 dark:text-gray-400">Data is sourced from high-res satellite imagery, validated with ground surveys, achieving 95%+ accuracy across 16 wards.</div>
+                </div>
+                <div class="border-b border-gray-200 dark:border-gray-800 pb-5 group cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center"><span class="font-semibold text-lg text-gray-800 dark:text-gray-200">Can I contribute or report an issue?</span><i class="fas fa-chevron-down text-primary-500 transition-transform"></i></div>
+                    <div class="hidden mt-3 text-gray-500 dark:text-gray-400">Yes, citizens can submit reports through the interactive map. Our team verifies and updates the platform weekly.</div>
+                </div>
+                <div class="border-b border-gray-200 dark:border-gray-800 pb-5 group cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center"><span class="font-semibold text-lg text-gray-800 dark:text-gray-200">Is the platform free for researchers?</span><i class="fas fa-chevron-down text-primary-500 transition-transform"></i></div>
+                    <div class="hidden mt-3 text-gray-500 dark:text-gray-400">Absolutely. Academic and non-profit use is free with attribution. Contact us for API access.</div>
+                </div>
+                <div class="pb-5 group cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center"><span class="font-semibold text-lg text-gray-800 dark:text-gray-200">How often is data updated?</span><i class="fas fa-chevron-down text-primary-500 transition-transform"></i></div>
+                    <div class="hidden mt-3 text-gray-500 dark:text-gray-400">Quarterly updates with real-time citizen reports. Major changes are reflected within 2 weeks.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Access CTA -->
+    <section class="py-20 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <i class="fas fa-satellite-dish text-5xl mb-5"></i>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Explore the Data Your Way</h2>
+            <p class="text-lg text-white/80 max-w-lg mx-auto mb-8">Dive into the interactive map, run spatial analysis, or take a cinematic satellite tour across all 51 Kitwe green spaces.</p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="index.html" class="bg-white text-primary-700 px-7 py-3.5 rounded-full font-bold text-sm transition-all hover:scale-105 shadow-xl flex items-center gap-2">
+                    <i class="fas fa-map"></i> Launch Interactive Map
+                </a>
+                <a href="3d-view.html" class="bg-black/20 backdrop-blur-sm border border-white/30 px-7 py-3.5 rounded-full font-semibold text-sm flex items-center gap-2 hover:bg-white/10 transition">
+                    <i class="fas fa-plane"></i> Satellite Fly-Through
+                </a>
+                <a href="simpledashboard.html" class="bg-black/20 backdrop-blur-sm border border-white/30 px-7 py-3.5 rounded-full font-semibold text-sm flex items-center gap-2 hover:bg-white/10 transition">
+                    <i class="fas fa-chart-bar"></i> Analytics Dashboard
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Pages Section -->
+    <section class="py-20 bg-white dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-3">Explore All Features</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-lg">Access all available pages and tools in the Kitwe Green Space Mapping System</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Main Features -->
+                <div class="space-y-3">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <i class="fas fa-star text-primary-600"></i> Main Features
+                    </h3>
+                    <a href="index.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-map text-primary-600 dark:text-primary-400"></i>
                             </div>
-                            <div class="mt-4">
-                                <span class="badge bg-primary me-2">GIS Technology</span>
-                                <span class="badge bg-success me-2">Web Development</span>
-                                <span class="badge bg-info me-2">PostgreSQL/PostGIS</span>
-                                <span class="badge bg-warning me-2">Flask Framework</span>
-                                <span class="badge bg-danger">Leaflet.js</span>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Interactive Map</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Explore green spaces</div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+                    <a href="simpledashboard.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-chart-bar text-primary-600 dark:text-primary-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Dashboard</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">View statistics</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="events.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-calendar-alt text-primary-600 dark:text-primary-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Community Events</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Join tree plantings & cleanups</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="advanced-stats.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-chart-line text-primary-600 dark:text-primary-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Advanced Stats</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Detailed analytics</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Environmental & Reports -->
+                <div class="space-y-3">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <i class="fas fa-leaf text-green-600"></i> Environment & Reports
+                    </h3>
+                    <a href="environmental-monitoring.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-green-50 dark:hover:bg-green-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-thermometer-half text-green-600 dark:text-green-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Environmental Monitor</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Air quality & climate</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="report-generator.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-green-50 dark:hover:bg-green-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-file-pdf text-green-600 dark:text-green-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Report Generator</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Generate PDF reports</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="feedback.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-green-50 dark:hover:bg-green-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-flag text-green-600 dark:text-green-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Report Issue</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Submit feedback</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Information & Resources -->
+                <div class="space-y-3">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <i class="fas fa-book text-blue-600"></i> Information
+                    </h3>
+                    <a href="about-green-spaces.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-info-circle text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">About Green Spaces</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Learn more</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="documentation.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-book-open text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Documentation</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">User guides</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="bibliography.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-bookmark text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Bibliography</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">References</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Admin & Officials -->
+                <div class="space-y-3">
+                    <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <i class="fas fa-user-shield text-purple-600"></i> For Officials
+                    </h3>
+                    <a href="admin-portal.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-shield-alt text-purple-600 dark:text-purple-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Admin Portal</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">System admin</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="admindashboard.html" class="block p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center group-hover:scale-110 transition">
+                                <i class="fas fa-tachometer-alt text-purple-600 dark:text-purple-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">Admin Dashboard</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Management</div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="home-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="logo-icon me-3" style="width: 60px; height: 60px; background: #2E7D32; border-radius: 50%;">
-                            <i class="fas fa-tree text-white" style="font-size: 32px;"></i>
-                        </div>
+    <footer class="bg-gray-900 dark:bg-black text-gray-400 py-16 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid md:grid-cols-5 gap-10">
+                <!-- Brand Column -->
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-tree text-primary-500 text-xl"></i>
                         <div>
-                            <h5 class="mb-0">Kitwe Green Space</h5>
-                            <small>Mapping System</small>
+                            <span class="font-bold text-white">Kitwe Green Space</span>
+                            <p class="text-xs">Mapping System</p>
                         </div>
                     </div>
-                    <p class="mb-3">
-                        A GIS-based web application for sustainable urban environmental management in Kitwe, Zambia.
-                    </p>
+                    <p class="text-sm">Mapping Kitwe's green future with precision and transparency.</p>
                 </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="index.html" class="text-light text-decoration-none">Interactive Map</a></li>
-                        <li><a href="simpledashboard.html" class="text-light text-decoration-none">Analytics Dashboard</a></li>
-                        <li><a href="documentation.html" class="text-light text-decoration-none">Documentation</a></li>
+                
+                <!-- Main Features Column -->
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Main Features</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-map text-xs"></i> Interactive Map</a></li>
+                        <li><a href="simpledashboard.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-chart-bar text-xs"></i> Dashboard</a></li>
+                        <li><a href="advanced-stats.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-chart-line text-xs"></i> Advanced Statistics</a></li>
+                        <li><a href="environmental-monitoring.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-leaf text-xs"></i> Environmental Monitor</a></li>
+                        <li><a href="report-generator.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-file-pdf text-xs"></i> Report Generator</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <h5 class="mb-4">Contact Information</h5>
-                    
-                    <div class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <div>
-                            <strong>Mulungushi University</strong><br>
-                            <small>School of Engineering and Technology</small>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div>
-                            <strong>Email</strong><br>
-                            <small>info@kitwe-greenspaces.org</small>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div>
-                            <strong>Location</strong><br>
-                            <small>Kitwe, Copperbelt Province, Zambia</small>
-                        </div>
-                    </div>
+                
+                <!-- Information & Resources Column -->
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Information</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="about-green-spaces.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-info-circle text-xs"></i> About Green Spaces</a></li>
+                        <li><a href="documentation.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-book text-xs"></i> Documentation</a></li>
+                        <li><a href="bibliography.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-bookmark text-xs"></i> Bibliography</a></li>
+                        <li><a href="feedback.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-flag text-xs"></i> Report an Issue</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Admin & Council Column -->
+                <div>
+                    <h4 class="font-semibold text-white mb-4">For Officials</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="admin-portal.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-user-shield text-xs"></i> Admin Portal</a></li>
+                        <li><a href="admindashboard.html" class="hover:text-primary-400 flex items-center gap-2"><i class="fas fa-tachometer-alt text-xs"></i> Admin Dashboard</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Column -->
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Contact</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center gap-2"><i class="fas fa-map-marker-alt w-4"></i> Kitwe, Zambia</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-envelope w-4"></i> info@kitwegreenspaces.zm</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-phone w-4"></i> +260 212 123 456</li>
+                        <li class="flex gap-4 pt-3">
+                            <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-twitter text-lg"></i></a>
+                            <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-facebook text-lg"></i></a>
+                            <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-linkedin text-lg"></i></a>
+                            <a href="#" class="hover:text-primary-400 transition"><i class="fab fa-github text-lg"></i></a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <hr class="mt-4 mb-3" style="border-color: rgba(255,255,255,0.1);">
-            <div class="text-center">
-                <p class="mb-0">
-                    &copy; 2024 Kitwe Green Space Mapping System. Developed for ICT431 Capstone Project.
-                </p>
+            
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
+                <p>© 2025 Kitwe Green Space Mapping System. All rights reserved.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-primary-400 transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-primary-400 transition">Terms of Service</a>
+                    <a href="#" class="hover:text-primary-400 transition">Cookie Policy</a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Configuration and Fallback Data -->
-    <script src="config.js"></script>
-    <script src="fallback-data.js"></script>
-    
     <script>
-        // Load real stats from API with fallback support
-        document.addEventListener('DOMContentLoaded', function() {
-            loadRealStats();
-        });
-        
-        async function loadRealStats() {
-            try {
-                // Use the centralized data loading function
-                const data = await window.loadGreenSpacesWithFallback();
-                const spaces = data.features;
-                
-                // Calculate real statistics
-                const totalSpaces = spaces.length;
-                const totalAreaSqM = spaces.reduce((sum, space) => sum + (space.properties.area_sq_m || 0), 0);
-                const totalAreaHa = Math.round(totalAreaSqM / 10000); // Convert to hectares
-                const uniqueWards = [...new Set(spaces.map(space => space.properties.ward))].filter(Boolean).length;
-                const uniqueTypes = [...new Set(spaces.map(space => space.properties.type))].filter(Boolean).length;
-                
-                // Calculate per capita (Kitwe population: 517,543)
-                const kitwePop = 517543;
-                const perCapita = ((totalAreaSqM / kitwePop)).toFixed(1);
-                const whoStandard = 9;
-                const whoComparison = perCapita < whoStandard ? 'Below WHO standard' : 'Meets WHO standard';
-                const whoStatusClass = perCapita < whoStandard ? 'text-danger' : 'text-success';
-                
-                // Calculate environmental impact
-                // CO2 absorption: ~2 kg per hectare per year
-                const co2Absorbed = Math.round(totalAreaHa * 2);
-                // Cars equivalent: average car emits ~4.6 tons CO2/year
-                const carsEquivalent = Math.round(co2Absorbed / 4.6);
-                // Rainwater capacity: ~10,000 liters per hectare
-                const rainwaterCapacity = totalAreaHa * 10000;
-                const rainwaterFormatted = rainwaterCapacity >= 1000000 
-                    ? (rainwaterCapacity / 1000000).toFixed(2) + 'M' 
-                    : (rainwaterCapacity / 1000).toFixed(1) + 'K';
-                // Temperature reduction: ~0.1°C per hectare
-                const tempReduction = (totalAreaHa * 0.1).toFixed(1);
-                
-                // Update the stats on page (top section)
-                document.getElementById('stats-parks').textContent = totalSpaces;
-                document.getElementById('stats-area').textContent = totalAreaHa;
-                document.getElementById('stats-wards').textContent = uniqueWards;
-                document.getElementById('stats-types').textContent = uniqueTypes;
-                
-                // Update environmental impact section
-                document.getElementById('impact-hectares').textContent = totalAreaHa;
-                document.getElementById('impact-co2').textContent = co2Absorbed.toLocaleString();
-                document.getElementById('impact-cars').textContent = carsEquivalent;
-                document.getElementById('impact-water').textContent = rainwaterFormatted;
-                document.getElementById('impact-temp').textContent = tempReduction + '°C';
-                
-                // Update WHO comparison section
-                const whoStatusElement = document.getElementById('who-status');
-                whoStatusElement.textContent = perCapita;
-                whoStatusElement.className = whoStatusClass;
-                document.getElementById('who-comparison').textContent = whoComparison;
-                
-                // Update challenges section
-                document.getElementById('challenge-coverage').textContent = `Below WHO recommendations (${perCapita} vs ${whoStandard} m²/capita)`;
-                
-                console.log(`✅ Updated homepage stats: ${totalSpaces} spaces, ${totalAreaHa} hectares, ${uniqueWards} wards, ${uniqueTypes} types, ${perCapita} m²/capita`);
-                
-            } catch (error) {
-                console.error('❌ Error loading stats:', error);
-                // Keep default values if both API and fallback fail
-                document.getElementById('stats-parks').textContent = '51';
-                document.getElementById('stats-area').textContent = '314';
-                document.getElementById('stats-wards').textContent = '16';
-                document.getElementById('stats-types').textContent = '6';
-                
-                // Update environmental impact with fallback values
-                document.getElementById('impact-hectares').textContent = '314';
-                document.getElementById('impact-co2').textContent = '628';
-                document.getElementById('impact-cars').textContent = '136';
-                document.getElementById('impact-water').textContent = '3.14M';
-                document.getElementById('impact-temp').textContent = '31.4°C';
-                
-                // Update WHO comparison with fallback values
-                document.getElementById('who-status').textContent = '6.1';
-                document.getElementById('who-comparison').textContent = 'Below WHO standard';
-                document.getElementById('challenge-coverage').textContent = 'Below WHO recommendations (6.1 vs 9 m²/capita)';
+        function toggleFaq(el) {
+            const answer = el.querySelector('div:last-child');
+            const icon = el.querySelector('i');
+            if (answer.classList.contains('hidden')) {
+                answer.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                answer.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
             }
         }
+        
+        const darkToggle = document.getElementById('darkModeToggle');
+        if (darkToggle) {
+            darkToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            });
+            if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+        }
+        
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileBtn && mobileMenu) {
+            mobileBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+        }
+        
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 20) nav.classList.add('shadow-sm', 'bg-white/95', 'dark:bg-black/95');
+            else nav.classList.remove('shadow-sm', 'bg-white/95', 'dark:bg-black/95');
+        });
+        
+        async function loadStats() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/green-spaces').catch(() => null);
+                if (response && response.ok) {
+                    const data = await response.json();
+                    const spaces = data.features || [];
+                    const totalArea = spaces.reduce((sum, s) => sum + (s.properties.area_sq_m || 0), 0);
+                    const areaHa = Math.round(totalArea / 10000);
+                    const wards = [...new Set(spaces.map(s => s.properties.ward).filter(Boolean))];
+                    const types = [...new Set(spaces.map(s => s.properties.type).filter(Boolean))];
+                    document.getElementById('hero-parks').innerText = spaces.length;
+                    document.getElementById('hero-area').innerText = areaHa;
+                    document.getElementById('hero-wards').innerText = wards.length;
+                    document.getElementById('hero-types').innerText = types.length;
+                }
+            } catch(e) { console.log('Using fallback stats'); }
+        }
+        loadStats();
+        AOS.init({ once: true, offset: 40, duration: 700 });
     </script>
-    </div> <!-- Close main-content wrapper -->
 </body>
 </html>

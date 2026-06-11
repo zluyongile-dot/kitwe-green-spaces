@@ -1,11 +1,10 @@
 /* style.css - Kitwe Green Spaces System */
+/* Tokens now live in theme.css — imported below */
+@import url('theme.css');
+
 :root {
-    --primary-color: #2E7D32;
-    --secondary-color: #4CAF50;
+    /* Keep sidebar width here (map-specific) */
     --sidebar-width: 380px;
-    --accent-color: #FF9800;
-    --dark-green: #1B5E20;
-    --light-green: #E8F5E9;
 }
 
 /* ========== BASE STYLES ========== */

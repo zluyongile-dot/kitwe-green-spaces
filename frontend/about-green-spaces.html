@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,9 @@
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="dark-mode.css">
     <link rel="stylesheet" href="style.css">
     
     <style>
@@ -157,6 +159,9 @@
             border-radius: 10px;
         }
     </style>
+    <link rel="stylesheet" href="page-dark.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="info-container">
@@ -470,5 +475,28 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Dark Mode Script -->
+    <script src="dark-mode.js"></script>
+
+    <script>
+    (function(){
+        var page = window.location.pathname.split('/').pop();
+        function lnk(href,icon,label){ var a=document.createElement('a');a.href=href;if(page===href)a.className='active';a.innerHTML='<i class="fas fa-'+icon+'"></i> '+label;return a; }
+        var bar = document.createElement('div');
+        bar.id = 'kgs-topbar';
+        var brand=document.createElement('a');brand.className='brand';brand.href='home.html';
+        brand.innerHTML='<span class="dot"><i class="fas fa-tree"></i></span>Kitwe Green Spaces';
+        var links=document.createElement('div');links.className='links';
+        links.appendChild(lnk('index.html','map','Map'));
+        links.appendChild(lnk('simpledashboard.html','chart-bar','Dashboard'));
+        links.appendChild(lnk('3d-view.html','satellite-dish','Satellite Tour'));
+        links.appendChild(lnk('about-green-spaces.html','info-circle','About'));
+        var cta=document.createElement('a');cta.href='index.html';cta.className='cta';cta.innerHTML='<i class="fas fa-map"></i> Launch Map';
+        links.appendChild(cta);
+        bar.appendChild(brand);bar.appendChild(links);
+        document.body.insertBefore(bar,document.body.firstChild);
+    })();
+    </script>
 </body>
 </html>

@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitwe Green Spaces - Enhanced Platform</title>
+    
+    <!-- External Libraries -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           DESIGN SYSTEM - COLOR PALETTE
+           ======================================== */
+        :root {
+            /* Primary - Green Forward */
+            --primary-green: #2E7D32;
+            --primary-light: #4CAF50;
+            --primary-dark: #1B5E20;
+            --primary-hover: #388E3C;
+            
+            /* Gap Analysis Colors */
+            --critical-gap: #D32F2F;
+            --low-coverage: #F57C00;
+            --healthy-coverage: #388E3C;
+            
+            /* UI Elements */
+            --background: #FAFAFA;
+            --surface: #FFFFFF;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --text-tertiary: #9E9E9E;
+            --border: #E0E0E0;
+            --border-dark: #BDBDBD;
+            
+            /* Semantic Colors */
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #F44336;
+            --info: #2196F3;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.16);
+            --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.19);
+            
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            /* Layout */
+            --nav-height: 64px;
+            --sidebar-width: 360px;
+        }
+        
+        /* ========================================
+           GLOBAL STYLES
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+            overflow: hidden;
+        }
+        
+        /* ========================================
+           TOP NAVIGATION BAR
+           ======================================== */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-lg);
+            z-index: 1000;
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-light));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .app-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .nav-center {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .nav-tab {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .nav-tab:hover {
+            color: var(--primary-green);
+            background: rgba(46, 125, 50, 0.05);
+        }
+        
+        .nav-tab.active {
+            color: var(--primary-green);
+            border-bottom-color: var(--primary-green);
+        }
+        
+        .nav-tab[data-role="planner"] {
+            display: none; /* Show only for planners */
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
+        .nav-search {
+            position: relative;
+        }
+        
+        .nav-search input {
+            width: 200px;
+            padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 36px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .nav-search input:focus {
+            outline: none;
+            width: 300px;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+        
+        .nav-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+        }
+        
+        .user-avatar {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .user-avatar:hover {
+            background: var(--background);
+        }
+        
+        .user-avatar img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-light);
+        }
+        
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        /* ========================================
+           MAIN LAYOUT
+           ======================================== */
+        .main-container {
+            display: flex;
+            margin-top: var(--nav-height);
+            height: calc(100vh - var(--nav-height));
+        }
+        
+        .content-area {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-content {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* ========================================
+           MAP VIEW
+           ======================================== */
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            top: var(--spacing-md);
+            right: calc(var(--sidebar-width) + var(--spacing-md));
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+        
+        .map-control-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+        }
+        
+        .map-control-btn:hover {
+            background: var(--primary-green);
+            color: white;
+            border-color: var(--primary-green);
+        }
+        
+        /* Map Legend */
+        .map-legend {
+            position: absolute;
+            bottom: var(--spacing-lg);
+            left: var(--spacing-lg);
+            background: var(--surface);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            z-index: 500;
+            min-width: 200px;
+        }
+        
+        .legend-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xs);
+            font-size: 13px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        
+        /* ========================================
+           RIGHT SIDEBAR PANEL
+           ======================================== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-section {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+        
+        .stat-card {
+            background: var(--background);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-green);
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+        
+        /* Ward Coverage Metrics */
+        .ward-metric {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .ward-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .ward-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .coverage-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: var(--radius-sm);
+        }
+        
+        .progress-fill.critical {
+            background: var(--critical-gap);
+        }
+        
+        .progress-fill.low {
+            background: var(--low-coverage);
+        }
+        
+        .progress-fill.healthy {
+            background: var(--healthy-coverage);
+        }
+        
+        /* ========================================
+           EVENTS TAB
+           ======================================== */
+        .events-container {
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .events-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .event-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .event-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+        
+        .event-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .event-badge {
+            padding: 4px 12px;
+            border-radius: var(--radius-md);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .event-badge.open {
+            background: #E8F5E9;
+            color: var(--healthy-coverage);
+        }
+        
+        .event-badge.filling {
+            background: #FFF3E0;
+            color: var(--low-coverage);
+        }
+        
+        .event-badge.full {
+            background: #FFEBEE;
+            color: var(--critical-gap);
+        }
+        
+        .event-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .event-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .event-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.6;
+        }
+        
+        .event-details {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .event-detail-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .event-detail-item i {
+            width: 16px;
+            color: var(--primary-green);
+        }
+        
+        .event-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .btn-primary, .btn-secondary {
+            flex: 1;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--primary-green);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background: var(--background);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+        
+        /* ========================================
+           ANALYTICS TAB
+           ======================================== */
+        .analytics-container {
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .analytics-header {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .analytics-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .metric-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary-green);
+            display: block;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .chart-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+        
+        /* ========================================
+           PLANNER TAB
+           ======================================== */
+        .planner-container {
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .planner-header {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .planner-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .tool-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .tool-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+        
+        .tool-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .tool-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+        
+        .tool-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.6;
+        }
+        
+        .tool-card .btn-primary {
+            width: 100%;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-primary);
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+        
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                right: -100%;
+                top: var(--nav-height);
+                height: calc(100vh - var(--nav-height));
+                transition: right 0.3s;
+                z-index: 900;
+                box-shadow: var(--shadow-lg);
+            }
+            
+            .sidebar.open {
+                right: 0;
+            }
+            
+            .map-controls {
+                right: var(--spacing-md);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-center {
+                display: none;
+            }
+            
+            .app-name {
+                display: none;
+            }
+            
+            .nav-search input {
+                width: 150px;
+            }
+            
+            .nav-search input:focus {
+                width: 200px;
+            }
+            
+            .user-name {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <div class="logo">
+                <i class="fas fa-tree"></i>
+            </div>
+            <span class="app-name">Kitwe Green Spaces</span>
+        </div>
+        
+        <div class="nav-center">
+            <button class="nav-tab active" data-tab="map">
+                <i class="fas fa-map-marked-alt"></i> Map
+            </button>
+            <button class="nav-tab" data-tab="events">
+                <i class="fas fa-calendar-alt"></i> Events
+            </button>
+            <button class="nav-tab" data-tab="analytics">
+                <i class="fas fa-chart-line"></i> Analytics
+            </button>
+            <button class="nav-tab" data-tab="planner" data-role="planner">
+                <i class="fas fa-tools"></i> Planner
+            </button>
+        </div>
+        
+        <div class="nav-right">
+            <div class="nav-search">
+                <i class="fas fa-search"></i>
+                <input type="search" placeholder="Search locations..." id="searchInput">
+            </div>
+            
+            <div class="user-avatar">
+                <img src="https://ui-avatars.com/api/?name=User&background=4CAF50&color=fff" alt="User">
+                <span class="user-name">Guest User</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Map Tab -->
+            <div class="tab-content active" id="mapTab">
+                <div id="map"></div>
+                
+                <!-- Map Controls -->
+                <div class="map-controls">
+                    <button class="map-control-btn" title="Zoom In" onclick="map.zoomIn()">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="map-control-btn" title="Zoom Out" onclick="map.zoomOut()">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button class="map-control-btn" title="Reset View" onclick="resetMapView()">
+                        <i class="fas fa-home"></i>
+                    </button>
+                    <button class="map-control-btn" title="My Location" onclick="goToMyLocation()">
+                        <i class="fas fa-location-arrow"></i>
+                    </button>
+                    <button class="map-control-btn" title="Fullscreen" onclick="toggleFullscreen()">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+                
+                <!-- Map Legend -->
+                <div class="map-legend">
+                    <div class="legend-title">Coverage Legend</div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--healthy-coverage);"></div>
+                        <span>Healthy Coverage (>60%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--low-coverage);"></div>
+                        <span>Low Coverage (30-60%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--critical-gap);"></div>
+                        <span>Critical Gap (<30%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--primary-green); border-radius: 50%;"></div>
+                        <span>Green Space Marker</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Events Tab -->
+            <div class="tab-content" id="eventsTab">
+                <div class="events-container">
+                    <div class="events-header">
+                        <h1>Community Events</h1>
+                    </div>
+                    <div class="events-grid" id="eventsGrid">
+                        <!-- Events will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics Tab -->
+            <div class="tab-content" id="analyticsTab">
+                <div class="analytics-container">
+                    <div class="analytics-header">
+                        <h1>Analytics Dashboard</h1>
+                        <p style="color: var(--text-secondary);">Comprehensive insights into Kitwe's green space development</p>
+                    </div>
+                    
+                    <div class="metrics-grid" id="analyticsMetrics">
+                        <!-- Metrics will be loaded here -->
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Monthly Trends</div>
+                        <canvas id="trendsChart" height="80"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-title">Ward Coverage Analysis</div>
+                        <canvas id="coverageChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Planner Tab -->
+            <div class="tab-content" id="plannerTab">
+                <div class="planner-container">
+                    <div class="planner-header">
+                        <h1>City Planner Tools</h1>
+                        <p style="color: var(--text-secondary);">Professional GIS tools and data export capabilities</p>
+                    </div>
+                    
+                    <div class="tools-grid">
+                        <div class="tool-card">
+                            <div class="tool-icon">📦</div>
+                            <h3>GIS Export</h3>
+                            <p>Download green spaces data as GeoJSON for use in QGIS, ArcGIS, or other GIS software.</p>
+                            <button class="btn-primary" onclick="exportGeoJSON()">
+                                <i class="fas fa-download"></i> Export GeoJSON
+                            </button>
+                        </div>
+                        
+                        <div class="tool-card">
+                            <div class="tool-icon">📊</div>
+                            <h3>Gap Analysis Report</h3>
+                            <p>Generate comprehensive PDF report with coverage analysis and recommendations.</p>
+                            <button class="btn-primary" onclick="generateGapReport()">
+                                <i class="fas fa-file-pdf"></i> Generate Report
+                            </button>
+                        </div>
+                        
+                        <div class="tool-card">
+                            <div class="tool-icon">🌡️</div>
+                            <h3>Heat Island Risk</h3>
+                            <p>View temperature risk zones and identify areas needing green space intervention.</p>
+                            <button class="btn-primary" onclick="showHeatIslandData()">
+                                <i class="fas fa-temperature-high"></i> View Heat Zones
+                            </button>
+                        </div>
+                        
+                        <div class="tool-card">
+                            <div class="tool-icon">📅</div>
+                            <h3>Development Timeline</h3>
+                            <p>Track green space projects from planning through completion.</p>
+                            <button class="btn-primary" onclick="showTimeline()">
+                                <i class="fas fa-calendar-alt"></i> View Timeline
+                            </button>
+                        </div>
+                        
+                        <div class="tool-card">
+                            <div class="tool-icon">🔌</div>
+                            <h3>API Documentation</h3>
+                            <p>REST API endpoints for integrating green space data into other systems.</p>
+                            <button class="btn-primary" onclick="showAPIDoc()">
+                                <i class="fas fa-code"></i> View API Docs
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="sidebar">
+            <!-- Quick Stats -->
+            <div class="sidebar-section">
+                <div class="section-title">Quick Stats</div>
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <span class="stat-value" id="totalSpaces">0</span>
+                        <span class="stat-label">Green Spaces</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="totalArea">0</span>
+                        <span class="stat-label">Hectares</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="avgCoverage">0%</span>
+                        <span class="stat-label">Avg Coverage</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="criticalZones">0</span>
+                        <span class="stat-label">Critical Zones</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ward Coverage -->
+            <div class="sidebar-section">
+                <div class="section-title">
+                    Ward Coverage
+                    <i class="fas fa-info-circle" style="font-size: 14px; color: var(--text-tertiary);" title="Green space coverage by ward"></i>
+                </div>
+                <div id="wardCoverageList">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- RSVP Modal -->
+    <div class="modal" id="rsvpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>RSVP to Event</h2>
+                <button class="modal-close" onclick="closeRSVPModal()">&times;</button>
+            </div>
+            <form id="rsvpForm" onsubmit="submitRSVP(event)">
+                <input type="hidden" id="rsvpEventId">
+                <div class="form-group">
+                    <label>Your Name *</label>
+                    <input type="text" id="rsvpName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="rsvpEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone (optional)</label>
+                    <input type="tel" id="rsvpPhone">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">
+                    Confirm RSVP
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- External Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="config.js"></script>
+    <script src="app-enhanced.js"></script>
+    
+    <script>
+        // ========================================
+        // TAB NAVIGATION
+        // ========================================
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                
+                // Update active tab
+                navTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabName + 'Tab').classList.add('active');
+            });
+        });
+        
+        // ========================================
+        // MAP INITIALIZATION
+        // ========================================
+        const map = L.map('map').setView([-12.8175, 28.2136], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Custom marker icon
+        const greenIcon = L.icon({
+            iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+                    <circle cx="12" cy="12" r="10" fill="#4CAF50" stroke="#fff" stroke-width="2"/>
+                    <path d="M12 6 L12 18 M6 12 L18 12" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            `),
+            iconSize: [32, 32],
+            iconAnchor: [16, 16],
+            popupAnchor: [0, -16]
+        });
+        
+        // ========================================
+        // LOAD GREEN SPACES DATA
+        // ========================================
+        let greenSpacesData = [];
+        let wardCoverageData = {};
+        
+        async function loadGreenSpaces() {
+            try {
+                const response = await fetch('http://localhost:5000/api/green-spaces');
+                const data = await response.json();
+                
+                if (data.features) {
+                    greenSpacesData = data.features;
+                    displayGreenSpaces(data.features);
+                    calculateStatistics(data.features);
+                }
+            } catch (error) {
+                console.error('Error loading green spaces:', error);
+            }
+        }
+        
+        function displayGreenSpaces(features) {
+            features.forEach(feature => {
+                const props = feature.properties;
+                const coords = feature.geometry.coordinates;
+                
+                const marker = L.marker([coords[1], coords[0]], { icon: greenIcon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="min-width: 200px;">
+                            <h3 style="margin: 0 0 8px 0; color: var(--primary-green);">${props.name}</h3>
+                            <p style="margin: 4px 0;"><strong>Type:</strong> ${props.type || 'N/A'}</p>
+                            <p style="margin: 4px 0;"><strong>Area:</strong> ${(props.area_sq_m / 10000).toFixed(2)} hectares</p>
+                            <p style="margin: 4px 0;"><strong>Ward:</strong> ${props.ward || 'N/A'}</p>
+                        </div>
+                    `);
+            });
+        }
+        
+        function calculateStatistics(features) {
+            // Total spaces
+            const totalSpaces = features.length;
+            document.getElementById('totalSpaces').textContent = totalSpaces;
+            
+            // Total area in hectares
+            const totalArea = features.reduce((sum, f) => sum + (f.properties.area_sq_m || 0), 0) / 10000;
+            document.getElementById('totalArea').textContent = totalArea.toFixed(1);
+            
+            // Calculate ward coverage
+            const wardData = {};
+            features.forEach(f => {
+                const ward = f.properties.ward || 'Unknown';
+                if (!wardData[ward]) {
+                    wardData[ward] = { area: 0, count: 0 };
+                }
+                wardData[ward].area += f.properties.area_sq_m || 0;
+                wardData[ward].count += 1;
+            });
+            
+            // Mock coverage percentages (in real app, calculate from ward total area)
+            const mockCoverage = {
+                'City Centre': 75,
+                'Parklands': 62,
+                'Nkana': 58,
+                'Chimwemwe': 45,
+                'Mindolo': 68,
+                'Buchi': 38,
+                'Garneton': 52,
+                'Riverside': 71,
+                'Wusakile': 42
+            };
+            
+            // Display ward coverage
+            const wardList = document.getElementById('wardCoverageList');
+            wardList.innerHTML = '';
+            
+            let totalCoverage = 0;
+            let criticalCount = 0;
+            
+            Object.keys(mockCoverage).sort().forEach(ward => {
+                const coverage = mockCoverage[ward];
+                totalCoverage += coverage;
+                
+                let statusClass = 'healthy';
+                if (coverage < 30) {
+                    statusClass = 'critical';
+                    criticalCount++;
+                } else if (coverage < 60) {
+                    statusClass = 'low';
+                }
+                
+                const wardDiv = document.createElement('div');
+                wardDiv.className = 'ward-metric';
+                wardDiv.innerHTML = `
+                    <div class="ward-header">
+                        <span class="ward-name">${ward}</span>
+                        <span class="coverage-value">${coverage}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill ${statusClass}" style="width: ${coverage}%"></div>
+                    </div>
+                `;
+                wardList.appendChild(wardDiv);
+            });
+            
+            // Average coverage
+            const avgCoverage = Math.round(totalCoverage / Object.keys(mockCoverage).length);
+            document.getElementById('avgCoverage').textContent = avgCoverage + '%';
+            
+            // Critical zones
+            document.getElementById('criticalZones').textContent = criticalCount;
+        }
+        
+        // ========================================
+        // MAP CONTROLS
+        // ========================================
+        function resetMapView() {
+            map.setView([-12.8175, 28.2136], 13);
+        }
+        
+        function goToMyLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    map.setView([position.coords.latitude, position.coords.longitude], 15);
+                });
+            } else {
+                alert('Geolocation is not supported by your browser');
+            }
+        }
+        
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        // ========================================
+        // SEARCH FUNCTIONALITY
+        // ========================================
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            if (query.length < 2) return;
+            
+            const matches = greenSpacesData.filter(f => 
+                f.properties.name.toLowerCase().includes(query) ||
+                (f.properties.ward && f.properties.ward.toLowerCase().includes(query))
+            );
+            
+            if (matches.length > 0) {
+                const coords = matches[0].geometry.coordinates;
+                map.setView([coords[1], coords[0]], 16);
+            }
+        });
+        
+        // ========================================
+        // INITIALIZE
+        // ========================================
+        loadGreenSpaces();
+    </script>
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stakeholders Slide Presentation | Kitwe & Ndola GIS</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
+    <!-- Professional Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Design tokens and style imports -->
+    <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="page-dark.css">
+    
+    <style>
+        /* Interactive slide deck styles */
+        html, body {
+            overflow: hidden !important;
+            height: 100vh !important;
+            min-height: 100vh !important;
+            background: linear-gradient(135deg, #051707 0%, #020b03 50%, #000000 100%) !important;
+            color: #f1f5f9 !important;
+            font-family: 'Inter', sans-serif;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .slide-deck-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* Side Navigation Panel */
+        .slide-sidebar {
+            width: 280px;
+            background: rgba(9, 14, 29, 0.9);
+            backdrop-filter: blur(16px);
+            border-right: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .slide-sidebar-header {
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+            padding-bottom: 18px;
+            margin-bottom: 20px;
+        }
+
+        .slide-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+            border: 1px solid transparent;
+        }
+        .slide-link:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: #f1f5f9;
+        }
+        .slide-link.active {
+            background: rgba(27, 94, 32, 0.12);
+            border-color: rgba(74, 222, 128, 0.3) !important;
+            color: #4ade80;
+            font-weight: 600;
+        }
+
+        /* Slide Viewport */
+        .slide-viewport {
+            flex-grow: 1;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+        }
+
+        .slide-content-wrap {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(18px) saturate(160%);
+            border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+            border-radius: 16px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.55);
+            padding: 45px;
+            width: 100%;
+            max-width: 950px;
+            min-height: 520px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .slide-card.active {
+            display: flex;
+            animation: slideFadeIn 0.4s ease-out;
+        }
+        .slide-card:hover {
+            border-color: rgba(74, 222, 128, 0.4) !important;
+            box-shadow: 0 20px 50px rgba(74, 222, 128, 0.12);
+        }
+
+        @keyframes slideFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Floating Controls */
+        .slide-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+            width: 100%;
+            max-width: 950px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .control-btn-presentation {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
+            color: #f1f5f9;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .control-btn-presentation:hover {
+            border-color: rgba(74, 222, 128, 0.5) !important;
+            background: rgba(27, 94, 32, 0.12);
+            color: #4ade80;
+            box-shadow: 0 0 12px rgba(74, 222, 128, 0.25);
+        }
+        
+        .progress-bar-wrap {
+            height: 6px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 150;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4ade80 0%, #38bdf8 100%);
+            transition: width 0.3s ease;
+        }
+
+        .slide-header {
+            margin-bottom: 24px;
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+            padding-bottom: 14px;
+        }
+        .slide-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #ffffff 40%, #86ef95);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Mock CLI style window for slide 3 */
+        .mock-console {
+            background: #090d16;
+            border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 18px;
+            font-size: 0.78rem;
+            color: #cbd5e1;
+            margin-top: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        /* Grid metrics cards */
+        .slide-grid-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 12px;
+            padding: 20px;
+            height: 100%;
+            transition: all 0.2s ease;
+        }
+        .slide-grid-card:hover {
+            border-color: rgba(74, 222, 128, 0.25) !important;
+            background: rgba(27, 94, 32, 0.04);
+        }
+    </style>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+
+    <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+
+    <div class="slide-deck-container">
+        <!-- Sidebar Navigation -->
+        <div class="slide-sidebar">
+            <div class="slide-sidebar-header">
+                <a href="home.html" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-tree text-success" style="font-size:1.2rem;"></i>
+                    <span style="font-family:'Outfit', sans-serif; font-weight:700; color:#f1f5f9; font-size:0.95rem;">Copperbelt GIS Study</span>
+                </a>
+                <div class="small text-muted mt-1" style="font-size: 0.68rem; text-transform:uppercase; letter-spacing:0.5px;">Stakeholders Briefing</div>
+            </div>
+            
+            <div class="flex-grow-1" style="overflow-y:auto;">
+                <div class="slide-link active" onclick="goToSlide(1)">
+                    <span class="fw-bold">01.</span> Cover Slide
+                </div>
+                <div class="slide-link" onclick="goToSlide(2)">
+                    <span class="fw-bold">02.</span> Goal & Context
+                </div>
+                <div class="slide-link" onclick="goToSlide(3)">
+                    <span class="fw-bold">03.</span> Core Architecture
+                </div>
+                <div class="slide-link" onclick="goToSlide(4)">
+                    <span class="fw-bold">04.</span> Map & GIS Engine
+                </div>
+                <div class="slide-link" onclick="goToSlide(5)">
+                    <span class="fw-bold">05.</span> Multi-City Benchmarks
+                </div>
+                <div class="slide-link" onclick="goToSlide(6)">
+                    <span class="fw-bold">06.</span> Live Environmental
+                </div>
+                <div class="slide-link" onclick="goToSlide(7)">
+                    <span class="fw-bold">07.</span> Simulation & Reports
+                </div>
+                <div class="slide-link" onclick="goToSlide(8)">
+                    <span class="fw-bold">08.</span> Conclusion & Roadmap
+                </div>
+            </div>
+
+            <div class="pt-3" style="border-top:1px solid rgba(255,255,255,0.06);">
+                <button class="btn btn-sm btn-outline-secondary w-100 mb-2" onclick="window.location.href='index.html'">
+                    <i class="fas fa-map me-1"></i> Exit to Map
+                </button>
+                <div class="text-center" style="font-size:0.65rem; color:#64748b;">Press Left/Right Arrows</div>
+            </div>
+        </div>
+
+        <!-- Presentation Viewport -->
+        <div class="slide-viewport">
+            <div class="slide-content-wrap">
+                
+                <!-- ── SLIDE 1: COVER SLIDE ────────────────────────────────────────── -->
+                <div class="slide-card active" id="slide1">
+                    <div class="text-center py-4">
+                        <i class="fas fa-circle-nodes text-success mb-4" style="font-size: 3.5rem; filter: drop-shadow(0 0 15px rgba(74,222,128,0.3));"></i>
+                        <h1 style="font-family:'Outfit',sans-serif; font-weight:800; font-size:3rem; line-height:1.2; background: linear-gradient(135deg, #ffffff 40%, #86ef95); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Comparative GIS Analysis of<br>Urban Green Spaces</h1>
+                        <p class="lead text-emerald mt-2" style="color:#a7f3d0; font-size:1.15rem; font-weight:500;">A Multi-City Spatial Benchmarking of Kitwe & Ndola Districts</p>
+                        
+                        <div class="d-flex justify-content-center gap-3 mt-4 pt-3" style="font-size:0.85rem; color:#cbd5e1;">
+                            <div style="background:rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding:10px 18px; border-radius:10px;">
+                                <div class="text-muted small uppercase">Academic Project</div>
+                                <strong>ICT431 - Capstone Project</strong>
+                            </div>
+                            <div style="background:rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding:10px 18px; border-radius:10px;">
+                                <div class="text-muted small uppercase">Student Author</div>
+                                <strong>Mukendwa Luyongile (202201912)</strong>
+                            </div>
+                            <div style="background:rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding:10px 18px; border-radius:10px;">
+                                <div class="text-muted small uppercase">Supervisor</div>
+                                <strong>Mr. Nyirenda (Mulungushi University)</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── SLIDE 2: GOAL & CONTEXT ─────────────────────────────────────── -->
+                <div class="slide-card" id="slide2">
+                    <div class="slide-header">
+                        <div class="slide-title"><i class="fas fa-bullseye text-success me-2"></i>Goal & Urban Forestry Context</div>
+                        <p class="text-muted small mb-0">Why comparative spatial evaluation matters to Copperbelt municipalities.</p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-7">
+                            <h5 style="color:#a7f3d0; font-weight:700;"><i class="fas fa-tree me-2"></i>The Spatial Green Equity Problem</h5>
+                            <p class="small" style="line-height:1.7; color:#cbd5e1;">Copperbelt mining and industrial growth have caused rapid urbanization, leading to significant fragmentation of tree cover and unequal access to municipal green spaces.</p>
+                            <ul class="small text-muted ps-3" style="line-height:1.8;">
+                                <li>Kitwe features massive tailing dumps that require planned forestry reclamation.</li>
+                                <li>Peripheral high-density settlements suffer a distinct lack of accessible shade parks.</li>
+                                <li>Stakeholders need interactive GIS maps to identify coverage gaps and target capital investments.</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="slide-grid-card text-center" style="border-left: 4px solid #38bdf8 !important;">
+                                <i class="fas fa-balance-scale text-info mb-3" style="font-size:2rem;"></i>
+                                <h6 class="text-white fw-bold">Multi-City Benchmarking</h6>
+                                <p class="small text-muted mb-0">Integrating <strong>Ndola</strong> (benchmark reference) with <strong>Kitwe</strong> (primary focus) establishes a standard to compare canopy density, accessibility indexes, and ecological indicators between neighboring industrial districts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── SLIDE 3: CORE ARCHITECTURE ──────────────────────────────────── -->
+                <div class="slide-card" id="slide3">
+                    <div class="slide-header">
+                        <div class="slide-title"><i class="fas fa-layer-group text-success me-2"></i>Full-Stack GIS System Architecture</div>
+                        <p class="text-muted small mb-0">Preserving 100% offline capabilities with Postgres/PostGIS and JS fallback buffers.</p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h5 style="color:#a7f3d0; font-weight:700;"><i class="fas fa-server me-2"></i>Full-Stack Components</h5>
+                            <ul class="small ps-3" style="line-height:1.9; color:#cbd5e1;">
+                                <li><strong>Spatial Database</strong>: PostgreSQL with <strong>PostGIS Extension</strong> for coordinate projections (WGS84, SRID 4326).</li>
+                                <li><strong>RESTful Backend API</strong>: Python Flask server exposing dynamically generated GeoJSON and weather polling routes.</li>
+                                <li><strong>Offline Parity Layer</strong>: Embedded Javascript fallback caches (`static-data.js` & `fallback-data.js`) trigger automatically to guarantee functionality without an active database connection.</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mock-console">
+                                <div style="display:flex; justify-content:space-between; color:#64748b; font-size:10px; margin-bottom:8px;">
+                                    <span>SQL Schema Console</span>
+                                    <span>postgres@postgis</span>
+                                </div>
+                                <span style="color:#f43f5e;">ALTER TABLE</span> green_spaces <span style="color:#f43f5e;">ADD COLUMN</span> city <span style="color:#38bdf8;">VARCHAR</span>(100) <span style="color:#f43f5e;">DEFAULT</span> <span style="color:#34d399;">'Kitwe'</span>;<br>
+                                <span style="color:#f43f5e;">ALTER TABLE</span> green_spaces <span style="color:#f43f5e;">ADD COLUMN</span> ndvi_value <span style="color:#38bdf8;">FLOAT</span> <span style="color:#f43f5e;">DEFAULT</span> <span style="color:#38bdf8;">0.45</span>;<br><br>
+                                <span style="color:#475569;">-- Fetch green spaces with spatial attributes</span><br>
+                                <span style="color:#f43f5e;">SELECT</span> name, type, city, ndvi_value, ST_AsGeoJSON(geom) <span style="color:#f43f5e;">FROM</span> green_spaces;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── SLIDE 4: MAP & GIS ENGINE ───────────────────────────────────── -->
+                <div class="slide-card" id="slide4">
+                    <div class="slide-header">
+                        <div class="slide-title"><i class="fas fa-map-marked-alt text-success me-2"></i>Leaflet 2D GIS Engine & Map overlays</div>
+                        <p class="text-muted small mb-0">High-fidelity Leaflet map providing spatial analyses entirely client-side.</p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="slide-grid-card text-center">
+                                <i class="fas fa-satellite text-success mb-3" style="font-size:1.8rem;"></i>
+                                <h6 class="text-white fw-bold">NDVI Thematic Scale</h6>
+                                <p class="small text-muted mb-0">Renders markers on a vegetation density scale based on remote-sensed index constants, with a floating legend container for visual reference.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="slide-grid-card text-center">
+                                <i class="fas fa-route text-primary mb-3" style="font-size:1.8rem;"></i>
+                                <h6 class="text-white fw-bold">Turf.js Spatial walk buffers</h6>
+                                <p class="small text-muted mb-0">Computes walking access walksheds dynamically and charts cooling mitigation radiuses `Cooling = sqrt(Area) * TypeConstant` on the fly.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="slide-grid-card text-center">
+                                <i class="fas fa-cubes text-warning mb-3" style="font-size:1.8rem;"></i>
+                                <h6 class="text-white fw-bold">Satellite Tour & Routing</h6>
+                                <p class="small text-muted mb-0">Features an automated 3D cinematic fly-through tour and fully functional street routing to mapped spaces via navigation machinery.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── SLIDE 5: MULTI-CITY BENCHMARKS ──────────────────────────────── -->
+                <div class="slide-card" id="slide5">
+                    <div class="slide-header">
+                        <div class="slide-title"><i class="fas fa-balance-scale text-success me-2"></i>Kitwe & Ndola Spatial Benchmark Comparisons</div>
+                        <p class="text-muted small mb-0">Dynamic side-by-side analytical comparisons demonstrating green space equity.</p>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="slide-grid-card text-center" style="border: 1.5px solid rgba(74, 222, 128, 0.3) !important;">
+                                <div class="text-success small uppercase">Study Area (Kitwe)</div>
+                                <h2 class="fw-bold mt-2" style="color:#4ade80;">26 Spaces</h2>
+                                <h4 class="fw-bold text-white mt-1">381.1 Hectares</h4>
+                                <div class="small text-muted mt-2">6.8 m² public green per-capita</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="slide-grid-card text-center" style="border: 1.5px solid rgba(56, 189, 248, 0.3) !important;">
+                                <div class="text-info small uppercase">Benchmark (Ndola)</div>
+                                <h2 class="fw-bold mt-2" style="color:#38bdf8;">12 Spaces</h2>
+                                <h4 class="fw-bold text-white mt-1">160.5 Hectares</h4>
+                                <div class="small text-muted mt-2">4.1 m² public green per-capita</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="slide-grid-card" style="font-size:0.8rem; line-height:1.6; display:flex; flex-direction:column; justify-content:center;">
+                                <h6 style="color:#a7f3d0; font-weight:600;"><i class="fas fa-info-circle me-1"></i>Comparative Insights</h6>
+                                <p class="text-muted mb-0 small">Kitwe maintains a larger total woodland profile, but Ndola's central parks average a higher NDVI density score (average NDVI: 0.54 vs 0.48). Neither city currently satisfies the WHO recommended target of 9 m² of green space per capita, showcasing a clear developmental gap.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── SLIDE 6: LIVE ENVIRONMENTAL ─────────────────────────────────── -->
+                <div class="slide-card" id="slide6">
+                    <div class="slide-header">
+                        <div class="slide-title"><i class="fas fa-cloud-sun text-success me-2"></i>Live Environmental Telemetry Feeds</div>
+                        <p class="text-muted small mb-0">Real-time weather parameters and air quality indicators polled directly via REST APIs.</p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-7">
+                            <h5 style="color:#a7f3d0; font-weight:700;"><i class="fas fa-satellite-dish me-2 text-primary"></i>Live Sensor Telemetry APIs</h5>
+                            <p class="small" style="line-height:1.7; color:#cbd5e1;">The system links geographical coordinate arrays to active telemetry sensors, allowing users to select individual stations or compare both districts simultaneously.</p>
+                            <ul class="small text-muted ps-3" style="line-height:1.8;">
+                                <li><strong>Open-Meteo API</strong>: Polls hourly microclimatic temperatures and generates double-curve line charts for temperature comparison.</li>
+                                <li><strong>WAQI Sensor API</strong>: Extracts active PM2.5 and PM10 particulate levels to compute local air quality.</li>
+                                <li><strong>Clustered Visualizations</strong>: Compiles telemetry side-by-side using high-performance Chart.js canvases.</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="slide-grid-card" style="border: 1.5px solid rgba(255, 255, 255, 0.12) !important;">
+                                <h6 class="text-white fw-bold mb-3"><i class="fas fa-chart-line text-success me-2"></i>Weather Indicators</h6>
+                                <div style="font-size:0.8rem; line-height:2.0; color:#cbd5e1;">
+                                    <div class="d-flex justify-content-between"><span>Sensor Status</span><span class="badge bg-success">ACTIVE</span></div>
+                                    <div class="d-flex justify-content-between"><span>Kitwe Station (Nkana)</span><strong>24.6°C  ·  48 AQI</strong></div>
+                                    <div class="d-flex justify-content-between"><span>Ndola Station (Itawa)</span><strong>25.2°C  ·  42 AQI</strong></div>
+                                    <div class="d-flex justify-content-between"><span>API Polling Rate</span><strong>Real-Time (Caching Active)</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── SLIDE 7: SIMULATION & REPORTS ───────────────────────────────── -->
+                <div class="slide-card" id="slide7">
+                    <div class="slide-header">
+                        <div class="slide-title"><i class="fas fa-magic text-success me-2"></i>Interactive Simulation & Report Generation</div>
+                        <p class="text-muted small mb-0">Empowering stakeholders with town simulator models and PDF publications.</p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="slide-grid-card" style="border-left:4px solid #4ade80 !important;">
+                                <h6 class="text-white fw-bold"><i class="fas fa-calculator text-success me-2"></i>Planner Simulator</h6>
+                                <p class="small text-muted mt-2 mb-0">Users can tap anywhere on the map to draft a proposed green space. The simulator uses Turf.js to compute carbon sequestration capacity, stormwater retention index, walksheds, and cooling radius offsets in real-time.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="slide-grid-card" style="border-left:4px solid #38bdf8 !important;">
+                                <h6 class="text-white fw-bold"><i class="fas fa-file-invoice text-info me-2"></i>PDF Publications</h6>
+                                <p class="small text-muted mt-2 mb-0">Overhauled with modern styling and client-side calculations. The compiler generates comprehensive, formatted, multi-page PDFs with study-boundary page borders. This provides stakeholders with immediate, printable capstone data sheets.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── SLIDE 8: CONCLUSION & ROADMAP ───────────────────────────────── -->
+                <div class="slide-card" id="slide8">
+                    <div class="slide-header">
+                        <div class="slide-title"><i class="fas fa-rocket text-success me-2"></i>Conclusion & Project Roadmap</div>
+                        <p class="text-muted small mb-0">Planned future expansions to maximize municipal spatial management capabilities.</p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-7">
+                            <h5 style="color:#a7f3d0; font-weight:700;"><i class="fas fa-shield-alt me-2 text-warning"></i>Project Contributions</h5>
+                            <p class="small" style="line-height:1.7; color:#cbd5e1;">This Final-Year Capstone Project delivers a highly robust, full-stack spatial GIS system. By integrating Ndola as an active benchmark, it establishes a framework for multi-city analytical audits in Zambia.</p>
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                <span class="badge bg-success">WGS84 GIS Compliant</span>
+                                <span class="badge bg-info">100% Offline Parity</span>
+                                <span class="badge bg-primary">UN SDG 11.7 Standardized</span>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="slide-grid-card" style="border: 1.5px solid rgba(255, 255, 255, 0.12) !important;">
+                                <h6 class="text-white fw-bold mb-3"><i class="fas fa-map-signs text-success me-2"></i>Next Research Steps</h6>
+                                <ul class="small list-unstyled ps-0" style="color:#cbd5e1; line-height:2.0;">
+                                    <li><i class="fas fa-chevron-right text-success me-2"></i>CNN-based AI canopy evaluation</li>
+                                    <li><i class="fas fa-chevron-right text-success me-2"></i>Physical IoT soil sensor telemetry arrays</li>
+                                    <li><i class="fas fa-chevron-right text-success me-2"></i>Miombo species tailing dumps reclamation</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Slide Navigation Controls -->
+            <div class="slide-controls">
+                <button class="control-btn-presentation" id="prevBtn" onclick="prevSlide()" title="Previous Slide">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <span id="slideIndicator" style="font-family:'Outfit', sans-serif; font-weight:700; font-size:0.82rem; color:#a7f3d0;">
+                    Slide 1 of 8
+                </span>
+
+                <button class="control-btn-presentation" id="nextBtn" onclick="nextSlide()" title="Next Slide">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide Deck Logic -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+
+        function goToSlide(slideNum) {
+            if (slideNum < 1 || slideNum > totalSlides) return;
+            
+            // Hide current slide card
+            document.querySelector('.slide-card.active').classList.remove('active');
+            // Show new active slide card
+            document.getElementById(`slide${slideNum}`).classList.add('active');
+
+            // Update sidebar links
+            document.querySelector('.slide-link.active').classList.remove('active');
+            const links = document.querySelectorAll('.slide-link');
+            links[slideNum - 1].classList.add('active');
+
+            // Update indicators and progress bar
+            currentSlide = slideNum;
+            document.getElementById('slideIndicator').textContent = `Slide ${currentSlide} of ${totalSlides}`;
+            
+            const progress = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                goToSlide(currentSlide + 1);
+            } else {
+                goToSlide(1); // loop back
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                goToSlide(currentSlide - 1);
+            } else {
+                goToSlide(totalSlides); // loop to end
+            }
+        }
+
+        // Support arrow keys & spacebar navigation
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                event.preventDefault();
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                prevSlide();
+            }
+        });
+    </script>
+</body>
+</html>

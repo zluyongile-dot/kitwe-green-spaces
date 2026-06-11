@@ -1,9 +1,0 @@
-{
-  "build": {
-    "builder": "NIXPACKS"
-  },
-  "deploy": {
-    "startCommand": "gunicorn --chdir backend app:app",
-    "healthcheckPath": "/test-db"
-  }
-}

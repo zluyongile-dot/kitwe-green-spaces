@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal | Kitwe Green Spaces</title>
+    
+    <!-- External CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="dark-mode.css">
+    
+    <!-- Professional Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #1B5E20;
+            --secondary-color: #2E7D32;
+            --accent-color: #66BB6A;
+            --text-primary: #212121;
+            --text-secondary: #616161;
+            --background: #F5F5F5;
+            --card-bg: #FFFFFF;
+            --border-color: #E0E0E0;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --info: #2196F3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+        }
+        
+        /* Header */
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .admin-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .admin-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+        
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: white;
+            padding: 0 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--text-secondary);
+            border: none;
+            padding: 1rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: var(--primary-color);
+            background: rgba(27, 94, 32, 0.05);
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background: transparent;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        /* Main Content */
+        .admin-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        
+        .stat-card .icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(27, 94, 32, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card .label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        /* Data Table */
+        .data-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .refresh-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: var(--background);
+        }
+        
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        
+        tbody tr:hover {
+            background: rgba(27, 94, 32, 0.02);
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-warning {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning);
+        }
+        
+        .badge-danger {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--danger);
+        }
+        
+        .badge-info {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--info);
+        }
+        
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .loading i {
+            font-size: 2rem;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+        
+        /* Action Buttons */
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: var(--background);
+            color: var(--primary-color);
+        }
+        
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .filter-select {
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="admin-header">
+        <h1><i class="fas fa-shield-alt me-2"></i>Admin Portal</h1>
+        <p>Centralized dashboard for managing Kitwe Green Spaces data</p>
+    </div>
+    
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button">
+                <i class="fas fa-chart-line me-2"></i>Overview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="feedback-tab" data-bs-toggle="tab" data-bs-target="#feedback" type="button">
+                <i class="fas fa-comments me-2"></i>Feedback
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="greenspaces-tab" data-bs-toggle="tab" data-bs-target="#greenspaces" type="button">
+                <i class="fas fa-tree me-2"></i>Green Spaces
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="environmental-tab" data-bs-toggle="tab" data-bs-target="#environmental" type="button">
+                <i class="fas fa-leaf me-2"></i>Environmental Data
+            </button>
+        </li>
+    </ul>
+    
+    <!-- Main Content -->
+    <div class="admin-content">
+        <div class="tab-content" id="adminTabContent">
+            <!-- Overview Tab -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-tree"></i></div>
+                        <div class="value" id="totalSpaces">0</div>
+                        <div class="label">Total Green Spaces</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-comments"></i></div>
+                        <div class="value" id="totalFeedback">0</div>
+                        <div class="label">Feedback Submissions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-leaf"></i></div>
+                        <div class="value" id="totalEnvironmental">0</div>
+                        <div class="label">Environmental Records</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-users"></i></div>
+                        <div class="value" id="totalVisitors">0</div>
+                        <div class="label">Total Visitors</div>
+                    </div>
+                </div>
+                
+                <div class="data-section">
+                    <div class="section-header">
+                        <h2>Recent Activity</h2>
+                    </div>
+                    <div id="recentActivity"></div>
+                </div>
+            </div>
+            
+            <!-- Feedback Tab -->
+            <div class="tab-pane fade" id="feedback" role="tabpanel">
+                <div class="data-section">
+                    <div class="section-header">
+                        <h2>Feedback Submissions</h2>
+                        <button class="refresh-btn" onclick="loadFeedback()">
+                            <i class="fas fa-sync-alt me-2"></i>Refresh
+                        </button>
+                    </div>
+                    
+                    <div class="filters">
+                        <input type="text" class="filter-input" id="feedbackSearch" placeholder="Search feedback...">
+                        <select class="filter-select" id="feedbackType">
+                            <option value="all">All Types</option>
+                            <option value="suggestion">Suggestions</option>
+                            <option value="complaint">Complaints</option>
+                            <option value="compliment">Compliments</option>
+                        </select>
+                    </div>
+                    
+                    <div id="feedbackContent"></div>
+                </div>
+            </div>
+            
+            <!-- Green Spaces Tab -->
+            <div class="tab-pane fade" id="greenspaces" role="tabpanel">
+                <div class="data-section">
+                    <div class="section-header">
+                        <h2>Green Spaces</h2>
+                        <button class="refresh-btn" onclick="loadGreenSpaces()">
+                            <i class="fas fa-sync-alt me-2"></i>Refresh
+                        </button>
+                    </div>
+                    
+                    <div class="filters">
+                        <input type="text" class="filter-input" id="spaceSearch" placeholder="Search green spaces...">
+                        <select class="filter-select" id="spaceType">
+                            <option value="all">All Types</option>
+                            <option value="park">Parks</option>
+                            <option value="garden">Gardens</option>
+                            <option value="forest">Forests</option>
+                            <option value="recreational">Recreational</option>
+                        </select>
+                    </div>
+                    
+                    <div id="greenspacesContent"></div>
+                </div>
+            </div>
+            
+            <!-- Environmental Tab -->
+            <div class="tab-pane fade" id="environmental" role="tabpanel">
+                <div class="data-section">
+                    <div class="section-header">
+                        <h2>Environmental Monitoring Data</h2>
+                        <button class="refresh-btn" onclick="loadEnvironmentalData()">
+                            <i class="fas fa-sync-alt me-2"></i>Refresh
+                        </button>
+                    </div>
+                    
+                    <div id="environmentalContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- External JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Configuration -->
+    <script src="config.js"></script>
+    
+    <!-- Main Application Script -->
+    <script>
+        console.log('🔐 Admin Portal Initialized');
+        
+        // API Base URL from config
+        const API_URL = window.APP_CONFIG?.API_BASE_URL || 'http://127.0.0.1:5000';
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOverview();
+            loadFeedback();
+            loadGreenSpaces();
+            loadEnvironmentalData();
+            
+            // Setup search filters
+            document.getElementById('feedbackSearch')?.addEventListener('input', filterFeedback);
+            document.getElementById('feedbackType')?.addEventListener('change', filterFeedback);
+            document.getElementById('spaceSearch')?.addEventListener('input', filterGreenSpaces);
+            document.getElementById('spaceType')?.addEventListener('change', filterGreenSpaces);
+        });
+        
+        // Load Overview Statistics
+        async function loadOverview() {
+            try {
+                const response = await fetch(`${API_URL}/api/dashboard/simple-stats`);
+                const data = await response.json();
+                
+                document.getElementById('totalSpaces').textContent = data.total_spaces || 0;
+                document.getElementById('totalFeedback').textContent = data.total_feedback || 0;
+                document.getElementById('totalEnvironmental').textContent = data.total_environmental || 0;
+                document.getElementById('totalVisitors').textContent = data.total_visitors || 0;
+                
+                loadRecentActivity();
+            } catch (error) {
+                console.error('Error loading overview:', error);
+                showError('recentActivity', 'Unable to load overview data');
+            }
+        }
+        
+        // Load Recent Activity
+        async function loadRecentActivity() {
+            const container = document.getElementById('recentActivity');
+            container.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading recent activity...</p></div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/dashboard/recent-activity`);
+                const activities = await response.json();
+                
+                if (activities.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No recent activity</p></div>';
+                    return;
+                }
+                
+                let html = '<div class="table-responsive"><table><thead><tr><th>Time</th><th>Type</th><th>Description</th><th>Status</th></tr></thead><tbody>';
+                
+                activities.forEach(activity => {
+                    html += `
+                        <tr>
+                            <td>${formatDate(activity.timestamp)}</td>
+                            <td><span class="badge badge-info">${activity.type}</span></td>
+                            <td>${activity.description}</td>
+                            <td><span class="badge badge-success">${activity.status}</span></td>
+                        </tr>
+                    `;
+                });
+                
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading recent activity:', error);
+                showError('recentActivity', 'Unable to load recent activity');
+            }
+        }
+        
+        // Load Feedback
+        async function loadFeedback() {
+            const container = document.getElementById('feedbackContent');
+            container.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading feedback...</p></div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/feedback`);
+                const feedback = await response.json();
+                
+                if (feedback.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-comments"></i><p>No feedback submissions yet</p></div>';
+                    return;
+                }
+                
+                window.feedbackData = feedback;
+                renderFeedback(feedback);
+            } catch (error) {
+                console.error('Error loading feedback:', error);
+                showError('feedbackContent', 'Unable to load feedback data');
+            }
+        }
+        
+        // Render Feedback
+        function renderFeedback(feedback) {
+            const container = document.getElementById('feedbackContent');
+            
+            let html = '<div class="table-responsive"><table><thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Type</th><th>Message</th><th>Rating</th></tr></thead><tbody>';
+            
+            feedback.forEach(item => {
+                html += `
+                    <tr>
+                        <td>${formatDate(item.created_at)}</td>
+                        <td>${item.name || 'Anonymous'}</td>
+                        <td>${item.email || 'N/A'}</td>
+                        <td><span class="badge badge-${getBadgeClass(item.feedback_type)}">${item.feedback_type}</span></td>
+                        <td>${item.message}</td>
+                        <td>${'⭐'.repeat(item.rating || 0)}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+        
+        // Filter Feedback
+        function filterFeedback() {
+            const searchTerm = document.getElementById('feedbackSearch').value.toLowerCase();
+            const typeFilter = document.getElementById('feedbackType').value;
+            
+            if (!window.feedbackData) return;
+            
+            let filtered = window.feedbackData.filter(item => {
+                const matchesSearch = item.message.toLowerCase().includes(searchTerm) || 
+                                    (item.name && item.name.toLowerCase().includes(searchTerm));
+                const matchesType = typeFilter === 'all' || item.feedback_type === typeFilter;
+                return matchesSearch && matchesType;
+            });
+            
+            renderFeedback(filtered);
+        }
+        
+        // Load Green Spaces
+        async function loadGreenSpaces() {
+            const container = document.getElementById('greenspacesContent');
+            container.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading green spaces...</p></div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/green-spaces`);
+                const data = await response.json();
+                
+                if (!data.features || data.features.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-tree"></i><p>No green spaces found</p></div>';
+                    return;
+                }
+                
+                window.greenSpacesData = data.features;
+                renderGreenSpaces(data.features);
+            } catch (error) {
+                console.error('Error loading green spaces:', error);
+                showError('greenspacesContent', 'Unable to load green spaces data');
+            }
+        }
+        
+        // Render Green Spaces
+        function renderGreenSpaces(spaces) {
+            const container = document.getElementById('greenspacesContent');
+            
+            let html = '<div class="table-responsive"><table><thead><tr><th>Name</th><th>Type</th><th>Ward</th><th>Area (m²)</th><th>Area (ha)</th></tr></thead><tbody>';
+            
+            spaces.forEach(space => {
+                const props = space.properties;
+                html += `
+                    <tr>
+                        <td><strong>${props.name}</strong></td>
+                        <td><span class="badge badge-success">${props.type}</span></td>
+                        <td>${props.ward || 'N/A'}</td>
+                        <td>${props.area_sq_m?.toLocaleString() || 'N/A'}</td>
+                        <td>${props.area_hectares ? parseFloat(props.area_hectares).toFixed(2) : (props.area_sq_m / 10000).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+        
+        // Filter Green Spaces
+        function filterGreenSpaces() {
+            const searchTerm = document.getElementById('spaceSearch').value.toLowerCase();
+            const typeFilter = document.getElementById('spaceType').value;
+            
+            if (!window.greenSpacesData) return;
+            
+            let filtered = window.greenSpacesData.filter(space => {
+                const props = space.properties;
+                const matchesSearch = props.name.toLowerCase().includes(searchTerm) || 
+                                    (props.ward && props.ward.toLowerCase().includes(searchTerm));
+                const matchesType = typeFilter === 'all' || props.type === typeFilter;
+                return matchesSearch && matchesType;
+            });
+            
+            renderGreenSpaces(filtered);
+        }
+        
+        // Load Environmental Data
+        async function loadEnvironmentalData() {
+            const container = document.getElementById('environmentalContent');
+            container.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading environmental data...</p></div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/environmental-data?format=list`);
+                const data = await response.json();
+                
+                if (data.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-leaf"></i><p>No environmental data available</p></div>';
+                    return;
+                }
+                
+                let html = '<div class="table-responsive"><table><thead><tr><th>Date</th><th>Location</th><th>Air Quality</th><th>Temperature</th><th>Humidity</th><th>Status</th></tr></thead><tbody>';
+                
+                data.forEach(record => {
+                    html += `
+                        <tr>
+                            <td>${formatDate(record.recorded_at)}</td>
+                            <td>${record.location}</td>
+                            <td><span class="badge badge-${getAirQualityBadge(record.air_quality)}">${record.air_quality}</span></td>
+                            <td>${record.temperature}°C</td>
+                            <td>${record.humidity}%</td>
+                            <td><span class="badge badge-success">Active</span></td>
+                        </tr>
+                    `;
+                });
+                
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading environmental data:', error);
+                showError('environmentalContent', 'Unable to load environmental data');
+            }
+        }
+        
+        // Utility Functions
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+        
+        function getBadgeClass(type) {
+            const classes = {
+                'suggestion': 'info',
+                'complaint': 'warning',
+                'compliment': 'success',
+                'issue': 'danger'
+            };
+            return classes[type] || 'info';
+        }
+        
+        function getAirQualityBadge(quality) {
+            const badges = {
+                'Good': 'success',
+                'Moderate': 'info',
+                'Poor': 'warning',
+                'Unhealthy': 'danger'
+            };
+            return badges[quality] || 'info';
+        }
+        
+        function showError(containerId, message) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>${message}</p>
+                    <button class="refresh-btn" onclick="location.reload()">
+                        <i class="fas fa-sync-alt me-2"></i>Retry
+                    </button>
+                </div>
+            `;
+        }
+    </script>
+    
+    <!-- Dark Mode Script -->
+    <script src="dark-mode.js"></script>
+</body>
+</html>

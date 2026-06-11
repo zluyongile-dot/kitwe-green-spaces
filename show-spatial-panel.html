@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Spatial Analysis Panel</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Spatial Analysis Panel Finder</h1>
+    <button onclick="checkPanel()">Check if Panel Exists</button>
+    <button onclick="makeVisible()">Force Panel Visible</button>
+    <button onclick="scrollToPanel()">Scroll to Panel</button>
+    <div id="results"></div>
+    
+    <script>
+        function checkPanel() {
+            const results = document.getElementById('results');
+            const panel = window.opener?.document.getElementById('spatialAnalysisPanel');
+            
+            if (!window.opener) {
+                results.innerHTML = '<div class="result error">Please open this from index.html (right-click link → Open in new window)</div>';
+                return;
+            }
+            
+            if (panel) {
+                const computed = window.getComputedStyle(panel);
+                results.innerHTML = `
+                    <div class="result success">✅ Panel EXISTS!</div>
+                    <div class="result">
+                        <strong>Display:</strong> ${computed.display}<br>
+                        <strong>Visibility:</strong> ${computed.visibility}<br>
+                        <strong>Opacity:</strong> ${computed.opacity}<br>
+                        <strong>Height:</strong> ${computed.height}<br>
+                        <strong>Position:</strong> ${computed.position}
+                    </div>
+                `;
+            } else {
+                results.innerHTML = '<div class="result error">❌ Panel NOT FOUND in DOM!</div>';
+            }
+        }
+        
+        function makeVisible() {
+            if (!window.opener) {
+                alert('Open this from index.html');
+                return;
+            }
+            
+            const panel = window.opener.document.getElementById('spatialAnalysisPanel');
+            if (panel) {
+                panel.style.display = 'block';
+                panel.style.visibility = 'visible';
+                panel.style.opacity = '1';
+                panel.style.border = '3px solid red';
+                alert('✅ Panel forced visible with RED BORDER! Check index.html');
+            } else {
+                alert('❌ Panel not found!');
+            }
+        }
+        
+        function scrollToPanel() {
+            if (!window.opener) {
+                alert('Open this from index.html');
+                return;
+            }
+            
+            const panel = window.opener.document.getElementById('spatialAnalysisPanel');
+            if (panel) {
+                panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                panel.style.border = '5px solid red';
+                alert('✅ Scrolled to panel and added RED BORDER!');
+            } else {
+                alert('❌ Panel not found!');
+            }
+        }
+    </script>
+</body>
+</html>
