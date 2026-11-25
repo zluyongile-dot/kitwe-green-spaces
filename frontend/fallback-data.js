@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 // Fallback data for Kitwe & Ndola Green Spaces GIS Map - 26 Kitwe + 12 Ndola Locations with NDVI and City properties
 window.FALLBACK_GREEN_SPACES = {
     "type": "FeatureCollection",
     "features": [
         // ================= KITWE STUDY AREA (26 spaces) =================
+=======
+// Fallback data for Kitwe Green Spaces GIS Map - 26 Real Verified Locations with Cover Images
+window.FALLBACK_GREEN_SPACES = {
+    "type": "FeatureCollection",
+    "features": [
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
         // PARKS & RECREATION (8 spaces)
         {
             "type": "Feature",
@@ -11,8 +18,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Freedom Park", 
                 "type": "municipal_park", 
                 "ward": "City Centre", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.62,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 45000,
                 "image_url": "https://images.unsplash.com/photo-1625244724107-a73d34d69344?q=80&w=600&auto=format&fit=crop"
             },
@@ -25,8 +35,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Kitwe Playing Fields", 
                 "type": "sports_recreation", 
                 "ward": "City Centre", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.35,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 65000,
                 "image_url": "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?q=80&w=600&auto=format&fit=crop"
             },
@@ -39,8 +52,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Zambezi Way Park", 
                 "type": "neighborhood_park", 
                 "ward": "Riverside", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.55,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 28000,
                 "image_url": "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=80&w=600&auto=format&fit=crop"
             },
@@ -53,8 +69,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Fyapakale Park", 
                 "type": "neighborhood_park", 
                 "ward": "Riverside", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.58,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 32000,
                 "image_url": "https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=600&auto=format&fit=crop"
             },
@@ -67,8 +86,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Burrum Park", 
                 "type": "neighborhood_park", 
                 "ward": "Parklands", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.51,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 22000,
                 "image_url": "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=600&auto=format&fit=crop"
             },
@@ -81,8 +103,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Kew Gardens Park", 
                 "type": "neighborhood_park", 
                 "ward": "Parklands", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.56,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 19000,
                 "image_url": "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=600&auto=format&fit=crop"
             },
@@ -95,8 +120,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Garden Park Stadium", 
                 "type": "sports_recreation", 
                 "ward": "City Centre", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.32,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 28000,
                 "image_url": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=600&auto=format&fit=crop"
             },
@@ -109,8 +137,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Cheswa Park", 
                 "type": "neighborhood_park", 
                 "ward": "Parklands", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.53,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 15000,
                 "image_url": "https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600&auto=format&fit=crop"
             },
@@ -125,8 +156,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Kitwe Stream", 
                 "type": "tributary_stream", 
                 "ward": "Riverside", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.22,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 15000,
                 "image_url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=600&auto=format&fit=crop"
             },
@@ -139,8 +173,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Kafue River", 
                 "type": "major_river", 
                 "ward": "Riverside", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.10,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 185000,
                 "image_url": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=600&auto=format&fit=crop"
             },
@@ -153,8 +190,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Mindolo Dam", 
                 "type": "dam_lake", 
                 "ward": "Mindolo", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.08,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 425000,
                 "image_url": "https://images.unsplash.com/photo-1439066615861-d1af74d74000?q=80&w=600&auto=format&fit=crop"
             },
@@ -167,8 +207,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Mwekwera Falls", 
                 "type": "waterfall_lake", 
                 "ward": "Mwekwera", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.18,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 95000,
                 "image_url": "https://images.unsplash.com/photo-1482862549707-f63cb32c5fd9?q=80&w=600&auto=format&fit=crop"
             },
@@ -181,8 +224,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Chembe Bird Sanctuary Lake", 
                 "type": "lake_wetland", 
                 "ward": "Chembe", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.25,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 285000,
                 "image_url": "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=600&auto=format&fit=crop"
             },
@@ -195,8 +241,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Kumasamba Lodge Water", 
                 "type": "lake_fishing", 
                 "ward": "Kumasamba", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.15,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 125000,
                 "image_url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop"
             },
@@ -209,8 +258,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Ngoma Lake", 
                 "type": "lake", 
                 "ward": "Ngoma", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.05,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 165000,
                 "image_url": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=600&auto=format&fit=crop"
             },
@@ -223,8 +275,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Country Side Dam", 
                 "type": "dam_lake", 
                 "ward": "Mindolo", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.09,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 95000,
                 "image_url": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=600&auto=format&fit=crop"
             },
@@ -237,8 +292,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Chandamali Lake", 
                 "type": "lake", 
                 "ward": "Garneton", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.07,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 110000,
                 "image_url": "https://images.unsplash.com/photo-1494783367193-149034c05e8f?q=80&w=600&auto=format&fit=crop"
             },
@@ -253,8 +311,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Serene Gardens", 
                 "type": "commercial_garden", 
                 "ward": "City Centre", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.60,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 12000,
                 "image_url": "https://images.unsplash.com/photo-1558905617-1538b4512e80?q=80&w=600&auto=format&fit=crop"
             },
@@ -267,8 +328,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Mist Gardens", 
                 "type": "commercial_garden", 
                 "ward": "Riverside", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.64,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 15000,
                 "image_url": "https://images.unsplash.com/photo-1533038590840-1cde6b66b706?q=80&w=600&auto=format&fit=crop"
             },
@@ -281,8 +345,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Sunset Gardens Kitwe", 
                 "type": "commercial_event_garden", 
                 "ward": "City Centre", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.61,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 18500,
                 "image_url": "https://images.unsplash.com/photo-1472214222541-d510753a49fa?q=80&w=600&auto=format&fit=crop"
             },
@@ -295,8 +362,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Casablanca Gardens", 
                 "type": "commercial_garden", 
                 "ward": "Nkana", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.59,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 14000,
                 "image_url": "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=600&auto=format&fit=crop"
             },
@@ -311,8 +381,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Nkana Golf Club", 
                 "type": "golf_course_18hole", 
                 "ward": "Nkana West", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.42,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 485000,
                 "image_url": "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?q=80&w=600&auto=format&fit=crop"
             },
@@ -327,8 +400,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Nkana Cricket Club", 
                 "type": "cricket_ground", 
                 "ward": "Nkana", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.38,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 35000,
                 "image_url": "https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?q=80&w=600&auto=format&fit=crop"
             },
@@ -343,8 +419,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Savanna Woodlands", 
                 "type": "miombo_woodland", 
                 "ward": "Surrounding Area", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.82,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 1250000,
                 "image_url": "https://images.unsplash.com/photo-1475113548554-5a36f1f523d6?q=80&w=600&auto=format&fit=crop"
             },
@@ -357,8 +436,11 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "Dambos Seasonal Wetlands", 
                 "type": "grassland_wetland", 
                 "ward": "Surrounding Area", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.48,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 385000,
                 "image_url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=600&auto=format&fit=crop"
             },
@@ -373,12 +455,16 @@ window.FALLBACK_GREEN_SPACES = {
                 "name": "CBU Nature Park", 
                 "type": "university_nature_park", 
                 "ward": "Riverside", 
+<<<<<<< HEAD
                 "city": "Kitwe",
                 "ndvi_value": 0.74,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 "area_sq_m": 125000,
                 "image_url": "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=600&auto=format&fit=crop"
             },
             "geometry": { "type": "Point", "coordinates": [28.239010623101414, -12.80234209672651] }
+<<<<<<< HEAD
         },
 
         // ================= NDOLA BENCHMARK REFERENCE AREA (12 spaces) =================
@@ -549,6 +635,8 @@ window.FALLBACK_GREEN_SPACES = {
                 "image_url": "https://images.unsplash.com/photo-1482862549707-f63cb32c5fd9?q=80&w=600&auto=format&fit=crop"
             },
             "geometry": { "type": "Point", "coordinates": [28.6950, -12.9900] }
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
         }
     ]
 };

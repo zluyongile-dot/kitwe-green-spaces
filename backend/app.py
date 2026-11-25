@@ -325,9 +325,13 @@ def get_green_spaces():
                                 'type', type,
                                 'area_sq_m', area_sq_m,
                                 'ward', ward,
+<<<<<<< HEAD
                                 'image_url', image_url,
                                 'city', COALESCE(city, 'Kitwe'),
                                 'ndvi_value', COALESCE(ndvi_value, 0.45)
+=======
+                                'image_url', image_url
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                             )
                         )
                     )
@@ -588,8 +592,13 @@ def simple_dashboard_stats():
         area = cur.fetchone()['area']
         
         # Get breakdown by type
+<<<<<<< HEAD
         cur.execute(f"""
             SELECT type, COUNT(*) as count, COALESCE(SUM(area_sq_m), 0) as total_area
+=======
+        cur.execute("""
+            SELECT type, COUNT(*) as count 
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
             FROM green_spaces 
             {filter_sql}
             GROUP BY type
@@ -598,6 +607,7 @@ def simple_dashboard_stats():
         
         # Get feedback count
         try:
+<<<<<<< HEAD
             if city.lower() == 'all':
                 cur.execute("SELECT COUNT(*) as total FROM public_feedback")
             else:
@@ -607,16 +617,23 @@ def simple_dashboard_stats():
                     JOIN green_spaces gs ON f.green_space_id = gs.id
                     WHERE gs.city = %s
                 """, params)
+=======
+            cur.execute("SELECT COUNT(*) as total FROM public_feedback")
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
             feedback_count = cur.fetchone()['total']
         except:
             feedback_count = 0
         
         # Get environmental data count
         try:
+<<<<<<< HEAD
             if city.lower() == 'all':
                 cur.execute("SELECT COUNT(*) as total FROM environmental_data")
             else:
                 cur.execute("SELECT COUNT(*) as total FROM environmental_data WHERE city = %s", params)
+=======
+            cur.execute("SELECT COUNT(*) as total FROM environmental_data")
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
             environmental_count = cur.fetchone()['total']
         except:
             environmental_count = 0
@@ -625,7 +642,10 @@ def simple_dashboard_stats():
         conn.close()
         
         return jsonify({
+<<<<<<< HEAD
             "city": city,
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
             "total_spaces": total,
             "total_green_spaces": total,
             "total_area_m2": area,
@@ -996,6 +1016,7 @@ def get_environmental_data():
             if count == 0:
                 now = datetime.now()
                 samples = [
+<<<<<<< HEAD
                     # Kitwe (6)
                     ("Kitwe City Centre", "Moderate", 28.5, 55.0, now - timedelta(hours=1), "City centre active monitoring", "Kitwe"),
                     ("Mindolo Sanctuary", "Good", 23.4, 68.0, now - timedelta(hours=4), "Protected woodland reserve", "Kitwe"),
@@ -1032,6 +1053,32 @@ def get_environmental_data():
                     FROM environmental_data
                     ORDER BY recorded_at DESC
                 """)
+=======
+                    ("Kitwe City Centre", "Moderate", 28.5, 55.0, now - timedelta(hours=1), "City centre active monitoring"),
+                    ("Mindolo Sanctuary", "Good", 23.4, 68.0, now - timedelta(hours=4), "Protected woodland reserve"),
+                    ("Nkana Industrial Area", "Unhealthy", 32.1, 40.0, now - timedelta(hours=12), "Industrial zone near smelting plant"),
+                    ("Riverside Parklands", "Good", 25.6, 60.0, now - timedelta(days=1), "Residential riverside green belt"),
+                    ("Wusakile Mine Zone", "Poor", 29.8, 46.0, now - timedelta(days=1, hours=6), "Mine tailings monitoring station"),
+                    ("Chimwemwe Residential", "Good", 26.2, 58.0, now - timedelta(days=2), "Suburban green space zone"),
+                    ("Mwekera Forest Reserve", "Good", 21.8, 75.0, now - timedelta(days=2, hours=12), "Dense Miombo woodland canopy"),
+                    ("Kitwe Central Park", "Good", 24.8, 64.0, now - timedelta(days=3), "Active public urban park"),
+                    ("Community Garden Chimwemwe", "Good", 27.0, 52.0, now - timedelta(days=4), "Locally managed community garden"),
+                    ("Chambishi Road Checkpoint", "Moderate", 30.1, 48.0, now - timedelta(days=5), "Transit corridor background monitor")
+                ]
+                for loc, aq, temp, hum, dt, notes in samples:
+                    cur.execute("""
+                        INSERT INTO environmental_data (location, air_quality, temperature, humidity, recorded_at, notes)
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                    """, (loc, aq, temp, hum, dt, notes))
+                conn.commit()
+            
+            # Fetch all records
+            cur.execute("""
+                SELECT id, location, air_quality, temperature, humidity, noise_level, recorded_at, notes
+                FROM environmental_data
+                ORDER BY recorded_at DESC
+            """)
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
             records = cur.fetchall()
             cur.close()
             conn.close()
@@ -1444,9 +1491,13 @@ def export_geojson():
                                 'name', name,
                                 'type', type,
                                 'area_sq_m', area_sq_m,
+<<<<<<< HEAD
                                 'ward', ward,
                                 'city', city,
                                 'ndvi_value', ndvi_value
+=======
+                                'ward', ward
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                             )
                         )
                     )

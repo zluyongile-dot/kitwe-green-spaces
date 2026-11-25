@@ -3815,11 +3815,14 @@
                     <h3 class="section-title">
                         <i class="fas fa-key"></i> Map Legend
                     </h3>
+<<<<<<< HEAD
                     <div id="legendModeAlert" class="small d-none" style="background: rgba(27,94,32,0.1); border: 1.5px solid rgba(76,175,80,0.3); border-radius: 8px; padding: 10px; margin-bottom: 12px; font-size: 11px; color: #a7f3d0; line-height: 1.4;">
                         <i class="fas fa-info-circle text-success me-1"></i>
                         <strong>NDVI Mode Active</strong><br>
                         Marker colors represent vegetation canopy density index. Standard categories are faded.
                     </div>
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                     <!-- Mini donut chart -->
                     <canvas id="miniTypeChart" height="180" style="margin-bottom: 12px;"></canvas>
                     <div class="legend-grid">
@@ -5171,10 +5174,13 @@
                 // Add layer groups to map
                 Object.values(layerGroups).forEach(layer => layer.addTo(map));
                 
+<<<<<<< HEAD
                 // Initialize boundary layer group for study boundaries (clear borders)
                 boundaryLayerGroup = L.layerGroup().addTo(map);
                 updateStudyAreaBoundaries('Kitwe');
                 
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 // Layer control with satellite options
                 const baseMaps = {
                     "🗺️ Street Map": osmStandard,
@@ -6075,6 +6081,12 @@
                 const iconContent = isProposed ? '<i class="fas fa-star" style="font-size: 10px;"></i>' : props.type.charAt(0).toUpperCase();
                 const iconSize = isProposed ? 30 : 28;
                 
+                const isProposed = props.is_proposed === true;
+                const borderStyle = isProposed ? '3px dashed #1b5e20' : '3px solid white';
+                const shadowStyle = isProposed ? `0 0 15px ${color}` : '0 3px 10px rgba(0,0,0,0.3)';
+                const iconContent = isProposed ? '<i class="fas fa-star" style="font-size: 10px;"></i>' : props.type.charAt(0).toUpperCase();
+                const iconSize = isProposed ? 30 : 28;
+                
                 // Create custom icon
                 const icon = L.divIcon({
                     html: `<div style="
@@ -6125,11 +6137,16 @@
                                 <h5 style="margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; color: #ffffff; font-family: var(--font-display);">
                                     <i class="fas fa-tree" style="color: #34d399;"></i>${props.name}
                                 </h5>
+<<<<<<< HEAD
                                 <p style="margin: 4px 0 0 0; opacity: 0.95; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; color: #cbd5e1; flex-wrap: wrap;">
                                     <i class="fas fa-map-marker-alt" style="color: #34d399;"></i>${props.ward || 'Kitwe'}, ${props.city || 'Kitwe'}
                                     <span style="margin-left: 8px; background: ${props.ndvi_value !== undefined ? ndviColors(props.ndvi_value) : '#1b5e20'}; border: 1px solid rgba(255,255,255,0.25); color: white; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 700;">
                                         NDVI: ${props.ndvi_value !== undefined ? props.ndvi_value.toFixed(2) : '0.45'}
                                     </span>
+=======
+                                <p style="margin: 4px 0 0 0; opacity: 0.95; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; color: #cbd5e1;">
+                                    <i class="fas fa-map-marker-alt" style="color: #34d399;"></i>${props.ward || 'Kitwe, Zambia'}
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                                 </p>
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
+<<<<<<< HEAD
         body { 
             background: #050814; 
             color: #f1f5f9; 
@@ -82,6 +83,16 @@
             align-items: center;
             gap: 8px;
         }
+=======
+        body { background: #f8f9fa; padding: 20px; }
+        .stats-container { max-width: 1200px; margin: 0 auto; }
+        .stat-card { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .metric-box { background: linear-gradient(135deg, #e3f2fd, #f3e5f5); padding: 20px; border-radius: 10px; text-align: center; }
+    </style>
+    <link rel="stylesheet" href="page-dark.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
 </head>
 <body>
     <div class="stats-container">
@@ -568,6 +579,153 @@
         }
     </script>
     
+    <script src="config.js"></script>
+    
+    <script>
+<<<<<<< HEAD
+    (function(){
+        var page = window.location.pathname.split('/').pop();
+        function lnk(href,icon,label){ var a=document.createElement('a');a.href=href;if(page===href)a.className='active';a.innerHTML='<i class="fas fa-'+icon+'"></i> '+label;return a; }
+        var bar = document.createElement('div');
+        bar.id = 'kgs-topbar';
+        var brand=document.createElement('a');brand.className='brand';brand.href='home.html';
+        brand.innerHTML='<span class="dot"><i class="fas fa-tree"></i></span>Kitwe Green Spaces';
+        var links=document.createElement('div');links.className='links';
+        links.appendChild(lnk('index.html','map','Map'));
+        links.appendChild(lnk('simpledashboard.html','chart-bar','Dashboard'));
+        links.appendChild(lnk('3d-view.html','satellite-dish','Satellite Tour'));
+        links.appendChild(lnk('about-green-spaces.html','info-circle','About'));
+        var cta=document.createElement('a');cta.href='index.html';cta.className='cta';cta.innerHTML='<i class="fas fa-map"></i> Launch Map';
+        links.appendChild(cta);
+        bar.appendChild(brand);bar.appendChild(links);
+        document.body.insertBefore(bar,document.body.firstChild);
+    })();
+=======
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadAdvancedStats);
+        
+        async function loadAdvancedStats() {
+            try {
+                const apiUrl = window.APP_CONFIG?.API_BASE_URL || 'http://127.0.0.1:5000';
+                
+                // Load analytics data from API
+                const [summaryResponse, coverageResponse, trendsResponse] = await Promise.all([
+                    fetch(`${apiUrl}/api/analytics/summary`),
+                    fetch(`${apiUrl}/api/analytics/coverage`),
+                    fetch(`${apiUrl}/api/analytics/trends`)
+                ]);
+                
+                if (!summaryResponse.ok || !coverageResponse.ok || !trendsResponse.ok) {
+                    throw new Error('Analytics API not available');
+                }
+                
+                const summaryData = await summaryResponse.json();
+                const coverageData = await coverageResponse.json();
+                const trendsData = await trendsResponse.json();
+                
+                // Update key metrics with real data
+                const totalArea = summaryData.summary?.total_area_hectares || 314;
+                const totalSpaces = summaryData.summary?.total_green_spaces || 51;
+                const totalWards = summaryData.summary?.total_wards || 16;
+                
+                // Calculate per capita coverage (assuming population of 500,000)
+                const population = 500000;
+                const perCapita = (totalArea * 10000) / population; // Convert hectares to m²
+                
+                // Update metrics display
+                document.querySelector('.col-md-3:nth-child(1) h3').textContent = perCapita.toFixed(1) + ' m²';
+                document.querySelector('.col-md-3:nth-child(2) h3').textContent = (totalArea / totalSpaces).toFixed(1) + ' ha';
+                document.querySelector('.col-md-3:nth-child(3) h3').textContent = (totalSpaces / totalWards).toFixed(1);
+                document.querySelector('.col-md-3:nth-child(4) h3').textContent = ((totalArea / 51400) * 100).toFixed(2) + '%'; // Assuming Kitwe area 514 km²
+                
+                // Update charts with real data
+                updateChartsWithRealData(coverageData, trendsData);
+                
+                console.log('✅ Advanced stats loaded from API');
+                
+            } catch (error) {
+                console.error('❌ Error loading advanced stats:', error);
+                console.log('⚠️ Using simulated data');
+                // Charts will use default data
+            }
+        }
+        
+        function updateChartsWithRealData(coverageData, trendsData) {
+            // Type Distribution Chart
+            const typeCtx = document.getElementById('typeChart').getContext('2d');
+            
+            // Use coverage data for type distribution
+            const typeLabels = ['Parks', 'Gardens', 'Forests', 'Recreational', 'Golf Course', 'Other'];
+            const typeData = [18, 12, 8, 7, 3, 3]; // Default data
+            
+            new Chart(typeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: typeLabels,
+                    datasets: [{
+                        data: typeData,
+                        backgroundColor: ['#4CAF50', '#2196F3', '#9C27B0', '#FF9800', '#795548', '#607D8B']
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+            
+            // Ward Coverage Chart
+            const wardCtx = document.getElementById('wardChart').getContext('2d');
+            
+            // Use coverage data for ward chart
+            const wardLabels = coverageData.coverage?.slice(0, 6).map(item => item.ward) || 
+                              ['City Centre', 'Parklands', 'Nkana', 'Riverside', 'Ndeke', 'Others'];
+            const wardData = coverageData.coverage?.slice(0, 6).map(item => item.area_m2 / 10000) || 
+                            [45, 38, 42, 35, 28, 126];
+            
+            new Chart(wardCtx, {
+                type: 'bar',
+                data: {
+                    labels: wardLabels,
+                    datasets: [{
+                        label: 'Hectares',
+                        data: wardData,
+                        backgroundColor: 'rgba(76, 175, 80, 0.8)'
+                    }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: true } } }
+            });
+        }
+        
+        // Initialize charts with default data first
+        const typeCtx = document.getElementById('typeChart').getContext('2d');
+        new Chart(typeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Parks', 'Gardens', 'Forests', 'Recreational', 'Golf Course', 'Other'],
+                datasets: [{
+                    data: [18, 12, 8, 7, 3, 3],
+                    backgroundColor: ['#4CAF50', '#2196F3', '#9C27B0', '#FF9800', '#795548', '#607D8B']
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+        
+        const wardCtx = document.getElementById('wardChart').getContext('2d');
+        new Chart(wardCtx, {
+            type: 'bar',
+            data: {
+                labels: ['City Centre', 'Parklands', 'Nkana', 'Riverside', 'Ndeke', 'Others'],
+                datasets: [{
+                    label: 'Hectares',
+                    data: [45, 38, 42, 35, 28, 126],
+                    backgroundColor: 'rgba(76, 175, 80, 0.8)'
+                }]
+            },
+            options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        });
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
+    </script>
+    
+    <!-- Dark Mode Script -->
+    <script src="dark-mode.js"></script>
+
     <script>
     (function(){
         var page = window.location.pathname.split('/').pop();

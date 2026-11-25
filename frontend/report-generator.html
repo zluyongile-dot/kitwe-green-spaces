@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,7 @@
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<<<<<<< HEAD
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
     <!-- Professional Typography -->
@@ -19,6 +20,11 @@
     <link rel="stylesheet" href="dark-mode.css">
     
     <!-- jsPDF Library -->
+=======
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="dark-mode.css">
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
@@ -191,7 +197,13 @@
             background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
         }
     </style>
+<<<<<<< HEAD
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+=======
+    <link rel="stylesheet" href="page-dark.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
 </head>
 <body>
 
@@ -315,6 +327,7 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 
     <!-- Configuration and fallback data scripts -->
     <script src="config.js"></script>
@@ -540,6 +553,131 @@
             const chEco = document.getElementById('chEco').checked;
             const chRecs = document.getElementById('chRecs').checked;
 
+=======
+    
+    <script src="config.js"></script>
+    
+    <script>
+        async function generateReport() {
+            try {
+                const apiUrl = window.APP_CONFIG?.API_BASE_URL || 'http://127.0.0.1:5000';
+                const reportType = document.getElementById('reportType').value;
+                
+                // Show loading message
+                alert('📊 Generating report... Please wait while we fetch the latest data.');
+                
+                // Fetch data from API
+                const [summaryResponse, coverageResponse, environmentalResponse] = await Promise.all([
+                    fetch(`${apiUrl}/api/analytics/summary`),
+                    fetch(`${apiUrl}/api/analytics/coverage`),
+                    fetch(`${apiUrl}/api/environmental-data`)
+                ]);
+                
+                if (!summaryResponse.ok || !coverageResponse.ok || !environmentalResponse.ok) {
+                    throw new Error('API data not available');
+                }
+                
+                const summaryData = await summaryResponse.json();
+                const coverageData = await coverageResponse.json();
+                const environmentalData = await environmentalResponse.json();
+                
+                // Generate PDF with real data
+                generatePDFWithData(summaryData, coverageData, environmentalData, reportType);
+                
+            } catch (error) {
+                console.error('Error fetching data for report:', error);
+                alert('⚠️ Could not fetch latest data. Generating report with available information.');
+                generatePDFWithFallbackData();
+            }
+        }
+        
+        function generatePDFWithData(summaryData, coverageData, environmentalData, reportType) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Header
+            doc.setFontSize(20);
+            doc.text('Kitwe Green Space Analysis Report', 20, 30);
+            
+            doc.setFontSize(12);
+            doc.text('Generated: ' + new Date().toLocaleDateString(), 20, 45);
+            doc.text('Student: Mukendwa Luyongile (202201912)', 20, 55);
+            doc.text('Institution: Mulungushi University', 20, 65);
+            doc.text('Report Type: ' + (reportType === 'executive' ? 'Executive Summary' : 
+                                      reportType === 'technical' ? 'Technical Report' : 'Academic Analysis'), 20, 75);
+            
+            // Statistics
+            doc.setFontSize(16);
+            doc.text('Executive Summary', 20, 95);
+            
+            doc.setFontSize(12);
+            const summary = summaryData.summary || {};
+            doc.text('• Total Green Spaces: ' + (summary.total_green_spaces || 51), 25, 110);
+            doc.text('• Total Area: ' + (summary.total_area_hectares || 314) + ' hectares', 25, 120);
+            doc.text('• Wards Covered: ' + (summary.total_wards || 16), 25, 130);
+            doc.text('• Green Space per Capita: ' + calculatePerCapita(summary.total_area_hectares) + ' m²', 25, 140);
+            
+            // Environmental Impact
+            doc.setFontSize(16);
+            doc.text('Environmental Impact', 20, 160);
+            
+            doc.setFontSize(12);
+            const envImpact = environmentalData.green_space_impact || {};
+            doc.text('• CO₂ Absorption: ' + (envImpact.co2_absorbed || 628) + ' kg/year', 25, 175);
+            doc.text('• Rainwater Capacity: ' + (envImpact.rainwater_capacity || 3140000) + ' liters', 25, 185);
+            doc.text('• Temperature Reduction: ' + (envImpact.cooling_effect || 2.1) + '°C', 25, 195);
+            doc.text('• Biodiversity Index: ' + (envImpact.biodiversity_index || 85) + '%', 25, 205);
+            
+            // Ward Coverage Analysis
+            doc.setFontSize(16);
+            doc.text('Ward Coverage Analysis', 20, 225);
+            
+            doc.setFontSize(12);
+            let yPos = 240;
+            const topWards = coverageData.coverage?.slice(0, 5) || [];
+            topWards.forEach((ward, index) => {
+                if (yPos < 280) {
+                    doc.text(`${index + 1}. ${ward.ward}: ${ward.coverage}% coverage (${ward.area_m2 / 10000} ha)`, 25, yPos);
+                    yPos += 10;
+                }
+            });
+            
+            // Recommendations
+            doc.setFontSize(16);
+            doc.text('Key Recommendations', 20, yPos + 10);
+            
+            doc.setFontSize(12);
+            const recommendations = environmentalData.recommendations?.immediate || [
+                'Increase green space coverage to meet WHO standards',
+                'Focus development on underserved wards',
+                'Implement mine rehabilitation programs',
+                'Develop green corridors connecting existing spaces'
+            ];
+            
+            recommendations.forEach((rec, index) => {
+                if (yPos < 280) {
+                    doc.text(`${index + 1}. ${rec}`, 25, yPos + 25 + (index * 10));
+                }
+            });
+            
+            // Footer
+            doc.setFontSize(10);
+            doc.text('Generated by Kitwe Green Space Mapping System', 20, 280);
+            doc.text('Data Source: PostgreSQL Database with PostGIS Extension', 20, 285);
+            
+            doc.save('Kitwe_Green_Spaces_Report_' + new Date().toISOString().split('T')[0] + '.pdf');
+            
+            // Show success message
+            alert('✅ PDF Report generated successfully!\n\n' +
+                  'The report includes real data from the database:\n' +
+                  '• ' + (summary.total_green_spaces || 51) + ' green spaces\n' +
+                  '• ' + (summary.total_area_hectares || 314) + ' hectares total area\n' +
+                  '• Environmental impact analysis\n' +
+                  '\nThe report has been downloaded to your computer.');
+        }
+        
+        function generatePDFWithFallbackData() {
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('p', 'mm', 'a4');
             const pageWidth = doc.internal.pageSize.getWidth();
@@ -832,6 +970,35 @@
 
             alert(`✅ ${filename} has been compiled and downloaded successfully!\n\nIt contains structured sections with double page borders matching your requests.`);
         }
+        
+        function calculatePerCapita(totalAreaHectares) {
+            const population = 500000; // Kitwe population estimate
+            const areaM2 = (totalAreaHectares || 314) * 10000;
+            return (areaM2 / population).toFixed(1);
+        }
+    </script>
+    
+    <!-- Dark Mode Script -->
+    <script src="dark-mode.js"></script>
+
+    <script>
+    (function(){
+        var page = window.location.pathname.split('/').pop();
+        function lnk(href,icon,label){ var a=document.createElement('a');a.href=href;if(page===href)a.className='active';a.innerHTML='<i class="fas fa-'+icon+'"></i> '+label;return a; }
+        var bar = document.createElement('div');
+        bar.id = 'kgs-topbar';
+        var brand=document.createElement('a');brand.className='brand';brand.href='home.html';
+        brand.innerHTML='<span class="dot"><i class="fas fa-tree"></i></span>Kitwe Green Spaces';
+        var links=document.createElement('div');links.className='links';
+        links.appendChild(lnk('index.html','map','Map'));
+        links.appendChild(lnk('simpledashboard.html','chart-bar','Dashboard'));
+        links.appendChild(lnk('3d-view.html','satellite-dish','Satellite Tour'));
+        links.appendChild(lnk('about-green-spaces.html','info-circle','About'));
+        var cta=document.createElement('a');cta.href='index.html';cta.className='cta';cta.innerHTML='<i class="fas fa-map"></i> Launch Map';
+        links.appendChild(cta);
+        bar.appendChild(brand);bar.appendChild(links);
+        document.body.insertBefore(bar,document.body.firstChild);
+    })();
     </script>
 </body>
 </html>

@@ -287,6 +287,7 @@ def create_comprehensive_data():
         WILDLIFE_RESERVES
     )
     
+<<<<<<< HEAD
     # 1. Assign 'city' and 'ndvi_value' to Kitwe spaces
     kitwe_ndvis = {
         'Freedom Park': 0.62, 'Kitwe Playing Fields': 0.35, 'Zambezi Way Park': 0.55,
@@ -323,6 +324,16 @@ def create_comprehensive_data():
     print("\nDATA SUMMARY:")
     print(f"   Kitwe Green Spaces: {len(all_spaces) - len(ndola_spaces)}")
     print(f"   Ndola Green Spaces (Benchmark): {len(ndola_spaces)}")
+=======
+    print("\nDATA SUMMARY:")
+    print(f"   Parks: {len(PARKS)}")
+    print(f"   Water Bodies: {len(WATER_BODIES)}")
+    print(f"   Gardens: {len(GARDENS)}")
+    print(f"   Golf Courses: {len(GOLF_COURSES)}")
+    print(f"   Cricket Grounds: {len(CRICKET_GROUNDS)}")
+    print(f"   Forests & Woodlands: {len(FORESTS)}")
+    print(f"   Wildlife Reserves: {len(WILDLIFE_RESERVES)}")
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
     print("   " + "-" * 40)
     print(f"   TOTAL: {len(all_spaces)} green spaces")
     
@@ -343,9 +354,12 @@ def create_comprehensive_data():
         # Ensure schema column exists
         print("\nChecking table columns...")
         cur.execute("ALTER TABLE green_spaces ADD COLUMN IF NOT EXISTS image_url TEXT")
+<<<<<<< HEAD
         cur.execute("ALTER TABLE green_spaces ADD COLUMN IF NOT EXISTS city VARCHAR(100) DEFAULT 'Kitwe'")
         cur.execute("ALTER TABLE green_spaces ADD COLUMN IF NOT EXISTS ndvi_value FLOAT DEFAULT 0.45")
         conn.commit()
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
         
         # Clear existing data
         print("\nClearing old data...")
@@ -359,21 +373,33 @@ def create_comprehensive_data():
         for gs in all_spaces:
             try:
                 cur.execute("""
+<<<<<<< HEAD
                     INSERT INTO green_spaces (name, type, area_sq_m, ward, image_url, city, ndvi_value, geom)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326))
+=======
+                    INSERT INTO green_spaces (name, type, area_sq_m, ward, image_url, geom)
+                    VALUES (%s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326))
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                 """, (
                     gs['name'],
                     gs['type'],
                     gs['area_sq_m'],
                     gs['ward'],
                     gs['image_url'],
+<<<<<<< HEAD
                     gs['city'],
                     gs['ndvi_value'],
+=======
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
                     gs['longitude'],  # longitude first for PostGIS
                     gs['latitude']    # latitude second
                 ))
                 inserted_count += 1
+<<<<<<< HEAD
                 print(f"   + {gs['name']} ({gs['type']}) in {gs['city']}")
+=======
+                print(f"   + {gs['name']} ({gs['type']})")
+>>>>>>> d49c6aa (Update: sync latest frontend and backend changes)
             except Exception as e:
                 print(f"   - Failed to insert {gs['name']}: {e}")
         
